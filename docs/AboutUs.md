@@ -28,14 +28,14 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 * Role: Team Lead
 * Responsibilities: UI
 
-### Johnny Doe
 
-<img src="images/johndoe.png" width="200px">
+### Amritaa Varsni Ganapathi
 
-[[github](http://github.com/johndoe)] [[portfolio](team/johndoe.md)]
+<img src="images/amritaa66.png" width="200px">
 
-* Role: Developer
-* Responsibilities: Data
+[[github](https://github.com/Amritaa66)] 
+
+
 
 ### Jean Doe
 
