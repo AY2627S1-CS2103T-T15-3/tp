@@ -17,7 +17,8 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 
 [[github](https://github.com/pratixksha)]
 
-
+* Role: Student
+* Responsibilities: NIL
 
 ### Fu Lingyu
 
