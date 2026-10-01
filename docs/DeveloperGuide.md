@@ -283,16 +283,26 @@ _{Explain here how the data archiving feature will be implemented}_
 
 Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unlikely to have) - `*`
 
-| Priority | As a …                                    | I want to …                 | So that I can…                                                        |
-|----------|--------------------------------------------|------------------------------|------------------------------------------------------------------------|
-| `* * *`  | new user                                   | see usage instructions       | refer to instructions when I forget how to use the App                 |
-| `* * *`  | user                                       | add a new person             |                                                                        |
-| `* * *`  | user                                       | delete a person              | remove entries that I no longer need                                   |
-| `* * *`  | user                                       | find a person by name        | locate details of persons without having to go through the entire list |
-| `* *`    | user                                       | hide private contact details | minimize chance of someone else seeing them by accident                |
-| `*`      | user with many persons in the address book | sort persons by name         | locate a person easily                                                 |
-
-*{More to be added}*
+| Priority | As a …                           | I want to …                                                       | So that I can…                                                               |
+|----------|----------------------------------|-------------------------------------------------------------------|------------------------------------------------------------------------------|
+| `* * *`  | new user                         | easily access guidance on available commands                      | learn how to use TutorTrack quickly                                          |
+| `* * *`  | tutor                            | add a student and their relevant details                          | keep all the information I need about each student in one place              |
+| `* * *`  | tutor                            | add guardian information                                          | keep track of the people I need to contact regarding my students             |
+| `* * *`  | tutor                            | delete an incorrectly created student or guardian                 | remove records I do not need                                                 |
+| `* * *`  | tutor                            | edit a student's or guardian's information                        | keep their details up to date                                                |
+| `* * *`  | tutor                            | view the list of students                                         | know the details of all my students                                          |
+| `* * *`  | tutor                            | view the guardian associated with a student                       | quickly know whom to contact regarding that student                          |
+| `* * *`  | tutor                            | search for a student                                              | retrieve their information quickly without browsing my entire student list   |
+| `* * *`  | tutor teaching multiple subjects | record the subjects I teach each student                          | remember what tuition I provide to each student                              |
+| `* * `   | tutor with many students         | easily view my lessons for a day or a week                        | better plan my schedule and be on top of my work for each student            |
+| `* *`    | tutor with many students         | sort students by name                                             | locate a specific student easily                                             |
+| `* *`    | tutor with many students         | filter students by attribute                                      | quickly locate groups of students I am interested in                         |
+| `* * `   | tutor rescheduling a lesson      | check whether a proposed timing clashes with my existing schedule | easily and confidently reschedule lessons                                    |
+| `* *`    | first-time user                  | see sample student and guardian data                              | understand TutorTrack's capabilities before entering my own data             |
+| `*`      | tutor ready to adopt TutorTrack  | remove all sample data                                            | start managing my actual students without leftover dummy data                |
+| `*`      | tutor preparing for a lesson     | view my notes about a student                                     | remind myself of important information before teaching them                  |
+| `*`      | tutor with past students         | archive student data                                              | keep my student list uncluttered while not completely deleting past students |
+| `*`      | tutor managing monthly payments  | view students payment status                                      | quickly identify whose payments need to be collected                         |
 
 ### Use cases
 
