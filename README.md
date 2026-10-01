@@ -44,6 +44,4 @@ Guardians can be added, edited, removed, and searched independently from student
 
 ## Acknowledgements
 
-TutorTrack was developed as part of a software engineering project.
-
-The project was based on the **AddressBook Level 3 (AB3)** project developed as part of the SE-EDU initiative.
+This project is **part of the [se-education.org](https://se-education.org/) initiative**. If you would like to contribute code to this project, see [se-education.org](https://se-education.org/#contributing-to-se-edu) for more information.
