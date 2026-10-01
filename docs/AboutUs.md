@@ -30,6 +30,17 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 * Responsibilities: UI
 
 
+### Megan
+
+<img src="images/megspq.png" width="200px">
+
+[[github](https://github.com/megspq)]
+
+* Role: Documentation
+* Responsibilities: Responsible for the quality of various project documents
+
+
+
 ### Amritaa Varsni Ganapathi
 
 <img src="images/amritaa66.png" width="200px">
