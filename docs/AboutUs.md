@@ -17,7 +17,8 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 
 [[github](https://github.com/pratixksha)]
 
-
+* Role: Developer
+* Responsibilities: Testing
 
 ### Fu Lingyu
 
@@ -39,24 +40,20 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 * Responsibilities: Responsible for the quality of various project documents
 
 
-### Johnny Doe
 
-<img src="images/johndoe.png" width="200px">
+### Amritaa Varsni Ganapathi
 
-[[github](http://github.com/johndoe)] [[portfolio](team/johndoe.md)]
+<img src="images/amritaa66.png" width="200px">
 
-* Role: Developer
-* Responsibilities: Data
+[[github](https://github.com/Amritaa66)] 
 
-### Jean Doe
 
-<img src="images/johndoe.png" width="200px">
 
-[[github](http://github.com/johndoe)]
-[[portfolio](team/johndoe.md)]
+### Lucas Ngui
 
-* Role: Developer
-* Responsibilities: Dev Ops + Threading
+<img src="images/lucasngui.png" width="200px">
+
+[[github](http://github.com/lucasngui)]
 
 ### James Doe
 
