@@ -326,15 +326,20 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 ### Non-Functional Requirements
 
 1.  Should work on any _mainstream OS_ as long as it has Java `25` or above installed.
-2.  Should be able to hold up to 1000 persons without noticeable sluggishness in performance for typical usage.
-3.  A user with above average typing speed for regular English text (i.e. not code, not system admin commands) should be able to accomplish most of the tasks faster using commands than using the mouse.
-
-*{More to be added}*
+2.  Should be able to hold up to 1000 contacts without noticeable sluggishness in performance for typical usage.
+3.  A tutor with above average typing speed for regular English text (i.e. not code, not system admin commands) should be able to accomplish most of the tasks faster using commands than using the mouse.
+4.  Should maintain consistent command formats and terminology across similar features.
+5.  Should provide clear and informative error messages that help users identify and correct errors in their commands.
+6.  Should preserve existing user data when a command fails to execute successfully.
 
 ### Glossary
 
-* **Mainstream OS**: Windows, Linux, Unix, or macOS
-* **Private contact detail**: A contact detail that is not meant to be shared with others
+* **Contact**: A student or guardian stored in TutorTrack.
+* **Displayed list**: The student or guardian list currently displayed, either the full list or a filtered or found subset. Indices refer to the corresponding displayed list.
+* **Student-guardian link**: An association between a student and a guardian. A student may be linked to multiple guardians, and a guardian may be linked to multiple students.
+* **Lesson**: A scheduled tutoring session for a student, specified by its day, start time, and duration.
+* **Archived student**: A past student whose data is retained in TutorTrack but is no longer included in the active student list.
+* **Mainstream OS**: Windows, Linux, Unix, or macOS.
 
 --------------------------------------------------------------------------------------------------------------------
 
