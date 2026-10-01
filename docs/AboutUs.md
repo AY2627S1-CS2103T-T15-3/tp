@@ -38,15 +38,11 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 
 
 
-### Jean Doe
+### Lucas Ngui
 
-<img src="images/johndoe.png" width="200px">
+<img src="images/lucasngui.png" width="200px">
 
-[[github](http://github.com/johndoe)]
-[[portfolio](team/johndoe.md)]
-
-* Role: Developer
-* Responsibilities: Dev Ops + Threading
+[[github](http://github.com/lucasngui)]
 
 ### James Doe
 
