@@ -321,6 +321,89 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
       Use case resumes at step 2.
 
+**Use case: Filter contacts**
+
+**MSS**
+
+1.  User requests to filter contacts by criteria (contact type, year of study)
+2.  TutorTrack shows the contacts that match all the criteria
+
+    Use case ends.
+
+**Extensions**
+
+* 1a. The command format or a criterion value is invalid.
+
+    * 1a1. TutorTrack shows an error message.
+
+      Use case resumes at step 1.
+
+* 2a. No contact matches the criteria.
+
+  Use case ends.
+
+**Use case: Find contacts**
+
+**MSS**
+
+1.  User requests to find contacts by name keywords
+2.  TutorTrack shows the contacts whose names match any keyword
+
+    Use case ends.
+
+**Extensions**
+
+* 1a. No keyword is given.
+
+    * 1a1. TutorTrack shows an error message.
+
+      Use case resumes at step 1.
+
+* 2a. No contact matches the keywords.
+
+  Use case ends.
+
+**Use case: Schedule a lesson**
+
+**MSS**
+
+1.  User requests to list persons
+2.  TutorTrack shows a list of persons
+3.  User requests to schedule a lesson for a specific student in the list, giving the day, start time and duration
+4.  TutorTrack saves the lesson and shows the updated lesson slot
+
+    Use case ends.
+
+**Extensions**
+
+* 2a. The list is empty.
+
+  Use case ends.
+
+* 3a. The given index is invalid, or the person is not a student.
+
+    * 3a1. TutorTrack shows an error message.
+
+      Use case resumes at step 2.
+
+* 3b. The day, start time or duration is invalid.
+
+    * 3b1. TutorTrack shows an error message.
+
+      Use case resumes at step 3.
+
+* 3c. The lesson overlaps another student's lesson.
+
+    * 3c1. TutorTrack shows a clash error message.
+
+      Use case resumes at step 3.
+
+* 3d. The lesson is less than 30 minutes from another lesson.
+
+    * 3d1. TutorTrack shows a travel-time warning.
+
+      Use case resumes at step 4.
+
 *{More to be added}*
 
 ### Non-Functional Requirements
