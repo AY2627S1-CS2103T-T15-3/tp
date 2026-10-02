@@ -350,6 +350,8 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 **Use case: U3 - List students**
 
+**MSS**
+
 1. User requests to list students.
 2. TutorTrack shows the full list of students.
 
@@ -362,6 +364,8 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
   Use case ends.
 
 **Use case: U4 - List guardians**
+
+**MSS**
 
 1. User requests to list guardians.
 2. TutorTrack shows the full list of guardians.
@@ -477,7 +481,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 **Extensions**
 
-* 3a. The given index is invalid.
+* 3a. One or both indices given are invalid.
 
   * 3a1. TutorTrack shows an error message.
 
@@ -489,12 +493,12 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
     Use case ends.
 
-**Use case: U - 10 Filter contacts**
+**Use case: U10 - Filter contacts**
 
 **MSS**
 
-1. User requests to filter contacts by criteria (contact type, year of study)
-2. TutorTrack shows the contacts that match all the criteria
+1. User requests to filter contacts by criteria (contact type, year of study).
+2. TutorTrack shows the contacts that match all the criteria.
 
     Use case ends.
 
@@ -510,12 +514,12 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
   Use case ends.
 
-**Use case: U - 11 Find contacts**
+**Use case: U11 - Find contacts**
 
 **MSS**
 
-1. User requests to find contacts by name keywords
-2. TutorTrack shows the contacts whose names match any keyword
+1. User requests to find contacts by name keywords.
+2. TutorTrack shows the contacts whose names match any keyword.
 
     Use case ends.
 
@@ -531,13 +535,13 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
   Use case ends.
 
-**Use case: U- 12 Schedule a lesson**
+**Use case: U12 - Schedule a lesson**
 
 **MSS**
 
 1. User <u>requests to list students (U3)</u>.
-2. User requests to schedule a lesson for a specific student in the list, giving the day, start time and duration
-3. TutorTrack saves the lesson and shows the updated lesson slot
+2. User requests to schedule a lesson for a specific student in the list, giving the day, start time and duration.
+3. TutorTrack saves the lesson and shows the updated lesson slot.
 
     Use case ends.
 
