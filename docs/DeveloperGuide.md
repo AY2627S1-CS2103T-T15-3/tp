@@ -306,37 +306,211 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 ### Use cases
 
-(For all use cases below, the **System** is the `AddressBook` and the **Actor** is the `user`, unless specified otherwise)
+(For all use cases below, the **System** is `TutorTrack` and the **Actor** is the `user`, unless specified otherwise)
 
-**Use case: Delete a person**
+**Use case: U1 - Add a student**
 
 **MSS**
 
-1.  User requests to list persons
-2.  AddressBook shows a list of persons
-3.  User requests to delete a specific person in the list
-4.  AddressBook deletes the person
+1. User chooses to add a student.
+2. TutorTrack requests the student's details.
+3. User enters the student's details.
+4. TutorTrack adds the student.
 
-    Use case ends.
+   Use case ends.
 
 **Extensions**
 
-* 2a. The list is empty.
+* 3a. There is an error in the entered data.
 
-  Use case ends.
+  * 3a1. TutorTrack requests the correct data.
+  * 3a2. User enters new data.
 
-* 3a. The given index is invalid.
+    Steps 3a1-3a2 are repeated until the data entered is correct. Use case resumes from step 4.
 
-    * 3a1. AddressBook shows an error message.
+* 3b. The student is a duplicate.
 
-      Use case resumes at step 2.
+  * 3b1. TutorTrack shows an error message.
 
-**Use case: Filter contacts**
+    Use case ends.
+
+**Use case: U2 - Add a guardian**
 
 **MSS**
 
-1.  User requests to filter contacts by criteria (contact type, year of study)
-2.  TutorTrack shows the contacts that match all the criteria
+1. User requests to add a guardian.
+2. TutorTrack requests the guardian's details.
+3. User enters the guardian's details.
+4. TutorTrack adds the guardian.
+
+   Use case ends.
+
+**Extensions**
+
+* 3a. There is an error in the entered data.
+
+  * 3a1. TutorTrack requests the correct data.
+  * 3a2. User enters new data.
+
+    Steps 3a1-3a2 are repeated until the data entered is correct. Use case resumes from step 4.
+
+* 3b. The guardian is a duplicate.
+
+  * 3b1. TutorTrack shows an error message.
+
+    Use case ends.
+
+**Use case: U3 - List students**
+
+**MSS**
+
+1. User requests to list students.
+2. TutorTrack shows the full list of students.
+
+   Use case ends.
+
+**Extensions**
+
+* 1a. The list is empty.
+
+  Use case ends.
+
+**Use case: U4 - List guardians**
+
+**MSS**
+
+1. User requests to list guardians.
+2. TutorTrack shows the full list of guardians.
+
+   Use case ends.
+
+**Extensions**
+
+* 1a. The list is empty.
+
+  Use case ends.
+
+**Use case: U5 - Edit student details**
+
+**MSS**
+
+1. User <u>requests to list students (U3)</u>.
+2. User requests to edit a specific student in the list.
+3. TutorTrack requests the details to be edited.
+4. User enters the details to be edited.
+5. TutorTrack updates the student's details.
+
+   Use case ends.
+
+**Extensions**
+
+* 2a. The given index is invalid.
+
+  * 2a1. TutorTrack shows an error message.
+
+    Use case ends.
+
+* 4a. There is an error in the entered data.
+
+  * 4a1. TutorTrack requests the correct data.
+  * 4a2. User enters new data.
+
+    Steps 4a1-4a2 are repeated until the data entered is correct. Use case resumes from step 5.
+
+**Use case: U6 - Edit guardian details**
+
+**MSS**
+
+1. User <u>requests to list guardians (U4)</u>.
+2. User requests to edit a specific guardian in the list.
+3. TutorTrack requests the details to be edited.
+4. User enters the details to be edited.
+5. TutorTrack updates the guardian's details.
+
+   Use case ends.
+
+**Extensions**
+
+* 2a. The given index is invalid.
+
+  * 2a1. TutorTrack shows an error message.
+
+    Use case ends.
+
+* 4a. There is an error in the entered data.
+
+  * 4a1. TutorTrack requests the correct data.
+  * 4a2. User enters new data.
+
+    Steps 4a1-4a2 are repeated until the data entered is correct. Use case resumes from step 5.
+
+**Use case: U7 - Delete student**
+
+**MSS**
+
+1. User <u>requests to list students (U3)</u>.
+2. User requests to delete a specific student in the list.
+3. TutorTrack deletes the student.
+
+   Use case ends.
+
+**Extensions**
+
+* 2a. The given index is invalid.
+
+  * 2a1. TutorTrack shows an error message.
+
+    Use case ends.
+
+**Use case: U8 - Delete guardian**
+
+**MSS**
+
+1. User <u>requests to list guardians (U4)</u>.
+2. User requests to delete a specific guardian in the list.
+3. TutorTrack deletes the guardian.
+
+   Use case ends.
+
+**Extensions**
+
+* 2a. The given index is invalid.
+
+  * 2a1. TutorTrack shows an error message.
+
+    Use case ends.
+
+**Use case: U9 - Link guardian to student**
+
+**MSS**
+
+1. User <u>requests to list students (U3)</u>.
+2. User <u>requests to list guardians (U4)</u>.
+3. User selects a student and a guardian to link.
+4. TutorTrack links the student with the guardian.
+
+   Use case ends.
+
+**Extensions**
+
+* 3a. One or both indices given are invalid.
+
+  * 3a1. TutorTrack shows an error message.
+
+    Use case ends.
+
+* 3b. The student and guardian are already linked.
+
+  * 3b1. TutorTrack informs the user that they are already linked.
+
+    Use case ends.
+
+**Use case: U10 - Filter contacts**
+
+**MSS**
+
+1. User requests to filter contacts by criteria (contact type, year of study).
+2. TutorTrack shows the contacts that match all the criteria.
 
     Use case ends.
 
@@ -352,12 +526,12 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
   Use case ends.
 
-**Use case: Find contacts**
+**Use case: U11 - Find contacts**
 
 **MSS**
 
-1.  User requests to find contacts by name keywords
-2.  TutorTrack shows the contacts whose names match any keyword
+1. User requests to find contacts by name keywords.
+2. TutorTrack shows the contacts whose names match any keyword.
 
     Use case ends.
 
@@ -373,48 +547,45 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
   Use case ends.
 
-**Use case: Schedule a lesson**
+**Use case: U12 - Schedule a lesson**
 
 **MSS**
 
-1.  User requests to list persons
-2.  TutorTrack shows a list of persons
-3.  User requests to schedule a lesson for a specific student in the list, giving the day, start time and duration
-4.  TutorTrack saves the lesson and shows the updated lesson slot
+1. User <u>requests to list students (U3)</u>.
+2. User requests to schedule a lesson for a specific student in the list, giving the day, start time and duration.
+3. TutorTrack saves the lesson and shows the updated lesson slot.
 
     Use case ends.
 
 **Extensions**
 
-* 2a. The list is empty.
+* 1a. The list is empty.
 
   Use case ends.
 
-* 3a. The given index is invalid, or the person is not a student.
+* 2a. The given index is invalid, or the person is not a student.
 
-    * 3a1. TutorTrack shows an error message.
+    * 2a1. TutorTrack shows an error message.
 
       Use case resumes at step 2.
 
-* 3b. The day, start time or duration is invalid.
+* 2b. The day, start time or duration is invalid.
 
-    * 3b1. TutorTrack shows an error message.
+    * 2b1. TutorTrack shows an error message.
 
-      Use case resumes at step 3.
+      Use case resumes at step 2.
 
-* 3c. The lesson overlaps another student's lesson.
+* 2c. The lesson overlaps another student's lesson.
 
-    * 3c1. TutorTrack shows a clash error message.
+    * 2c1. TutorTrack shows a clash error message.
 
-      Use case resumes at step 3.
+      Use case resumes at step 2.
 
-* 3d. The lesson is less than 30 minutes from another lesson.
+* 2d. The lesson is less than 30 minutes from another lesson.
 
-    * 3d1. TutorTrack shows a travel-time warning.
+    * 2d1. TutorTrack shows a travel-time warning.
 
-      Use case resumes at step 4.
-
-*{More to be added}*
+      Use case resumes at step 2.
 
 ### Non-Functional Requirements
 
