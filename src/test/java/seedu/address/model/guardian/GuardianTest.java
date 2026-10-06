@@ -70,16 +70,31 @@ public class GuardianTest {
     }
 
     @Test
+    public void isSameGuardian_differentName_returnsFalse() {
+        Guardian guardian = new Guardian(NAME, PHONE, EMAIL, ADDRESS);
+        Guardian differentGuardian = new Guardian(new Name("Billie Lim"), PHONE, EMAIL, ADDRESS);
+
+        assertFalse(guardian.isSameGuardian(differentGuardian));
+    }
+
+    @Test
     public void equals() {
         Guardian guardian = new Guardian(NAME, PHONE, EMAIL, ADDRESS);
         Guardian copy = new Guardian(NAME, PHONE, EMAIL, ADDRESS);
-        Guardian differentGuardian = new Guardian(NAME, new Phone("98765432"), EMAIL, ADDRESS);
+        Guardian differentName = new Guardian(new Name("Billie Lim"), PHONE, EMAIL, ADDRESS);
+        Guardian differentPhone = new Guardian(NAME, new Phone("98765432"), EMAIL, ADDRESS);
+        Guardian differentEmail = new Guardian(NAME, PHONE, new Email("other@example.com"), ADDRESS);
+        Guardian differentAddress = new Guardian(NAME, PHONE, EMAIL, new Address("25 Happy Road"));
 
         assertTrue(guardian.equals(guardian));
         assertTrue(guardian.equals(copy));
         assertFalse(guardian.equals(null));
         assertFalse(guardian.equals(5));
-        assertFalse(guardian.equals(differentGuardian));
+        assertFalse(guardian.equals(differentName));
+        assertFalse(guardian.equals(differentPhone));
+        assertFalse(guardian.equals(differentEmail));
+        assertFalse(guardian.equals(differentAddress));
+        assertEquals(guardian.hashCode(), copy.hashCode());
     }
 
     @Test
