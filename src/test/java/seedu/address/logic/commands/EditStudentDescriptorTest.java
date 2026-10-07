@@ -88,7 +88,8 @@ public class EditStudentDescriptorTest {
         EditStudentDescriptor descriptor = new EditStudentDescriptor();
         descriptor.setSubjects(subjects("Mathematics"));
 
-        assertThrows(UnsupportedOperationException.class,
+        assertThrows(
+                UnsupportedOperationException.class,
                 () -> descriptor.getSubjects().orElseThrow().add(new Subject("Physics")));
     }
 
