@@ -1,6 +1,7 @@
 package seedu.address.logic.commands;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -81,6 +82,78 @@ public class EditStudentDescriptorTest {
         descriptor.setSubjects(Set.of());
 
         assertThrows(IllegalArgumentException.class, () -> descriptor.createEditedStudent(ORIGINAL));
+    }
+
+    @Test
+    public void settersAndGetters_allFields_returnSuppliedValues() {
+        EditStudentDescriptor descriptor = new EditStudentDescriptor();
+        Name name = new Name("Ben Tan");
+        Phone phone = new Phone("92345678");
+        Email email = new Email("ben@example.com");
+        Address address = new Address("25 Happy Road");
+        Level level = new Level("Secondary 3");
+        Set<Subject> subjects = subjects("Chemistry");
+
+        descriptor.setName(name);
+        descriptor.setPhone(phone);
+        descriptor.setEmail(email);
+        descriptor.setAddress(address);
+        descriptor.setLevel(level);
+        descriptor.setSubjects(subjects);
+
+        assertEquals(name, descriptor.getName().orElseThrow());
+        assertEquals(phone, descriptor.getPhone().orElseThrow());
+        assertEquals(email, descriptor.getEmail().orElseThrow());
+        assertEquals(address, descriptor.getAddress().orElseThrow());
+        assertEquals(level, descriptor.getLevel().orElseThrow());
+        assertEquals(subjects, descriptor.getSubjects().orElseThrow());
+    }
+
+    @Test
+    public void copyConstructor_copiesAllFields() {
+        EditStudentDescriptor original = new EditStudentDescriptor();
+        original.setName(new Name("Ben Tan"));
+        original.setPhone(new Phone("92345678"));
+        original.setEmail(new Email("ben@example.com"));
+        original.setAddress(new Address("25 Happy Road"));
+        original.setLevel(new Level("Secondary 3"));
+        original.setSubjects(subjects("Chemistry"));
+
+        EditStudentDescriptor copy = new EditStudentDescriptor(original);
+
+        assertEquals(original.getName(), copy.getName());
+        assertEquals(original.getPhone(), copy.getPhone());
+        assertEquals(original.getEmail(), copy.getEmail());
+        assertEquals(original.getAddress(), copy.getAddress());
+        assertEquals(original.getLevel(), copy.getLevel());
+        assertEquals(original.getSubjects(), copy.getSubjects());
+    }
+
+    @Test
+    public void copyConstructor_nullDescriptor_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> new EditStudentDescriptor(null));
+    }
+
+    @Test
+    public void createEditedStudent_nullStudent_throwsNullPointerException() {
+        EditStudentDescriptor descriptor = new EditStudentDescriptor();
+
+        assertThrows(NullPointerException.class, () -> descriptor.createEditedStudent(null));
+    }
+
+    @Test
+    public void isAnyFieldEdited_emptyDescriptor_returnsFalse() {
+        assertFalse(new EditStudentDescriptor().isAnyFieldEdited());
+    }
+
+    @Test
+    public void toString_containsEditedFields() {
+        EditStudentDescriptor descriptor = new EditStudentDescriptor();
+        descriptor.setName(new Name("Ben Tan"));
+
+        String result = descriptor.toString();
+
+        assertTrue(result.contains("name=Ben Tan"));
     }
 
     @Test
