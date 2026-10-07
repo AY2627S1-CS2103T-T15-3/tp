@@ -11,6 +11,8 @@ import javafx.collections.transformation.FilteredList;
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.model.person.Person;
+import seedu.address.model.student.Student;
+import seedu.address.model.guardian.Guardian;
 
 /**
  * Represents the in-memory model of the address book data.
@@ -108,6 +110,70 @@ public class ModelManager implements Model {
     public void updateFilteredPersonList(Predicate<Person> predicate) {
         requireNonNull(predicate);
         filteredPersons.setPredicate(predicate);
+    }
+
+    //=========== Student Operations ========================================================================
+
+    @Override
+    public boolean hasStudent(Student student) {
+        throw new UnsupportedOperationException("Student operations are not implemented yet");
+    }
+
+    @Override
+    public void deleteStudent(Student target) {
+        throw new UnsupportedOperationException("Student operations are not implemented yet");
+    }
+
+    @Override
+    public void addStudent(Student student) {
+        throw new UnsupportedOperationException("Student operations are not implemented yet");
+    }
+
+    @Override
+    public void setStudent(Student target, Student editedStudent) {
+        throw new UnsupportedOperationException("Student operations are not implemented yet");
+    }
+
+    @Override
+    public ObservableList<Student> getFilteredStudentList() {
+        throw new UnsupportedOperationException("Student operations are not implemented yet");
+    }
+
+    @Override
+    public void updateFilteredStudentList(Predicate<Student> predicate) {
+        throw new UnsupportedOperationException("Student operations are not implemented yet");
+    }
+
+    //=========== Guardian Operations ========================================================================
+
+    @Override
+    public boolean hasGuardian(Guardian guardian) {
+        throw new UnsupportedOperationException("Guardian operations are not implemented yet");
+    }
+
+    @Override
+    public void deleteGuardian(Guardian target) {
+        throw new UnsupportedOperationException("Guardian operations are not implemented yet");
+    }
+
+    @Override
+    public void addGuardian(Guardian guardian) {
+        throw new UnsupportedOperationException("Guardian operations are not implemented yet");
+    }
+
+    @Override
+    public void setGuardian(Guardian target, Guardian editedGuardian) {
+        throw new UnsupportedOperationException("Guardian operations are not implemented yet");
+    }
+
+    @Override
+    public ObservableList<Guardian> getFilteredGuardianList() {
+        throw new UnsupportedOperationException("Guardian operations are not implemented yet");
+    }
+
+    @Override
+    public void updateFilteredGuardianList(Predicate<Guardian> predicate) {
+        throw new UnsupportedOperationException("Guardian operations are not implemented yet");
     }
 
     @Override
