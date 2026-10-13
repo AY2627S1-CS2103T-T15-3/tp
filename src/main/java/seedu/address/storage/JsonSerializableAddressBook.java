@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.model.AddressBook;
 import seedu.address.model.ReadOnlyAddressBook;
+import seedu.address.model.guardian.Guardian;
 import seedu.address.model.person.Person;
 import seedu.address.model.student.Student;
 
@@ -21,22 +22,35 @@ import seedu.address.model.student.Student;
 class JsonSerializableAddressBook {
 
     public static final String MESSAGE_DUPLICATE_PERSON = "Persons list contains duplicate person(s).";
+    public static final String MESSAGE_DUPLICATE_GUARDIAN = "Guardians list contains duplicate guardian(s).";
 
     private final List<JsonAdaptedPerson> persons = new ArrayList<>();
     private final List<JsonAdaptedStudent> students = new ArrayList<>();
+    private final List<JsonAdaptedGuardian> guardians = new ArrayList<>();
 
     /**
      * Constructs a {@code JsonSerializableAddressBook} with the given persons.
      */
     @JsonCreator
     public JsonSerializableAddressBook(@JsonProperty("persons") List<JsonAdaptedPerson> persons,
-            @JsonProperty("students") List<JsonAdaptedStudent> students) {
+            @JsonProperty("students") List<JsonAdaptedStudent> students,
+            @JsonProperty("guardians") List<JsonAdaptedGuardian> guardians) {
         if (persons != null) {
             this.persons.addAll(persons);
         }
         if (students != null) {
             this.students.addAll(students);
         }
+        if (guardians != null) {
+            this.guardians.addAll(guardians);
+        }
+    }
+
+    /**
+     * Constructs serializable address-book data without guardians for compatibility with older callers.
+     */
+    public JsonSerializableAddressBook(List<JsonAdaptedPerson> persons, List<JsonAdaptedStudent> students) {
+        this(persons, students, null);
     }
 
     /**
@@ -47,6 +61,7 @@ class JsonSerializableAddressBook {
     public JsonSerializableAddressBook(ReadOnlyAddressBook source) {
         persons.addAll(source.getPersonList().stream().map(JsonAdaptedPerson::new).collect(Collectors.toList()));
         students.addAll(source.getStudentList().stream().map(JsonAdaptedStudent::new).collect(Collectors.toList()));
+        guardians.addAll(source.getGuardianList().stream().map(JsonAdaptedGuardian::new).collect(Collectors.toList()));
     }
 
     /**
@@ -69,6 +84,13 @@ class JsonSerializableAddressBook {
                 throw new IllegalValueException("Students list contains duplicate student(s).");
             }
             addressBook.addStudent(student);
+        }
+        for (JsonAdaptedGuardian jsonAdaptedGuardian : guardians) {
+            Guardian guardian = jsonAdaptedGuardian.toModelType();
+            if (addressBook.hasGuardian(guardian)) {
+                throw new IllegalValueException(MESSAGE_DUPLICATE_GUARDIAN);
+            }
+            addressBook.addGuardian(guardian);
         }
         return addressBook;
     }

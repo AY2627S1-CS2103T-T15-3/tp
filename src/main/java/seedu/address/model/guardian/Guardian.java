@@ -1,6 +1,7 @@
 package seedu.address.model.guardian;
 
 import static java.util.Objects.requireNonNull;
+import static seedu.address.commons.util.AppUtil.checkArgument;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.util.Locale;
@@ -28,6 +29,10 @@ public class Guardian {
      */
     public Guardian(Name name, Phone phone, Email email, Address address) {
         requireAllNonNull(name, phone, email, address);
+        checkArgument(GuardianFieldValidator.isValidName(name.fullName), GuardianFieldValidator.NAME_MESSAGE);
+        checkArgument(GuardianFieldValidator.isValidPhone(phone.value), GuardianFieldValidator.PHONE_MESSAGE);
+        checkArgument(GuardianFieldValidator.isValidEmail(email.value), GuardianFieldValidator.EMAIL_MESSAGE);
+        checkArgument(GuardianFieldValidator.isValidAddress(address.value), GuardianFieldValidator.ADDRESS_MESSAGE);
         this.name = name;
         this.phone = phone;
         this.email = email;

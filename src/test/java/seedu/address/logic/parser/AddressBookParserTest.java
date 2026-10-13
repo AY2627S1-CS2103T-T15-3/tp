@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.commands.AddCommand;
+import seedu.address.logic.commands.AddGuardianCommand;
 import seedu.address.logic.commands.AddStudentCommand;
 import seedu.address.logic.commands.ClearCommand;
 import seedu.address.logic.commands.Command;
@@ -46,6 +47,12 @@ public class AddressBookParserTest {
         Command command = parser.parseCommand("add-s n/Henry Tan p/91234567 e/henry@example.com "
                 + "a/12 ABCD Ave 3 l/JC 1 s/Mathematics");
         assertTrue(command instanceof AddStudentCommand);
+    }
+
+    @Test
+    public void parseCommand_addGuardian() throws Exception {
+        Command command = parser.parseCommand("add-g n/Ben Tan p/92345678 e/ben@example.com a/12 ABCD Ave 3");
+        assertTrue(command instanceof AddGuardianCommand);
     }
 
     @Test

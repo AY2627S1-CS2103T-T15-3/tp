@@ -24,6 +24,7 @@ public class ModelManager implements Model {
     private final UserPrefs userPrefs;
     private final FilteredList<Person> filteredPersons;
     private final FilteredList<Student> filteredStudents;
+    private final FilteredList<Guardian> filteredGuardians;
 
     /**
      * Initializes a ModelManager with the given addressBook and userPrefs.
@@ -37,6 +38,7 @@ public class ModelManager implements Model {
         this.userPrefs = new UserPrefs(userPrefs);
         filteredPersons = new FilteredList<>(this.addressBook.getPersonList());
         filteredStudents = new FilteredList<>(this.addressBook.getStudentList());
+        filteredGuardians = new FilteredList<>(this.addressBook.getGuardianList());
     }
 
     public ModelManager() {
@@ -156,32 +158,38 @@ public class ModelManager implements Model {
 
     @Override
     public boolean hasGuardian(Guardian guardian) {
-        throw new UnsupportedOperationException("Guardian operations are not implemented yet");
+        requireNonNull(guardian);
+        return addressBook.hasGuardian(guardian);
     }
 
     @Override
     public void deleteGuardian(Guardian target) {
-        throw new UnsupportedOperationException("Guardian operations are not implemented yet");
+        requireNonNull(target);
+        addressBook.removeGuardian(target);
     }
 
     @Override
     public void addGuardian(Guardian guardian) {
-        throw new UnsupportedOperationException("Guardian operations are not implemented yet");
+        requireNonNull(guardian);
+        addressBook.addGuardian(guardian);
+        updateFilteredGuardianList(PREDICATE_SHOW_ALL_GUARDIANS);
     }
 
     @Override
     public void setGuardian(Guardian target, Guardian editedGuardian) {
-        throw new UnsupportedOperationException("Guardian operations are not implemented yet");
+        requireAllNonNull(target, editedGuardian);
+        addressBook.setGuardian(target, editedGuardian);
     }
 
     @Override
     public ObservableList<Guardian> getFilteredGuardianList() {
-        throw new UnsupportedOperationException("Guardian operations are not implemented yet");
+        return filteredGuardians;
     }
 
     @Override
     public void updateFilteredGuardianList(Predicate<Guardian> predicate) {
-        throw new UnsupportedOperationException("Guardian operations are not implemented yet");
+        requireNonNull(predicate);
+        filteredGuardians.setPredicate(predicate);
     }
 
     @Override
@@ -198,7 +206,8 @@ public class ModelManager implements Model {
         return addressBook.equals(otherModelManager.addressBook)
                 && userPrefs.equals(otherModelManager.userPrefs)
                 && filteredPersons.equals(otherModelManager.filteredPersons)
-                && filteredStudents.equals(otherModelManager.filteredStudents);
+                && filteredStudents.equals(otherModelManager.filteredStudents)
+                && filteredGuardians.equals(otherModelManager.filteredGuardians);
     }
 
 }

@@ -9,6 +9,7 @@ import java.util.Set;
 import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.StringUtil;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.guardian.GuardianFieldValidator;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
@@ -225,5 +226,45 @@ public class ParserUtil {
             throw new ParseException(Subject.MESSAGE_CONSTRAINTS);
         }
         return new Subject(normalizedSubject);
+    }
+
+    /** Parses a guardian name using the add-g validation rules. */
+    public static Name parseGuardianName(String name) throws ParseException {
+        requireNonNull(name);
+        String normalizedName = GuardianFieldValidator.normalizeName(name);
+        if (!GuardianFieldValidator.isValidName(normalizedName)) {
+            throw new ParseException(GuardianFieldValidator.NAME_MESSAGE);
+        }
+        return Name.fromStudentValue(normalizedName);
+    }
+
+    /** Parses a guardian phone number using the add-g validation rules. */
+    public static Phone parseGuardianPhone(String phone) throws ParseException {
+        requireNonNull(phone);
+        String normalizedPhone = GuardianFieldValidator.normalizePhone(phone);
+        if (!GuardianFieldValidator.isValidPhone(normalizedPhone)) {
+            throw new ParseException(GuardianFieldValidator.PHONE_MESSAGE);
+        }
+        return Phone.fromStudentValue(normalizedPhone);
+    }
+
+    /** Parses a guardian email using the add-g validation rules. */
+    public static Email parseGuardianEmail(String email) throws ParseException {
+        requireNonNull(email);
+        String normalizedEmail = GuardianFieldValidator.normalizeEmail(email);
+        if (!GuardianFieldValidator.isValidEmail(normalizedEmail)) {
+            throw new ParseException(GuardianFieldValidator.EMAIL_MESSAGE);
+        }
+        return Email.fromStudentValue(normalizedEmail);
+    }
+
+    /** Parses a guardian address using the add-g validation rules. */
+    public static Address parseGuardianAddress(String address) throws ParseException {
+        requireNonNull(address);
+        String normalizedAddress = GuardianFieldValidator.normalizeAddress(address);
+        if (!GuardianFieldValidator.isValidAddress(normalizedAddress)) {
+            throw new ParseException(GuardianFieldValidator.ADDRESS_MESSAGE);
+        }
+        return Address.fromStudentValue(normalizedAddress);
     }
 }

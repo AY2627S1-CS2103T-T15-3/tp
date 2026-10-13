@@ -57,4 +57,17 @@ public class JsonSerializableAddressBookTest {
                 data::toModelType);
     }
 
+    @Test
+    public void toModelType_duplicateGuardians_throwsIllegalValueException() {
+        JsonAdaptedGuardian first = new JsonAdaptedGuardian("Ben Tan", "92345678", "ben@example.com",
+                "12 ABCD Ave 3");
+        JsonAdaptedGuardian duplicate = new JsonAdaptedGuardian("ben  tan", "92345678", "other@example.com",
+                "25 Happy Road");
+        JsonSerializableAddressBook data = new JsonSerializableAddressBook(java.util.List.of(),
+                java.util.List.of(), java.util.List.of(first, duplicate));
+
+        assertThrows(IllegalValueException.class, JsonSerializableAddressBook.MESSAGE_DUPLICATE_GUARDIAN,
+                data::toModelType);
+    }
+
 }

@@ -12,6 +12,7 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.guardian.GuardianFieldValidator;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
@@ -306,5 +307,29 @@ public class ParserUtilTest {
                 ParserUtil.parseStudentAddress(" 12 Main Street "));
         assertEquals(new Level("JC 1"), ParserUtil.parseStudentLevel(" JC 1 "));
         assertEquals(new Subject("Physics"), ParserUtil.parseStudentSubject(" Physics "));
+    }
+
+    @Test
+    public void parseGuardianFields_validValues_returnsFields() throws Exception {
+        assertEquals(Name.fromStudentValue("Billie O'Connor"),
+                ParserUtil.parseGuardianName(" Billie O'Connor "));
+        assertEquals(Phone.fromStudentValue("+6598765432"),
+                ParserUtil.parseGuardianPhone(" +6598765432 "));
+        assertEquals(Email.fromStudentValue("billie@example.com"),
+                ParserUtil.parseGuardianEmail(" billie@example.com "));
+        assertEquals(Address.fromStudentValue("25 Happy Road"),
+                ParserUtil.parseGuardianAddress(" 25 Happy Road "));
+    }
+
+    @Test
+    public void parseGuardianFields_invalidValues_throwsParseException() {
+        assertThrows(ParseException.class, GuardianFieldValidator.NAME_MESSAGE, () ->
+                ParserUtil.parseGuardianName("Ben&Tan"));
+        assertThrows(ParseException.class, GuardianFieldValidator.PHONE_MESSAGE, () ->
+                ParserUtil.parseGuardianPhone("12 345"));
+        assertThrows(ParseException.class, GuardianFieldValidator.EMAIL_MESSAGE, () ->
+                ParserUtil.parseGuardianEmail("ben@example"));
+        assertThrows(ParseException.class, GuardianFieldValidator.ADDRESS_MESSAGE, () ->
+                ParserUtil.parseGuardianAddress("25 Happy Road @"));
     }
 }
