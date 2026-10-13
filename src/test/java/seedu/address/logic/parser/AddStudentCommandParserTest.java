@@ -70,6 +70,13 @@ public class AddStudentCommandParserTest {
     }
 
     @Test
+    public void parse_textBeforeFirstPrefix_failure() {
+        assertParseFailure(parser,
+                "unexpected n/Henry Tan p/91234567 e/henry@example.com a/12 ABCD Ave 3 l/Secondary 3 s/Mathematics",
+                "Invalid command format.\n" + AddStudentCommand.MESSAGE_USAGE);
+    }
+
+    @Test
     public void parse_invalidValues_failure() {
         assertParseFailure(parser,
                 "n/Henry&Tan p/91234567 e/henry@example.com a/12 ABCD Ave 3 l/Secondary 3 s/Mathematics",

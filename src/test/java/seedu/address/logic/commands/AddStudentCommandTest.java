@@ -56,6 +56,24 @@ public class AddStudentCommandTest {
         assertEquals(java.util.List.of(HENRY, sameName), model.getFilteredStudentList());
     }
 
+    @Test
+    public void equals_sameStudent_returnsTrue() {
+        AddStudentCommand command = new AddStudentCommand(HENRY);
+        assertEquals(command, command);
+        assertEquals(command, new AddStudentCommand(HENRY));
+        assertEquals(command.toString(), new AddStudentCommand(HENRY).toString());
+    }
+
+    @Test
+    public void equals_differentObject_returnsFalse() {
+        AddStudentCommand command = new AddStudentCommand(HENRY);
+        Student differentStudent = student("Lucy Lim", "98765432", "lucy@example.com", "25 Happy Road", "JC 1",
+                "Physics");
+        assertEquals(false, command.equals(null));
+        assertEquals(false, command.equals(5));
+        assertEquals(false, command.equals(new AddStudentCommand(differentStudent)));
+    }
+
     private static Student student(String name, String phone, String email, String address, String level,
             String... subjects) {
         Set<Subject> subjectSet = new LinkedHashSet<>();
