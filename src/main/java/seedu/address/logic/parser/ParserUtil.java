@@ -15,6 +15,7 @@ import seedu.address.model.person.Name;
 import seedu.address.model.person.Phone;
 import seedu.address.model.student.Level;
 import seedu.address.model.student.Subject;
+import seedu.address.model.student.StudentFieldValidator;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -164,5 +165,65 @@ public class ParserUtil {
             subjectSet.add(parseSubject(subjectName));
         }
         return subjectSet;
+    }
+
+    /** Parses a student name using the add-s validation rules. */
+    public static Name parseStudentName(String name) throws ParseException {
+        requireNonNull(name);
+        String normalizedName = StudentFieldValidator.normalizeName(name);
+        if (!StudentFieldValidator.isValidName(normalizedName)) {
+            throw new ParseException(StudentFieldValidator.NAME_MESSAGE);
+        }
+        return Name.fromStudentValue(normalizedName);
+    }
+
+    /** Parses a student phone number using the add-s validation rules. */
+    public static Phone parseStudentPhone(String phone) throws ParseException {
+        requireNonNull(phone);
+        String normalizedPhone = StudentFieldValidator.normalizePhone(phone);
+        if (!StudentFieldValidator.isValidPhone(normalizedPhone)) {
+            throw new ParseException(StudentFieldValidator.PHONE_MESSAGE);
+        }
+        return Phone.fromStudentValue(normalizedPhone);
+    }
+
+    /** Parses a student email using the add-s validation rules. */
+    public static Email parseStudentEmail(String email) throws ParseException {
+        requireNonNull(email);
+        String normalizedEmail = StudentFieldValidator.normalizeEmail(email);
+        if (!StudentFieldValidator.isValidEmail(normalizedEmail)) {
+            throw new ParseException(StudentFieldValidator.EMAIL_MESSAGE);
+        }
+        return Email.fromStudentValue(normalizedEmail);
+    }
+
+    /** Parses a student address using the add-s validation rules. */
+    public static Address parseStudentAddress(String address) throws ParseException {
+        requireNonNull(address);
+        String normalizedAddress = StudentFieldValidator.normalizeAddress(address);
+        if (!StudentFieldValidator.isValidAddress(normalizedAddress)) {
+            throw new ParseException(StudentFieldValidator.ADDRESS_MESSAGE);
+        }
+        return Address.fromStudentValue(normalizedAddress);
+    }
+
+    /** Parses a student academic level using the add-s validation rules. */
+    public static Level parseStudentLevel(String level) throws ParseException {
+        requireNonNull(level);
+        String normalizedLevel = Level.normalize(level);
+        if (!StudentFieldValidator.isValidLevel(normalizedLevel)) {
+            throw new ParseException(Level.MESSAGE_CONSTRAINTS);
+        }
+        return new Level(normalizedLevel);
+    }
+
+    /** Parses a student subject using the add-s validation rules. */
+    public static Subject parseStudentSubject(String subject) throws ParseException {
+        requireNonNull(subject);
+        String normalizedSubject = Subject.normalize(subject);
+        if (!StudentFieldValidator.isValidSubject(normalizedSubject)) {
+            throw new ParseException(Subject.MESSAGE_CONSTRAINTS);
+        }
+        return new Subject(normalizedSubject);
     }
 }

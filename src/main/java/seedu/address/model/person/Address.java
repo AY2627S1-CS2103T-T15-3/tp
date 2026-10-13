@@ -31,6 +31,19 @@ public class Address {
     }
 
     /**
+     * Creates an address that has already been validated by a student-specific validator.
+     */
+    public static Address fromStudentValue(String address) {
+        requireNonNull(address);
+        return new Address(address, true);
+    }
+
+    private Address(String address, boolean alreadyValidated) {
+        requireNonNull(address);
+        value = address;
+    }
+
+    /**
      * Returns true if a given string is a valid address.
      */
     public static boolean isValidAddress(String test) {

@@ -1,0 +1,45 @@
+package seedu.address.ui;
+
+import java.util.Comparator;
+
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.Region;
+import seedu.address.model.student.Student;
+
+/** UI component that displays a student. */
+public class StudentCard extends UiPart<Region> {
+    private static final String FXML = "StudentListCard.fxml";
+
+    public final Student student;
+
+    @FXML
+    private Label name;
+    @FXML
+    private Label id;
+    @FXML
+    private Label phone;
+    @FXML
+    private Label address;
+    @FXML
+    private Label email;
+    @FXML
+    private Label level;
+    @FXML
+    private FlowPane subjects;
+
+    public StudentCard(Student student, int displayedIndex) {
+        super(FXML);
+        this.student = student;
+        id.setText(displayedIndex + ". ");
+        name.setText(student.getName().fullName);
+        phone.setText("Phone: " + student.getPhone().value);
+        email.setText("Email: " + student.getEmail().value);
+        address.setText("Address: " + student.getAddress().value);
+        level.setText("Level: " + student.getLevel().value);
+        student.getSubjects().stream()
+                .sorted(Comparator.comparing(subject -> subject.value))
+                .forEach(subject -> subjects.getChildren().add(new Label(subject.value)));
+    }
+}

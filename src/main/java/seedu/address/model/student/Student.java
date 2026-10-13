@@ -46,6 +46,10 @@ public class Student {
     public Student(Name name, Phone phone, Email email, Address address, Level level, Set<Subject> subjects) {
         requireAllNonNull(name, phone, email, address, level, subjects);
         requireAllNonNull(subjects);
+        checkArgument(StudentFieldValidator.isValidName(name.fullName), StudentFieldValidator.NAME_MESSAGE);
+        checkArgument(StudentFieldValidator.isValidPhone(phone.value), StudentFieldValidator.PHONE_MESSAGE);
+        checkArgument(StudentFieldValidator.isValidEmail(email.value), StudentFieldValidator.EMAIL_MESSAGE);
+        checkArgument(StudentFieldValidator.isValidAddress(address.value), StudentFieldValidator.ADDRESS_MESSAGE);
         checkArgument(!subjects.isEmpty(), MESSAGE_NO_SUBJECTS);
         this.name = name;
         this.phone = phone;

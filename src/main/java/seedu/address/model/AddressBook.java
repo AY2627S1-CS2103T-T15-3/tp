@@ -8,6 +8,8 @@ import javafx.collections.ObservableList;
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
+import seedu.address.model.student.Student;
+import seedu.address.model.student.UniqueStudentList;
 
 /**
  * Wraps all data at the address-book level.
@@ -16,6 +18,7 @@ import seedu.address.model.person.UniquePersonList;
 public class AddressBook implements ReadOnlyAddressBook {
 
     private final UniquePersonList persons = new UniquePersonList();
+    private final UniqueStudentList students = new UniqueStudentList();
 
     public AddressBook() {}
 
@@ -44,6 +47,7 @@ public class AddressBook implements ReadOnlyAddressBook {
         requireNonNull(newData);
 
         setPersons(newData.getPersonList());
+        setStudents(newData.getStudentList());
     }
 
     //// person-level operations
@@ -83,6 +87,30 @@ public class AddressBook implements ReadOnlyAddressBook {
         persons.remove(key);
     }
 
+    //// student-level operations
+
+    public boolean hasStudent(Student student) {
+        requireNonNull(student);
+        return students.contains(student);
+    }
+
+    public void addStudent(Student student) {
+        students.add(student);
+    }
+
+    public void setStudent(Student target, Student editedStudent) {
+        requireNonNull(editedStudent);
+        students.setStudent(target, editedStudent);
+    }
+
+    public void removeStudent(Student student) {
+        students.remove(student);
+    }
+
+    public void setStudents(List<Student> students) {
+        this.students.setStudents(students);
+    }
+
     //// util methods
 
     @Override
@@ -98,6 +126,11 @@ public class AddressBook implements ReadOnlyAddressBook {
     }
 
     @Override
+    public ObservableList<Student> getStudentList() {
+        return students.asUnmodifiableObservableList();
+    }
+
+    @Override
     public boolean equals(Object other) {
         if (other == this) {
             return true;
@@ -108,7 +141,8 @@ public class AddressBook implements ReadOnlyAddressBook {
             return false;
         }
 
-        return persons.equals(otherAddressBook.persons);
+        return persons.equals(otherAddressBook.persons)
+                && students.equals(otherAddressBook.students);
     }
 
     @Override
