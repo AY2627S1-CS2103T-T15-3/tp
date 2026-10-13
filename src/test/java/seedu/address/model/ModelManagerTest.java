@@ -14,6 +14,7 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.commons.core.GuiSettings;
+import seedu.address.model.guardian.Guardian;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
@@ -108,6 +109,37 @@ public class ModelManagerTest {
     }
 
     @Test
+    public void guardianOperations_addFilterSetAndDelete_success() {
+        Guardian guardian = guardian("Ben Tan", "92345678", "ben@example.com");
+        Guardian editedGuardian = guardian("Ben Tan", "92345678", "other@example.com");
+
+        assertFalse(modelManager.hasGuardian(guardian));
+        modelManager.addGuardian(guardian);
+        assertTrue(modelManager.hasGuardian(guardian));
+        assertEquals(List.of(guardian), modelManager.getFilteredGuardianList());
+
+        modelManager.updateFilteredGuardianList(candidate -> false);
+        assertTrue(modelManager.getFilteredGuardianList().isEmpty());
+        modelManager.updateFilteredGuardianList(Model.PREDICATE_SHOW_ALL_GUARDIANS);
+
+        modelManager.setGuardian(guardian, editedGuardian);
+        assertEquals(List.of(editedGuardian), modelManager.getFilteredGuardianList());
+        modelManager.deleteGuardian(editedGuardian);
+        assertTrue(modelManager.getFilteredGuardianList().isEmpty());
+    }
+
+    @Test
+    public void guardianOperations_nullInputs_throwNullPointerException() {
+        Guardian guardian = guardian("Ben Tan", "92345678", "ben@example.com");
+        assertThrows(NullPointerException.class, () -> modelManager.hasGuardian(null));
+        assertThrows(NullPointerException.class, () -> modelManager.addGuardian(null));
+        assertThrows(NullPointerException.class, () -> modelManager.deleteGuardian(null));
+        assertThrows(NullPointerException.class, () -> modelManager.setGuardian(null, guardian));
+        assertThrows(NullPointerException.class, () -> modelManager.setGuardian(guardian, null));
+        assertThrows(NullPointerException.class, () -> modelManager.updateFilteredGuardianList(null));
+    }
+
+    @Test
     public void getFilteredPersonList_modifyList_throwsUnsupportedOperationException() {
         assertThrows(UnsupportedOperationException.class, () -> modelManager.getFilteredPersonList().remove(0));
     }
@@ -152,5 +184,10 @@ public class ModelManagerTest {
     private static Student student(String name, String phone, String email) {
         return new Student(new Name(name), new Phone(phone), new Email(email), new Address("12 Main Street"),
                 new Level("JC 1"), Set.of(new Subject("Mathematics")));
+    }
+
+    private static Guardian guardian(String name, String phone, String email) {
+        return new Guardian(Name.fromStudentValue(name), Phone.fromStudentValue(phone),
+                Email.fromStudentValue(email), Address.fromStudentValue("12 Main Street"));
     }
 }

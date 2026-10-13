@@ -92,6 +92,11 @@ public class LogicManagerTest {
         assertEquals(model.getFilteredStudentList(), logic.getFilteredStudentList());
     }
 
+    @Test
+    public void getFilteredGuardianList_returnsModelGuardianList() {
+        assertEquals(model.getFilteredGuardianList(), logic.getFilteredGuardianList());
+    }
+
     /**
      * Executes the command and confirms that
      * - no exceptions are thrown <br>

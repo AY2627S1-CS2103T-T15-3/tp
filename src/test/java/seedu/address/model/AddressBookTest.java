@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import seedu.address.model.guardian.Guardian;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.student.Level;
@@ -31,6 +32,7 @@ public class AddressBookTest {
     public void constructor() {
         assertEquals(List.of(), addressBook.getPersonList());
         assertEquals(List.of(), new AddressBookStub(List.of()).getStudentList());
+        assertEquals(List.of(), new AddressBookStub(List.of()).getGuardianList());
     }
 
     @Test
@@ -126,6 +128,44 @@ public class AddressBookTest {
     }
 
     @Test
+    public void guardianOperations_addSetRemoveAndReset_success() {
+        Guardian guardian = guardian("Ben Tan", "92345678", "ben@example.com");
+        Guardian editedGuardian = guardian("Ben Tan", "92345678", "other@example.com");
+
+        assertFalse(addressBook.hasGuardian(guardian));
+        addressBook.addGuardian(guardian);
+        assertTrue(addressBook.hasGuardian(guardian));
+        assertEquals(List.of(guardian), addressBook.getGuardianList());
+
+        addressBook.setGuardian(guardian, editedGuardian);
+        assertEquals(List.of(editedGuardian), addressBook.getGuardianList());
+        addressBook.removeGuardian(editedGuardian);
+        assertTrue(addressBook.getGuardianList().isEmpty());
+
+        addressBook.setGuardians(List.of(guardian));
+        assertEquals(List.of(guardian), addressBook.getGuardianList());
+    }
+
+    @Test
+    public void guardianOperations_invalidInputs_throwExceptions() {
+        Guardian guardian = guardian("Ben Tan", "92345678", "ben@example.com");
+        assertThrows(NullPointerException.class, () -> addressBook.hasGuardian(null));
+        assertThrows(NullPointerException.class, () -> addressBook.setGuardian(guardian, null));
+        assertThrows(UnsupportedOperationException.class, () -> addressBook.getGuardianList().remove(0));
+    }
+
+    @Test
+    public void equals_guardianData_returnsExpectedResult() {
+        Guardian guardian = guardian("Ben Tan", "92345678", "ben@example.com");
+        addressBook.addGuardian(guardian);
+        AddressBook copy = new AddressBook();
+        copy.addGuardian(guardian);
+
+        assertTrue(addressBook.equals(copy));
+        assertEquals(addressBook.hashCode(), copy.hashCode());
+    }
+
+    @Test
     public void toStringMethod() {
         String expected = AddressBook.class.getCanonicalName() + "{persons=" + addressBook.getPersonList() + "}";
         assertEquals(expected, addressBook.toString());
@@ -151,6 +191,13 @@ public class AddressBookTest {
         return new Student(new seedu.address.model.person.Name(name), new seedu.address.model.person.Phone(phone),
                 new seedu.address.model.person.Email(email), new seedu.address.model.person.Address("12 Main Street"),
                 new Level("JC 1"), java.util.Set.of(new Subject("Mathematics")));
+    }
+
+    private static Guardian guardian(String name, String phone, String email) {
+        return new Guardian(seedu.address.model.person.Name.fromStudentValue(name),
+                seedu.address.model.person.Phone.fromStudentValue(phone),
+                seedu.address.model.person.Email.fromStudentValue(email),
+                seedu.address.model.person.Address.fromStudentValue("12 Main Street"));
     }
 
 }

@@ -18,6 +18,9 @@ public interface Model {
     /** Predicate that always evaluates to true for students. */
     Predicate<Student> PREDICATE_SHOW_ALL_STUDENTS = unused -> true;
 
+    /** Predicate that always evaluates to true for guardians. */
+    Predicate<Guardian> PREDICATE_SHOW_ALL_GUARDIANS = unused -> true;
+
     /**
      * Returns the user prefs.
      */

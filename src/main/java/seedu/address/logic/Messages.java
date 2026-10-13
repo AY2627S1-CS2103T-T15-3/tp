@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import seedu.address.logic.parser.Prefix;
+import seedu.address.model.guardian.Guardian;
 import seedu.address.model.person.Person;
 import seedu.address.model.student.Student;
 
@@ -64,6 +65,12 @@ public class Messages {
                 .map(subject -> subject.toString())
                 .collect(Collectors.joining(", ")));
         return builder.toString();
+    }
+
+    /** Formats a guardian for display to the user. */
+    public static String format(Guardian guardian) {
+        return guardian.getName() + "; Phone: " + guardian.getPhone()
+                + "; Email: " + guardian.getEmail() + "; Address: " + guardian.getAddress();
     }
 
 }

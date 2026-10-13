@@ -6,6 +6,8 @@ import java.util.List;
 
 import javafx.collections.ObservableList;
 import seedu.address.commons.util.ToStringBuilder;
+import seedu.address.model.guardian.Guardian;
+import seedu.address.model.guardian.UniqueGuardianList;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.student.Student;
@@ -19,6 +21,7 @@ public class AddressBook implements ReadOnlyAddressBook {
 
     private final UniquePersonList persons = new UniquePersonList();
     private final UniqueStudentList students = new UniqueStudentList();
+    private final UniqueGuardianList guardians = new UniqueGuardianList();
 
     public AddressBook() {}
 
@@ -48,6 +51,7 @@ public class AddressBook implements ReadOnlyAddressBook {
 
         setPersons(newData.getPersonList());
         setStudents(newData.getStudentList());
+        setGuardians(newData.getGuardianList());
     }
 
     //// person-level operations
@@ -127,6 +131,35 @@ public class AddressBook implements ReadOnlyAddressBook {
         this.students.setStudents(students);
     }
 
+    //// guardian-level operations
+
+    /** Returns true if a guardian with the same identity exists in the address book. */
+    public boolean hasGuardian(Guardian guardian) {
+        requireNonNull(guardian);
+        return guardians.contains(guardian);
+    }
+
+    /** Adds a guardian to the address book. */
+    public void addGuardian(Guardian guardian) {
+        guardians.add(guardian);
+    }
+
+    /** Replaces the given guardian with {@code editedGuardian}. */
+    public void setGuardian(Guardian target, Guardian editedGuardian) {
+        requireNonNull(editedGuardian);
+        guardians.setGuardian(target, editedGuardian);
+    }
+
+    /** Removes {@code guardian} from the address book. */
+    public void removeGuardian(Guardian guardian) {
+        guardians.remove(guardian);
+    }
+
+    /** Replaces the contents of the guardian list with {@code guardians}. */
+    public void setGuardians(List<Guardian> guardians) {
+        this.guardians.setGuardians(guardians);
+    }
+
     //// util methods
 
     @Override
@@ -147,6 +180,11 @@ public class AddressBook implements ReadOnlyAddressBook {
     }
 
     @Override
+    public ObservableList<Guardian> getGuardianList() {
+        return guardians.asUnmodifiableObservableList();
+    }
+
+    @Override
     public boolean equals(Object other) {
         if (other == this) {
             return true;
@@ -158,11 +196,12 @@ public class AddressBook implements ReadOnlyAddressBook {
         }
 
         return persons.equals(otherAddressBook.persons)
-                && students.equals(otherAddressBook.students);
+                && students.equals(otherAddressBook.students)
+                && guardians.equals(otherAddressBook.guardians);
     }
 
     @Override
     public int hashCode() {
-        return persons.hashCode();
+        return java.util.Objects.hash(persons, students, guardians);
     }
 }
