@@ -23,6 +23,7 @@ public class ModelManager implements Model {
     private final AddressBook addressBook;
     private final UserPrefs userPrefs;
     private final FilteredList<Person> filteredPersons;
+    private final FilteredList<Student> filteredStudents;
 
     /**
      * Initializes a ModelManager with the given addressBook and userPrefs.
@@ -35,6 +36,7 @@ public class ModelManager implements Model {
         this.addressBook = new AddressBook(addressBook);
         this.userPrefs = new UserPrefs(userPrefs);
         filteredPersons = new FilteredList<>(this.addressBook.getPersonList());
+        filteredStudents = new FilteredList<>(this.addressBook.getStudentList());
     }
 
     public ModelManager() {
@@ -116,32 +118,38 @@ public class ModelManager implements Model {
 
     @Override
     public boolean hasStudent(Student student) {
-        throw new UnsupportedOperationException("Student operations are not implemented yet");
+        requireNonNull(student);
+        return addressBook.hasStudent(student);
     }
 
     @Override
     public void deleteStudent(Student target) {
-        throw new UnsupportedOperationException("Student operations are not implemented yet");
+        requireNonNull(target);
+        addressBook.removeStudent(target);
     }
 
     @Override
     public void addStudent(Student student) {
-        throw new UnsupportedOperationException("Student operations are not implemented yet");
+        requireNonNull(student);
+        addressBook.addStudent(student);
+        updateFilteredStudentList(PREDICATE_SHOW_ALL_STUDENTS);
     }
 
     @Override
     public void setStudent(Student target, Student editedStudent) {
-        throw new UnsupportedOperationException("Student operations are not implemented yet");
+        requireAllNonNull(target, editedStudent);
+        addressBook.setStudent(target, editedStudent);
     }
 
     @Override
     public ObservableList<Student> getFilteredStudentList() {
-        throw new UnsupportedOperationException("Student operations are not implemented yet");
+        return filteredStudents;
     }
 
     @Override
     public void updateFilteredStudentList(Predicate<Student> predicate) {
-        throw new UnsupportedOperationException("Student operations are not implemented yet");
+        requireNonNull(predicate);
+        filteredStudents.setPredicate(predicate);
     }
 
     //=========== Guardian Operations ========================================================================
@@ -189,7 +197,8 @@ public class ModelManager implements Model {
 
         return addressBook.equals(otherModelManager.addressBook)
                 && userPrefs.equals(otherModelManager.userPrefs)
-                && filteredPersons.equals(otherModelManager.filteredPersons);
+                && filteredPersons.equals(otherModelManager.filteredPersons)
+                && filteredStudents.equals(otherModelManager.filteredStudents);
     }
 
 }

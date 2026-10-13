@@ -288,4 +288,23 @@ public class ParserUtilTest {
 
         assertEquals(Set.of(new Subject(VALID_SUBJECT_1)), actualSubjectSet);
     }
+
+    @Test
+    public void parseStudentFields_invalidValues_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseStudentAddress("12 Main Street @"));
+        assertThrows(ParseException.class, () -> ParserUtil.parseStudentLevel("JC-1"));
+        assertThrows(ParseException.class, () -> ParserUtil.parseStudentSubject("Maths & Physics"));
+    }
+
+    @Test
+    public void parseStudentFields_validValues_returnsStudentFields() throws Exception {
+        assertEquals(Name.fromStudentValue("Mary-Jane O'Connor"),
+                ParserUtil.parseStudentName(" Mary-Jane O'Connor "));
+        assertEquals(Phone.fromStudentValue("+6591234567"), ParserUtil.parseStudentPhone(" +6591234567 "));
+        assertEquals(Email.fromStudentValue("mary@example.com"), ParserUtil.parseStudentEmail(" mary@example.com "));
+        assertEquals(Address.fromStudentValue("12 Main Street"),
+                ParserUtil.parseStudentAddress(" 12 Main Street "));
+        assertEquals(new Level("JC 1"), ParserUtil.parseStudentLevel(" JC 1 "));
+        assertEquals(new Subject("Physics"), ParserUtil.parseStudentSubject(" Physics "));
+    }
 }

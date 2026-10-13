@@ -18,6 +18,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
+import seedu.address.model.student.Level;
+import seedu.address.model.student.Student;
+import seedu.address.model.student.Subject;
 import seedu.address.testutil.PersonBuilder;
 
 public class AddressBookTest {
@@ -27,6 +30,7 @@ public class AddressBookTest {
     @Test
     public void constructor() {
         assertEquals(List.of(), addressBook.getPersonList());
+        assertEquals(List.of(), new AddressBookStub(List.of()).getStudentList());
     }
 
     @Test
@@ -82,6 +86,46 @@ public class AddressBookTest {
     }
 
     @Test
+    public void studentOperations_addSetRemoveAndReset_success() {
+        Student student = student("Henry Tan", "91234567", "henry@example.com");
+        Student editedStudent = student("Henry Tan", "91234567", "other@example.com");
+
+        assertFalse(addressBook.hasStudent(student));
+        addressBook.addStudent(student);
+        assertTrue(addressBook.hasStudent(student));
+        assertEquals(List.of(student), addressBook.getStudentList());
+
+        addressBook.setStudent(student, editedStudent);
+        assertEquals(List.of(editedStudent), addressBook.getStudentList());
+        addressBook.removeStudent(editedStudent);
+        assertTrue(addressBook.getStudentList().isEmpty());
+
+        addressBook.setStudents(List.of(student));
+        assertEquals(List.of(student), addressBook.getStudentList());
+    }
+
+    @Test
+    public void studentOperations_invalidInputs_throwExceptions() {
+        Student student = student("Henry Tan", "91234567", "henry@example.com");
+        assertThrows(NullPointerException.class, () -> addressBook.hasStudent(null));
+        assertThrows(NullPointerException.class, () -> addressBook.setStudent(student, null));
+        assertThrows(UnsupportedOperationException.class, () -> addressBook.getStudentList().remove(0));
+    }
+
+    @Test
+    public void equals_studentDataAndDifferentTypes_returnsExpectedResult() {
+        Student student = student("Henry Tan", "91234567", "henry@example.com");
+        addressBook.addStudent(student);
+        AddressBook copy = new AddressBook();
+        copy.addStudent(student);
+
+        assertTrue(addressBook.equals(addressBook));
+        assertTrue(addressBook.equals(copy));
+        assertFalse(addressBook.equals(5));
+        assertEquals(addressBook.hashCode(), copy.hashCode());
+    }
+
+    @Test
     public void toStringMethod() {
         String expected = AddressBook.class.getCanonicalName() + "{persons=" + addressBook.getPersonList() + "}";
         assertEquals(expected, addressBook.toString());
@@ -101,6 +145,12 @@ public class AddressBookTest {
         public ObservableList<Person> getPersonList() {
             return persons;
         }
+    }
+
+    private static Student student(String name, String phone, String email) {
+        return new Student(new seedu.address.model.person.Name(name), new seedu.address.model.person.Phone(phone),
+                new seedu.address.model.person.Email(email), new seedu.address.model.person.Address("12 Main Street"),
+                new Level("JC 1"), java.util.Set.of(new Subject("Mathematics")));
     }
 
 }

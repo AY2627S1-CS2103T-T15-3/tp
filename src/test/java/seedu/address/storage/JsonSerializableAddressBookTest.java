@@ -44,4 +44,17 @@ public class JsonSerializableAddressBookTest {
                 dataFromFile::toModelType);
     }
 
+    @Test
+    public void toModelType_duplicateStudents_throwsIllegalValueException() {
+        JsonAdaptedStudent first = new JsonAdaptedStudent("Henry Tan", "91234567", "henry@example.com",
+                "12 ABCD Ave 3", "JC 1", java.util.List.of("Mathematics"));
+        JsonAdaptedStudent duplicate = new JsonAdaptedStudent("henry  tan", "91234567", "other@example.com",
+                "25 Happy Road", "JC 1", java.util.List.of("Physics"));
+        JsonSerializableAddressBook data = new JsonSerializableAddressBook(java.util.List.of(),
+                java.util.List.of(first, duplicate));
+
+        assertThrows(IllegalValueException.class, "Students list contains duplicate student(s).",
+                data::toModelType);
+    }
+
 }

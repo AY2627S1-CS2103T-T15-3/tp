@@ -9,11 +9,19 @@ import static seedu.address.testutil.TypicalPersons.ALICE;
 import static seedu.address.testutil.TypicalPersons.BENSON;
 
 import java.util.List;
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
 import seedu.address.commons.core.GuiSettings;
+import seedu.address.model.person.Address;
+import seedu.address.model.person.Email;
+import seedu.address.model.person.Name;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
+import seedu.address.model.person.Phone;
+import seedu.address.model.student.Level;
+import seedu.address.model.student.Student;
+import seedu.address.model.student.Subject;
 import seedu.address.testutil.AddressBookBuilder;
 
 public class ModelManagerTest {
@@ -69,6 +77,37 @@ public class ModelManagerTest {
     }
 
     @Test
+    public void studentOperations_addFilterSetAndDelete_success() {
+        Student student = student("Henry Tan", "91234567", "henry@example.com");
+        Student editedStudent = student("Henry Tan", "91234567", "other@example.com");
+
+        assertFalse(modelManager.hasStudent(student));
+        modelManager.addStudent(student);
+        assertTrue(modelManager.hasStudent(student));
+        assertEquals(List.of(student), modelManager.getFilteredStudentList());
+
+        modelManager.updateFilteredStudentList(candidate -> false);
+        assertTrue(modelManager.getFilteredStudentList().isEmpty());
+        modelManager.updateFilteredStudentList(Model.PREDICATE_SHOW_ALL_STUDENTS);
+
+        modelManager.setStudent(student, editedStudent);
+        assertEquals(List.of(editedStudent), modelManager.getFilteredStudentList());
+        modelManager.deleteStudent(editedStudent);
+        assertTrue(modelManager.getFilteredStudentList().isEmpty());
+    }
+
+    @Test
+    public void studentOperations_nullInputs_throwNullPointerException() {
+        Student student = student("Henry Tan", "91234567", "henry@example.com");
+        assertThrows(NullPointerException.class, () -> modelManager.hasStudent(null));
+        assertThrows(NullPointerException.class, () -> modelManager.addStudent(null));
+        assertThrows(NullPointerException.class, () -> modelManager.deleteStudent(null));
+        assertThrows(NullPointerException.class, () -> modelManager.setStudent(null, student));
+        assertThrows(NullPointerException.class, () -> modelManager.setStudent(student, null));
+        assertThrows(NullPointerException.class, () -> modelManager.updateFilteredStudentList(null));
+    }
+
+    @Test
     public void getFilteredPersonList_modifyList_throwsUnsupportedOperationException() {
         assertThrows(UnsupportedOperationException.class, () -> modelManager.getFilteredPersonList().remove(0));
     }
@@ -108,5 +147,10 @@ public class ModelManagerTest {
         UserPrefs differentUserPrefs = new UserPrefs();
         differentUserPrefs.setGuiSettings(new GuiSettings(1, 2, 3, 4));
         assertFalse(modelManager.equals(new ModelManager(addressBook, differentUserPrefs)));
+    }
+
+    private static Student student(String name, String phone, String email) {
+        return new Student(new Name(name), new Phone(phone), new Email(email), new Address("12 Main Street"),
+                new Level("JC 1"), Set.of(new Subject("Mathematics")));
     }
 }
