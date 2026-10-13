@@ -2,6 +2,7 @@ package seedu.address.logic.commands;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -154,6 +155,29 @@ public class EditStudentDescriptorTest {
         String result = descriptor.toString();
 
         assertTrue(result.contains("name=Ben Tan"));
+    }
+
+    @Test
+    public void equalsAndHashCode_sameFields_areEqual() {
+        EditStudentDescriptor descriptor = new EditStudentDescriptor();
+        descriptor.setPhone(new Phone("98765432"));
+        EditStudentDescriptor sameDescriptor = new EditStudentDescriptor(descriptor);
+
+        assertEquals(descriptor, descriptor);
+        assertEquals(descriptor, sameDescriptor);
+        assertEquals(descriptor.hashCode(), sameDescriptor.hashCode());
+        assertNotEquals(descriptor, null);
+        assertNotEquals(descriptor, "not a descriptor");
+    }
+
+    @Test
+    public void equals_differentFields_areNotEqual() {
+        EditStudentDescriptor descriptor = new EditStudentDescriptor();
+        descriptor.setPhone(new Phone("98765432"));
+        EditStudentDescriptor differentDescriptor = new EditStudentDescriptor();
+        differentDescriptor.setLevel(new Level("JC 2"));
+
+        assertNotEquals(descriptor, differentDescriptor);
     }
 
     @Test
