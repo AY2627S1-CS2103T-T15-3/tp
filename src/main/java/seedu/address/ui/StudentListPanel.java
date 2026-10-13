@@ -15,6 +15,11 @@ public class StudentListPanel extends UiPart<Region> {
     @FXML
     private ListView<Student> studentListView;
 
+    /**
+     * Creates a panel displaying the given list of students.
+     *
+     * @param studentList the list of students to display
+     */
     public StudentListPanel(ObservableList<Student> studentList) {
         super(FXML);
         studentListView.setItems(studentList);

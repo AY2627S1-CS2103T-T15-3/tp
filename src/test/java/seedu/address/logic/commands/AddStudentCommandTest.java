@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.ModelManager;
-import seedu.address.model.UserPrefs;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
@@ -41,8 +40,8 @@ public class AddStudentCommandTest {
         Student duplicate = student("  henry   tan", "91234567", "other@example.com", "25 Happy Road", "JC 1",
                 "Physics");
 
-        assertThrows(CommandException.class, AddStudentCommand.MESSAGE_DUPLICATE_STUDENT,
-                () -> new AddStudentCommand(duplicate).execute(model));
+        assertThrows(CommandException.class, AddStudentCommand.MESSAGE_DUPLICATE_STUDENT, () ->
+                new AddStudentCommand(duplicate).execute(model));
         assertEquals(java.util.List.of(HENRY), model.getFilteredStudentList());
     }
 

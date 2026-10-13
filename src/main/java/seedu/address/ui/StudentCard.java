@@ -29,6 +29,12 @@ public class StudentCard extends UiPart<Region> {
     @FXML
     private FlowPane subjects;
 
+    /**
+     * Creates a card displaying the details of a student.
+     *
+     * @param student the student to display
+     * @param displayedIndex the student's displayed index
+     */
     public StudentCard(Student student, int displayedIndex) {
         super(FXML);
         this.student = student;

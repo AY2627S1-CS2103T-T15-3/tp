@@ -14,8 +14,8 @@ import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Phone;
 import seedu.address.model.student.Level;
-import seedu.address.model.student.Subject;
 import seedu.address.model.student.StudentFieldValidator;
+import seedu.address.model.student.Subject;
 import seedu.address.model.tag.Tag;
 
 /**

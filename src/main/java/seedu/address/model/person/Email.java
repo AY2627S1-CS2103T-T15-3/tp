@@ -44,17 +44,17 @@ public class Email {
         value = email;
     }
 
+    private Email(String email, boolean alreadyValidated) {
+        requireNonNull(email);
+        value = email;
+    }
+
     /**
      * Creates an email that has already been validated by a student-specific validator.
      */
     public static Email fromStudentValue(String email) {
         requireNonNull(email);
         return new Email(email, true);
-    }
-
-    private Email(String email, boolean alreadyValidated) {
-        requireNonNull(email);
-        value = email;
     }
 
     /**

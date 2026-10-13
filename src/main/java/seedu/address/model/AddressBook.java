@@ -89,24 +89,40 @@ public class AddressBook implements ReadOnlyAddressBook {
 
     //// student-level operations
 
+    /**
+     * Returns true if a student with the same identity as {@code student} exists in the address book.
+     */
     public boolean hasStudent(Student student) {
         requireNonNull(student);
         return students.contains(student);
     }
 
+    /**
+     * Adds a student to the address book.
+     * The student must not already exist in the address book.
+     */
     public void addStudent(Student student) {
         students.add(student);
     }
 
+    /**
+     * Replaces the given student {@code target} with {@code editedStudent}.
+     */
     public void setStudent(Student target, Student editedStudent) {
         requireNonNull(editedStudent);
         students.setStudent(target, editedStudent);
     }
 
+    /**
+     * Removes {@code student} from the address book.
+     */
     public void removeStudent(Student student) {
         students.remove(student);
     }
 
+    /**
+     * Replaces the contents of the student list with {@code students}.
+     */
     public void setStudents(List<Student> students) {
         this.students.setStudents(students);
     }

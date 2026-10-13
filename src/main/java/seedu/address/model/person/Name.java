@@ -31,17 +31,17 @@ public class Name {
         fullName = name;
     }
 
+    private Name(String name, boolean alreadyValidated) {
+        requireNonNull(name);
+        fullName = name;
+    }
+
     /**
      * Creates a name that has already been validated by a student-specific validator.
      */
     public static Name fromStudentValue(String name) {
         requireNonNull(name);
         return new Name(name, true);
-    }
-
-    private Name(String name, boolean alreadyValidated) {
-        requireNonNull(name);
-        fullName = name;
     }
 
     /**

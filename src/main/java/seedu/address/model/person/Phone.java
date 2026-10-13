@@ -26,17 +26,17 @@ public class Phone {
         value = phone;
     }
 
+    private Phone(String phone, boolean alreadyValidated) {
+        requireNonNull(phone);
+        value = phone;
+    }
+
     /**
      * Creates a phone number that has already been validated by a student-specific validator.
      */
     public static Phone fromStudentValue(String phone) {
         requireNonNull(phone);
         return new Phone(phone, true);
-    }
-
-    private Phone(String phone, boolean alreadyValidated) {
-        requireNonNull(phone);
-        value = phone;
     }
 
     /**

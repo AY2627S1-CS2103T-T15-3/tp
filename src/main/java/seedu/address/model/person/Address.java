@@ -30,17 +30,17 @@ public class Address {
         value = address;
     }
 
+    private Address(String address, boolean alreadyValidated) {
+        requireNonNull(address);
+        value = address;
+    }
+
     /**
      * Creates an address that has already been validated by a student-specific validator.
      */
     public static Address fromStudentValue(String address) {
         requireNonNull(address);
         return new Address(address, true);
-    }
-
-    private Address(String address, boolean alreadyValidated) {
-        requireNonNull(address);
-        value = address;
     }
 
     /**
