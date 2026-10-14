@@ -175,12 +175,16 @@ public class AddressBookTest {
         assertFalse(addressBook.hasStudentGuardianLink(link));
         addressBook.addStudentGuardianLink(link);
         assertTrue(addressBook.hasStudentGuardianLink(link));
+        assertEquals(List.of(guardian), addressBook.getGuardiansForStudent(student));
+        addressBook.addStudentGuardianLink(link);
+        assertEquals(List.of(guardian), addressBook.getGuardiansForStudent(student));
     }
 
     @Test
     public void studentGuardianLinkOperations_nullLink_throwsNullPointerException() {
         assertThrows(NullPointerException.class, () -> addressBook.hasStudentGuardianLink(null));
         assertThrows(NullPointerException.class, () -> addressBook.addStudentGuardianLink(null));
+        assertThrows(NullPointerException.class, () -> addressBook.getGuardiansForStudent(null));
     }
 
     @Test

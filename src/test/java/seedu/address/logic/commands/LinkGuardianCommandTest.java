@@ -3,6 +3,7 @@ package seedu.address.logic.commands;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static seedu.address.testutil.Assert.assertThrows;
 
+import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -35,7 +36,10 @@ public class LinkGuardianCommandTest {
 
         CommandResult result = new LinkGuardianCommand(Index.fromOneBased(1), Index.fromOneBased(1)).execute(model);
 
-        assertEquals("Linked Lucy Lim (student) to Ben Tan (guardian).", result.getFeedbackToUser());
+        assertEquals(String.format(LinkGuardianCommand.MESSAGE_SUCCESS, STUDENT.getName(), GUARDIAN.getName()),
+                result.getFeedbackToUser());
+        assertEquals(STUDENT, result.getStudentToHighlight());
+        assertEquals(null, result.getGuardianToHighlight());
         assertEquals(true, model.hasStudentGuardianLink(new StudentGuardianLink(STUDENT, GUARDIAN)));
     }
 
@@ -48,7 +52,8 @@ public class LinkGuardianCommandTest {
         command.execute(model);
         command.execute(model);
 
-        assertEquals(true, model.hasStudentGuardianLink(new StudentGuardianLink(STUDENT, GUARDIAN)));
+        assertEquals(1, model.getGuardiansForStudent(STUDENT).size());
+        assertEquals(List.of(GUARDIAN), model.getGuardiansForStudent(STUDENT));
     }
 
     @Test

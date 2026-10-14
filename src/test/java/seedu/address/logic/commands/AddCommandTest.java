@@ -210,6 +210,11 @@ public class AddCommandTest {
         }
 
         @Override
+        public java.util.List<Guardian> getGuardiansForStudent(Student student) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
         public void addStudentGuardianLink(seedu.address.model.link.StudentGuardianLink link) {
             throw new AssertionError("This method should not be called.");
         }

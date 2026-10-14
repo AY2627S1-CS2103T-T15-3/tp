@@ -32,6 +32,8 @@ public class EditGuardianCommandTest {
 
         assertEquals(String.format(EditGuardianCommand.MESSAGE_SUCCESS, Messages.format(edited)),
                 result.getFeedbackToUser());
+        assertEquals(edited, result.getGuardianToHighlight());
+        assertEquals(null, result.getStudentToHighlight());
         assertEquals(java.util.List.of(edited), model.getFilteredGuardianList());
     }
 
