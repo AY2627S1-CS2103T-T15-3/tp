@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seedu.address.model.guardian.Guardian;
+import seedu.address.model.link.StudentGuardianLink;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.student.Level;
@@ -163,6 +164,23 @@ public class AddressBookTest {
 
         assertTrue(addressBook.equals(copy));
         assertEquals(addressBook.hashCode(), copy.hashCode());
+    }
+
+    @Test
+    public void studentGuardianLinkOperations_addAndDetectLink_success() {
+        Student student = student("Henry Tan", "91234567", "henry@example.com");
+        Guardian guardian = guardian("Ben Tan", "92345678", "ben@example.com");
+        StudentGuardianLink link = new StudentGuardianLink(student, guardian);
+
+        assertFalse(addressBook.hasStudentGuardianLink(link));
+        addressBook.addStudentGuardianLink(link);
+        assertTrue(addressBook.hasStudentGuardianLink(link));
+    }
+
+    @Test
+    public void studentGuardianLinkOperations_nullLink_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> addressBook.hasStudentGuardianLink(null));
+        assertThrows(NullPointerException.class, () -> addressBook.addStudentGuardianLink(null));
     }
 
     @Test

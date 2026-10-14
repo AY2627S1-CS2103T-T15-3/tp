@@ -147,12 +147,8 @@ public interface Model {
     void updateFilteredGuardianList(Predicate<Guardian> predicate);
 
     /** Returns true if the student-guardian link already exists. */
-    default boolean hasStudentGuardianLink(StudentGuardianLink link) {
-        return false;
-    }
+    boolean hasStudentGuardianLink(StudentGuardianLink link);
 
     /** Adds a student-guardian link. */
-    default void addStudentGuardianLink(StudentGuardianLink link) {
-        throw new UnsupportedOperationException();
-    }
+    void addStudentGuardianLink(StudentGuardianLink link);
 }

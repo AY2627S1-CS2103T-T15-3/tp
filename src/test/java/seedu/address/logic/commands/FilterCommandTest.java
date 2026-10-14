@@ -276,6 +276,16 @@ public class FilterCommandTest {
         public void updateFilteredGuardianList(Predicate<Guardian> predicate) {
             throw new AssertionError("This method should not be called.");
         }
+
+        @Override
+        public boolean hasStudentGuardianLink(seedu.address.model.link.StudentGuardianLink link) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void addStudentGuardianLink(seedu.address.model.link.StudentGuardianLink link) {
+            throw new AssertionError("This method should not be called.");
+        }
     }
 
     /**
