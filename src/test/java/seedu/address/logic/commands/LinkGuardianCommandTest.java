@@ -1,6 +1,7 @@
 package seedu.address.logic.commands;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static seedu.address.testutil.Assert.assertThrows;
 
 import java.util.List;
@@ -66,5 +67,17 @@ public class LinkGuardianCommandTest {
                 new LinkGuardianCommand(Index.fromOneBased(2), Index.fromOneBased(1)).execute(model));
         assertThrows(CommandException.class, LinkGuardianCommand.MESSAGE_INVALID_GUARDIAN_INDEX, () ->
                 new LinkGuardianCommand(Index.fromOneBased(1), Index.fromOneBased(2)).execute(model));
+    }
+
+    @Test
+    public void equals_sameValuesAndDifferentTypes_returnsExpectedResult() {
+        LinkGuardianCommand command = new LinkGuardianCommand(Index.fromOneBased(1), Index.fromOneBased(1));
+
+        assertEquals(command, command);
+        assertEquals(command, new LinkGuardianCommand(Index.fromOneBased(1), Index.fromOneBased(1)));
+        assertFalse(command.equals(null));
+        assertFalse(command.equals(0.5f));
+        assertFalse(command.equals(new LinkGuardianCommand(Index.fromOneBased(2), Index.fromOneBased(1))));
+        assertFalse(command.equals(new LinkGuardianCommand(Index.fromOneBased(1), Index.fromOneBased(2))));
     }
 }
