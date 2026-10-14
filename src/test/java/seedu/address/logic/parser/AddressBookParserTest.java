@@ -22,6 +22,7 @@ import seedu.address.logic.commands.Command;
 import seedu.address.logic.commands.DeleteCommand;
 import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.EditCommand.EditPersonDescriptor;
+import seedu.address.logic.commands.EditGuardianCommand;
 import seedu.address.logic.commands.EditStudentCommand;
 import seedu.address.logic.commands.ExitCommand;
 import seedu.address.logic.commands.FilterCommand;
@@ -60,6 +61,12 @@ public class AddressBookParserTest {
     public void parseCommand_addGuardian() throws Exception {
         Command command = parser.parseCommand("add-g n/Ben Tan p/92345678 e/ben@example.com a/12 ABCD Ave 3");
         assertTrue(command instanceof AddGuardianCommand);
+    }
+
+    @Test
+    public void parseCommand_editGuardian() throws Exception {
+        Command command = parser.parseCommand("edit-g 1 n/Ben Tan");
+        assertTrue(command instanceof EditGuardianCommand);
     }
 
     @Test
