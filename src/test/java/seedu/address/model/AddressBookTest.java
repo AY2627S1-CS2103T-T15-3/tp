@@ -184,32 +184,44 @@ public class AddressBookTest {
     public void studentGuardianLinkOperations_editStudent_preservesUpdatedLink() {
         Student student = student("Henry Tan", "91234567", "henry@example.com");
         Student editedStudent = student("Henry Tan", "99887766", "henry@example.com");
+        Student unrelatedStudent = student("Ivy Lim", "93456789", "ivy@example.com");
         Guardian guardian = guardian("Ben Tan", "92345678", "ben@example.com");
+        Guardian unrelatedGuardian = guardian("Billie Ng", "94567890", "billie@example.com");
         addressBook.addStudent(student);
+        addressBook.addStudent(unrelatedStudent);
         addressBook.addGuardian(guardian);
+        addressBook.addGuardian(unrelatedGuardian);
         addressBook.addStudentGuardianLink(new StudentGuardianLink(student, guardian));
+        addressBook.addStudentGuardianLink(new StudentGuardianLink(unrelatedStudent, unrelatedGuardian));
 
         addressBook.setStudent(student, editedStudent);
 
         assertEquals(List.of(guardian), addressBook.getGuardiansForStudent(editedStudent));
         assertFalse(addressBook.hasStudentGuardianLink(new StudentGuardianLink(student, guardian)));
         assertTrue(addressBook.hasStudentGuardianLink(new StudentGuardianLink(editedStudent, guardian)));
+        assertTrue(addressBook.hasStudentGuardianLink(new StudentGuardianLink(unrelatedStudent, unrelatedGuardian)));
     }
 
     @Test
     public void studentGuardianLinkOperations_editGuardian_preservesUpdatedLink() {
         Student student = student("Henry Tan", "91234567", "henry@example.com");
+        Student unrelatedStudent = student("Ivy Lim", "93456789", "ivy@example.com");
         Guardian guardian = guardian("Ben Tan", "92345678", "ben@example.com");
         Guardian editedGuardian = guardian("Ben Tan", "99887766", "ben@example.com");
+        Guardian unrelatedGuardian = guardian("Billie Ng", "94567890", "billie@example.com");
         addressBook.addStudent(student);
+        addressBook.addStudent(unrelatedStudent);
         addressBook.addGuardian(guardian);
+        addressBook.addGuardian(unrelatedGuardian);
         addressBook.addStudentGuardianLink(new StudentGuardianLink(student, guardian));
+        addressBook.addStudentGuardianLink(new StudentGuardianLink(unrelatedStudent, unrelatedGuardian));
 
         addressBook.setGuardian(guardian, editedGuardian);
 
         assertEquals(List.of(editedGuardian), addressBook.getGuardiansForStudent(student));
         assertFalse(addressBook.hasStudentGuardianLink(new StudentGuardianLink(student, guardian)));
         assertTrue(addressBook.hasStudentGuardianLink(new StudentGuardianLink(student, editedGuardian)));
+        assertTrue(addressBook.hasStudentGuardianLink(new StudentGuardianLink(unrelatedStudent, unrelatedGuardian)));
     }
 
     @Test
