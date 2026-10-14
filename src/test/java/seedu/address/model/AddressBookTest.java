@@ -220,6 +220,16 @@ public class AddressBookTest {
     }
 
     @Test
+    public void getGuardiansForStudent_returnsUnmodifiableList() {
+        Student student = student("Henry Tan", "91234567", "henry@example.com");
+        Guardian guardian = guardian("Ben Tan", "92345678", "ben@example.com");
+        addressBook.addStudentGuardianLink(new StudentGuardianLink(student, guardian));
+
+        assertThrows(UnsupportedOperationException.class,
+                () -> addressBook.getGuardiansForStudent(student).clear());
+    }
+
+    @Test
     public void toStringMethod() {
         String expected = AddressBook.class.getCanonicalName() + "{persons=" + addressBook.getPersonList() + "}";
         assertEquals(expected, addressBook.toString());
