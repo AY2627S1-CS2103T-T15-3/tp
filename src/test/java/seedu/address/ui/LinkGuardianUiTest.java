@@ -10,17 +10,25 @@ import java.util.concurrent.FutureTask;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.logic.Logic;
+import seedu.address.logic.LogicManager;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.Model;
+import seedu.address.model.ModelManager;
 import seedu.address.model.guardian.Guardian;
+import seedu.address.model.link.StudentGuardianLink;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
@@ -29,6 +37,9 @@ import seedu.address.model.person.Phone;
 import seedu.address.model.student.Level;
 import seedu.address.model.student.Student;
 import seedu.address.model.student.Subject;
+import seedu.address.storage.JsonAddressBookStorage;
+import seedu.address.storage.JsonUserPrefsStorage;
+import seedu.address.storage.StorageManager;
 
 /** Tests the JavaFX components changed for the link-g feature. */
 public class LinkGuardianUiTest {
@@ -85,6 +96,63 @@ public class LinkGuardianUiTest {
             window.show();
             return window;
         });
+    }
+
+    @Test
+    public void mainWindow_removeGuardian_refreshesAllLinkedStudentCards(@TempDir Path temporaryFolder)
+            throws Exception {
+        runOnFxThread(() -> {
+            Model model = new ModelManager();
+            List<Student> students = List.of(student("Lucy Lim"), student("Mary Tan"));
+            Guardian removedGuardian = guardian("Ben Tan");
+            Guardian remainingGuardian = guardian("Amy Lim");
+            model.addGuardian(removedGuardian);
+            model.addGuardian(remainingGuardian);
+            for (Student student : students) {
+                model.addStudent(student);
+                model.addStudentGuardianLink(new StudentGuardianLink(student, removedGuardian));
+                model.addStudentGuardianLink(new StudentGuardianLink(student, remainingGuardian));
+            }
+            Path dataPath = temporaryFolder.resolve("addressBook.json");
+            Logic logic = new LogicManager(model, new StorageManager(new JsonAddressBookStorage(dataPath),
+                    new JsonUserPrefsStorage(temporaryFolder.resolve("userPrefs.json"))));
+            MainWindow window = new MainWindow(new javafx.stage.Stage(), logic, dataPath);
+            try {
+                window.fillInnerParts();
+                window.getPrimaryStage().setHeight(1000);
+                window.show();
+                assertStudentGuardianLabels(window, students,
+                        List.of("Guardians:", "Ben Tan (92345678)", "Amy Lim (92345678)"));
+
+                TextField commandField = (TextField) window.getRoot().getScene().lookup("#commandTextField");
+                commandField.setText("remove-g 1");
+                commandField.fireEvent(new ActionEvent());
+                assertEquals(List.of(remainingGuardian), List.copyOf(model.getFilteredGuardianList()));
+                assertStudentGuardianLabels(window, students, List.of("Guardians:", "Amy Lim (92345678)"));
+            } finally {
+                window.getPrimaryStage().hide();
+            }
+            return null;
+        });
+    }
+
+    private static void assertStudentGuardianLabels(MainWindow window, List<Student> students,
+            List<String> expectedLabels) {
+        // Process the refresh in the existing skin without manually refreshing or recreating any cards.
+        window.getPrimaryStage().getScene().getRoot().applyCss();
+        window.getPrimaryStage().getScene().getRoot().layout();
+        List<ListCell<?>> cells = window.getStudentListPanel().getRoot().lookupAll(".list-cell").stream()
+                .filter(node -> node instanceof ListCell<?>)
+                .<ListCell<?>>map(node -> (ListCell<?>) node)
+                .filter(cell -> !cell.isEmpty())
+                .sorted(java.util.Comparator.comparingInt(ListCell::getIndex))
+                .toList();
+        assertEquals(students, cells.stream().map(ListCell::getItem).toList());
+        for (ListCell<?> cell : cells) {
+            FlowPane guardians = (FlowPane) cell.getGraphic().lookup("#guardians");
+            assertEquals(expectedLabels, guardians.getChildren().stream()
+                    .map(node -> ((Label) node).getText()).toList());
+        }
     }
 
     private static <T> T runOnFxThread(java.util.concurrent.Callable<T> action) throws Exception {
