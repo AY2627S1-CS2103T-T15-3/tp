@@ -3,6 +3,7 @@ package seedu.address.model;
 import static java.util.Objects.requireNonNull;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javafx.collections.ObservableList;
 import seedu.address.commons.util.ToStringBuilder;
@@ -167,9 +168,23 @@ public class AddressBook implements ReadOnlyAddressBook {
         return studentGuardianLinks.contains(requireNonNull(link));
     }
 
-    /** Adds a student-guardian link. */
+    /**
+     * Returns the guardians linked to {@code student}, in link creation order.
+     */
+    public List<Guardian> getGuardiansForStudent(Student student) {
+        requireNonNull(student);
+        return studentGuardianLinks.stream()
+                .filter(link -> link.getStudent().equals(student))
+                .map(StudentGuardianLink::getGuardian)
+                .collect(Collectors.toUnmodifiableList());
+    }
+
+    /** Adds a student-guardian link. Duplicate links are ignored. */
     public void addStudentGuardianLink(StudentGuardianLink link) {
-        studentGuardianLinks.add(requireNonNull(link));
+        StudentGuardianLink nonNullLink = requireNonNull(link);
+        if (!studentGuardianLinks.contains(nonNullLink)) {
+            studentGuardianLinks.add(nonNullLink);
+        }
     }
 
     //// util methods

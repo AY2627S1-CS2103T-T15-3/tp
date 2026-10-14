@@ -15,6 +15,7 @@ import seedu.address.model.student.Student;
 public class LinkGuardianCommand extends Command {
     public static final String COMMAND_WORD = "link-g";
     public static final String MESSAGE_USAGE = "Usage: link-g STUDENT_INDEX g/GUARDIAN_INDEX";
+    public static final String MESSAGE_SUCCESS = "Linked %1$s (student) to %2$s (guardian).";
     public static final String MESSAGE_INVALID_STUDENT_INDEX = "The student index provided is invalid.";
     public static final String MESSAGE_INVALID_GUARDIAN_INDEX = "The guardian index provided is invalid.";
 
@@ -44,8 +45,7 @@ public class LinkGuardianCommand extends Command {
         if (!model.hasStudentGuardianLink(link)) {
             model.addStudentGuardianLink(link);
         }
-        return new CommandResult("Linked " + student.getName() + " (student) to "
-                + guardian.getName() + " (guardian).");
+        return new CommandResult(String.format(MESSAGE_SUCCESS, student.getName(), guardian.getName()));
     }
 
     @Override

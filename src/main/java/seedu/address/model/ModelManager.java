@@ -3,6 +3,7 @@ package seedu.address.model;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
+import java.util.List;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 
@@ -196,6 +197,12 @@ public class ModelManager implements Model {
     @Override
     public boolean hasStudentGuardianLink(StudentGuardianLink link) {
         return addressBook.hasStudentGuardianLink(link);
+    }
+
+    @Override
+    public List<Guardian> getGuardiansForStudent(Student student) {
+        requireNonNull(student);
+        return addressBook.getGuardiansForStudent(student);
     }
 
     @Override
