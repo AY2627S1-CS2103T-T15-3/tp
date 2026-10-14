@@ -5,6 +5,7 @@ import java.util.function.Predicate;
 import javafx.collections.ObservableList;
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.model.guardian.Guardian;
+import seedu.address.model.link.StudentGuardianLink;
 import seedu.address.model.person.Person;
 import seedu.address.model.student.Student;
 
@@ -144,4 +145,14 @@ public interface Model {
      * @throws NullPointerException if {@code predicate} is null.
      */
     void updateFilteredGuardianList(Predicate<Guardian> predicate);
+
+    /** Returns true if the student-guardian link already exists. */
+    default boolean hasStudentGuardianLink(StudentGuardianLink link) {
+        return false;
+    }
+
+    /** Adds a student-guardian link. */
+    default void addStudentGuardianLink(StudentGuardianLink link) {
+        throw new UnsupportedOperationException();
+    }
 }

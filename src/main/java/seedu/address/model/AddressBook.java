@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.model.guardian.Guardian;
 import seedu.address.model.guardian.UniqueGuardianList;
+import seedu.address.model.link.StudentGuardianLink;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.student.Student;
@@ -22,6 +23,7 @@ public class AddressBook implements ReadOnlyAddressBook {
     private final UniquePersonList persons = new UniquePersonList();
     private final UniqueStudentList students = new UniqueStudentList();
     private final UniqueGuardianList guardians = new UniqueGuardianList();
+    private final List<StudentGuardianLink> studentGuardianLinks = new java.util.ArrayList<>();
 
     public AddressBook() {}
 
@@ -160,6 +162,16 @@ public class AddressBook implements ReadOnlyAddressBook {
         this.guardians.setGuardians(guardians);
     }
 
+    /** Returns true if the given student-guardian link exists. */
+    public boolean hasStudentGuardianLink(StudentGuardianLink link) {
+        return studentGuardianLinks.contains(requireNonNull(link));
+    }
+
+    /** Adds a student-guardian link. */
+    public void addStudentGuardianLink(StudentGuardianLink link) {
+        studentGuardianLinks.add(requireNonNull(link));
+    }
+
     //// util methods
 
     @Override
@@ -197,11 +209,12 @@ public class AddressBook implements ReadOnlyAddressBook {
 
         return persons.equals(otherAddressBook.persons)
                 && students.equals(otherAddressBook.students)
-                && guardians.equals(otherAddressBook.guardians);
+                && guardians.equals(otherAddressBook.guardians)
+                && studentGuardianLinks.equals(otherAddressBook.studentGuardianLinks);
     }
 
     @Override
     public int hashCode() {
-        return java.util.Objects.hash(persons, students, guardians);
+        return java.util.Objects.hash(persons, students, guardians, studentGuardianLinks);
     }
 }
