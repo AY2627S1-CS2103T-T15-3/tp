@@ -29,7 +29,15 @@ import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.ReadOnlyAddressBook;
 import seedu.address.model.UserPrefs;
+import seedu.address.model.guardian.Guardian;
+import seedu.address.model.person.Address;
+import seedu.address.model.person.Email;
+import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
+import seedu.address.model.person.Phone;
+import seedu.address.model.student.Level;
+import seedu.address.model.student.Student;
+import seedu.address.model.student.Subject;
 import seedu.address.storage.JsonAddressBookStorage;
 import seedu.address.storage.JsonUserPrefsStorage;
 import seedu.address.storage.StorageManager;
@@ -119,6 +127,20 @@ public class LogicManagerTest {
     @Test
     public void getFilteredGuardianList_returnsModelGuardianList() {
         assertEquals(model.getFilteredGuardianList(), logic.getFilteredGuardianList());
+    }
+
+    @Test
+    public void getGuardiansForStudent_returnsModelLinkedGuardians() {
+        Student student = new Student(new Name("Henry Tan"), new Phone("91234567"),
+                new Email("henry@example.com"), new Address("12 Main Street"), new Level("JC 1"),
+                java.util.Set.of(new Subject("Mathematics")));
+        Guardian guardian = new Guardian(new Name("Ben Tan"), new Phone("92345678"),
+                new Email("ben@example.com"), new Address("12 Main Street"));
+        model.addStudent(student);
+        model.addGuardian(guardian);
+        model.addStudentGuardianLink(new seedu.address.model.link.StudentGuardianLink(student, guardian));
+
+        assertEquals(java.util.List.of(guardian), logic.getGuardiansForStudent(student));
     }
 
     /**
