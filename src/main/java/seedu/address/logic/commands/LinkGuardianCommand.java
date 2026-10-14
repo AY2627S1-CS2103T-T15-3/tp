@@ -47,4 +47,15 @@ public class LinkGuardianCommand extends Command {
         return new CommandResult("Linked " + student.getName() + " (student) to "
                 + guardian.getName() + " (guardian).");
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == this) {
+            return true;
+        }
+        if (!(other instanceof LinkGuardianCommand otherCommand)) {
+            return false;
+        }
+        return studentIndex.equals(otherCommand.studentIndex) && guardianIndex.equals(otherCommand.guardianIndex);
+    }
 }
