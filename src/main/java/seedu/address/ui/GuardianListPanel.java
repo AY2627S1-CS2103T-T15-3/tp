@@ -34,6 +34,11 @@ public class GuardianListPanel extends UiPart<Region> {
         });
     }
 
+    /** Clears the current guardian selection. */
+    public void clearSelection() {
+        guardianListView.getSelectionModel().clearSelection();
+    }
+
     class GuardianListViewCell extends ListCell<Guardian> {
         @Override
         protected void updateItem(Guardian guardian, boolean empty) {
