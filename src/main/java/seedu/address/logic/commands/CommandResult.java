@@ -5,6 +5,7 @@ import static java.util.Objects.requireNonNull;
 import java.util.Objects;
 
 import seedu.address.commons.util.ToStringBuilder;
+import seedu.address.model.student.Student;
 
 /**
  * Represents the result of a command execution.
@@ -19,13 +20,26 @@ public class CommandResult {
     /** The application should exit. */
     private final boolean exit;
 
+    /** The student that the UI should highlight, if any. */
+    private final Student studentToHighlight;
+
     /**
      * Constructs a {@code CommandResult} with the specified fields.
      */
     public CommandResult(String feedbackToUser, boolean showHelp, boolean exit) {
+        this(feedbackToUser, showHelp, exit, null);
+    }
+
+    /** Constructs a result that also identifies a student for the UI to highlight. */
+    public CommandResult(String feedbackToUser, Student studentToHighlight) {
+        this(feedbackToUser, false, false, studentToHighlight);
+    }
+
+    private CommandResult(String feedbackToUser, boolean showHelp, boolean exit, Student studentToHighlight) {
         this.feedbackToUser = requireNonNull(feedbackToUser);
         this.showHelp = showHelp;
         this.exit = exit;
+        this.studentToHighlight = studentToHighlight;
     }
 
     /**
@@ -46,6 +60,10 @@ public class CommandResult {
 
     public boolean isExit() {
         return exit;
+    }
+
+    public Student getStudentToHighlight() {
+        return studentToHighlight;
     }
 
     @Override

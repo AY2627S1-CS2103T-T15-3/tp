@@ -45,7 +45,7 @@ public class LinkGuardianCommand extends Command {
         if (!model.hasStudentGuardianLink(link)) {
             model.addStudentGuardianLink(link);
         }
-        return new CommandResult(String.format(MESSAGE_SUCCESS, student.getName(), guardian.getName()));
+        return new CommandResult(String.format(MESSAGE_SUCCESS, student.getName(), guardian.getName()), student);
     }
 
     @Override
