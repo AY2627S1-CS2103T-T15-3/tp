@@ -225,6 +225,22 @@ public class AddressBookTest {
     }
 
     @Test
+    public void copyAndResetData_preservesStudentGuardianLinks() {
+        Student student = student("Henry Tan", "91234567", "henry@example.com");
+        Guardian guardian = guardian("Ben Tan", "92345678", "ben@example.com");
+        addressBook.addStudent(student);
+        addressBook.addGuardian(guardian);
+        addressBook.addStudentGuardianLink(new StudentGuardianLink(student, guardian));
+
+        AddressBook copy = new AddressBook(addressBook);
+        AddressBook reset = new AddressBook();
+        reset.resetData(addressBook);
+
+        assertEquals(List.of(new StudentGuardianLink(student, guardian)), copy.getStudentGuardianLinkList());
+        assertEquals(copy, reset);
+    }
+
+    @Test
     public void studentGuardianLinkOperations_nullLink_throwsNullPointerException() {
         assertThrows(NullPointerException.class, () -> addressBook.hasStudentGuardianLink(null));
         assertThrows(NullPointerException.class, () -> addressBook.addStudentGuardianLink(null));
