@@ -2,6 +2,8 @@ package seedu.address.logic;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX;
+import static seedu.address.logic.Messages.MESSAGE_NO_STUDENTS_MATCH_FILTER;
+import static seedu.address.logic.Messages.MESSAGE_STUDENTS_LISTED_OVERVIEW;
 import static seedu.address.logic.Messages.MESSAGE_UNKNOWN_COMMAND;
 import static seedu.address.logic.commands.CommandTestUtil.ADDRESS_DESC_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.EMAIL_DESC_AMY;
@@ -90,6 +92,28 @@ public class LogicManagerTest {
     @Test
     public void getFilteredStudentList_returnsModelStudentList() {
         assertEquals(model.getFilteredStudentList(), logic.getFilteredStudentList());
+    }
+
+    @Test
+    public void execute_filterCommand_updatesFilteredStudentList() throws Exception {
+        logic.execute("add-s n/Henry Tan p/91234567 e/henry@example.com a/12 ABCD Ave 3 l/JC 1 "
+                + "s/Mathematics s/Physics");
+        logic.execute("add-s n/Ivy Lim p/92345678 e/ivy@example.com a/34 EFGH Road l/JC 1 s/Mathematics");
+        logic.execute("add-s n/Joel Ng p/93456789 e/joel@example.com a/56 IJKL Street l/Secondary 3 "
+                + "s/Mathematics s/English");
+
+        CommandResult levelResult = logic.execute("filter l/jc 1");
+        assertEquals(String.format(MESSAGE_STUDENTS_LISTED_OVERVIEW, 2), levelResult.getFeedbackToUser());
+        assertEquals(2, logic.getFilteredStudentList().size());
+
+        // a new filter applies to all students, not only those currently shown
+        CommandResult subjectResult = logic.execute("filter s/English");
+        assertEquals(String.format(MESSAGE_STUDENTS_LISTED_OVERVIEW, 1), subjectResult.getFeedbackToUser());
+        assertEquals("Joel Ng", logic.getFilteredStudentList().get(0).getName().toString());
+
+        CommandResult noMatchResult = logic.execute("filter l/JC 1 s/English");
+        assertEquals(MESSAGE_NO_STUDENTS_MATCH_FILTER, noMatchResult.getFeedbackToUser());
+        assertEquals(0, logic.getFilteredStudentList().size());
     }
 
     @Test

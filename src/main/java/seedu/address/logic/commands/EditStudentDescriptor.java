@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -105,6 +106,27 @@ public class EditStudentDescriptor {
     public boolean isAnyFieldEdited() {
         return name != null || phone != null || email != null || address != null
                 || level != null || subjects != null;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == this) {
+            return true;
+        }
+        if (!(other instanceof EditStudentDescriptor otherDescriptor)) {
+            return false;
+        }
+        return Objects.equals(name, otherDescriptor.name)
+                && Objects.equals(phone, otherDescriptor.phone)
+                && Objects.equals(email, otherDescriptor.email)
+                && Objects.equals(address, otherDescriptor.address)
+                && Objects.equals(level, otherDescriptor.level)
+                && Objects.equals(subjects, otherDescriptor.subjects);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, phone, email, address, level, subjects);
     }
 
     @Override
