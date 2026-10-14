@@ -55,6 +55,8 @@ public class AddressBook implements ReadOnlyAddressBook {
         setPersons(newData.getPersonList());
         setStudents(newData.getStudentList());
         setGuardians(newData.getGuardianList());
+        studentGuardianLinks.clear();
+        studentGuardianLinks.addAll(newData.getStudentGuardianLinkList());
     }
 
     //// person-level operations
@@ -217,6 +219,11 @@ public class AddressBook implements ReadOnlyAddressBook {
     @Override
     public ObservableList<Guardian> getGuardianList() {
         return guardians.asUnmodifiableObservableList();
+    }
+
+    @Override
+    public List<StudentGuardianLink> getStudentGuardianLinkList() {
+        return List.copyOf(studentGuardianLinks);
     }
 
     @Override
