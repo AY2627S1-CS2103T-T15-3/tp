@@ -225,8 +225,8 @@ public class AddressBookTest {
         Guardian guardian = guardian("Ben Tan", "92345678", "ben@example.com");
         addressBook.addStudentGuardianLink(new StudentGuardianLink(student, guardian));
 
-        assertThrows(UnsupportedOperationException.class,
-                () -> addressBook.getGuardiansForStudent(student).clear());
+        assertThrows(UnsupportedOperationException.class, () ->
+                addressBook.getGuardiansForStudent(student).clear());
     }
 
     @Test
