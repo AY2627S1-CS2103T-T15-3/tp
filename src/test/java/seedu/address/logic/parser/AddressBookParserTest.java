@@ -27,14 +27,17 @@ import seedu.address.logic.commands.EditStudentCommand;
 import seedu.address.logic.commands.ExitCommand;
 import seedu.address.logic.commands.FilterCommand;
 import seedu.address.logic.commands.FindCommand;
+import seedu.address.logic.commands.FindStudentCommand;
 import seedu.address.logic.commands.HelpCommand;
 import seedu.address.logic.commands.ListCommand;
 import seedu.address.logic.commands.RemoveGuardianCommand;
+import seedu.address.logic.commands.RemoveStudentCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
 import seedu.address.model.person.Person;
 import seedu.address.model.student.Level;
 import seedu.address.model.student.StudentMatchesFilterPredicate;
+import seedu.address.model.student.StudentNameContainsKeywordsPredicate;
 import seedu.address.model.student.Subject;
 import seedu.address.testutil.EditPersonDescriptorBuilder;
 import seedu.address.testutil.PersonBuilder;
@@ -86,8 +89,14 @@ public class AddressBookParserTest {
     @Test
     public void parseCommand_removeGuardian() throws Exception {
         RemoveGuardianCommand command = (RemoveGuardianCommand) parser.parseCommand("remove-g 1");
-
         assertEquals(new RemoveGuardianCommand(INDEX_FIRST_PERSON), command);
+    }  
+    
+    @Test
+    public void parseCommand_removeStudent() throws Exception {
+        RemoveStudentCommand command = (RemoveStudentCommand) parser.parseCommand(
+                RemoveStudentCommand.COMMAND_WORD + " " + INDEX_FIRST_PERSON.getOneBased());
+        assertEquals(new RemoveStudentCommand(INDEX_FIRST_PERSON), command);
     }
 
     @Test
@@ -126,6 +135,14 @@ public class AddressBookParserTest {
         FindCommand command = (FindCommand) parser.parseCommand(
                 FindCommand.COMMAND_WORD + " " + keywords.stream().collect(Collectors.joining(" ")));
         assertEquals(new FindCommand(new NameContainsKeywordsPredicate(keywords)), command);
+    }
+
+    @Test
+    public void parseCommand_findStudent() throws Exception {
+        List<String> keywords = List.of("Alice", "Bob");
+        FindStudentCommand command = (FindStudentCommand) parser.parseCommand(
+                FindStudentCommand.COMMAND_WORD + " " + keywords.stream().collect(Collectors.joining(" ")));
+        assertEquals(new FindStudentCommand(new StudentNameContainsKeywordsPredicate(keywords)), command);
     }
 
     @Test
