@@ -53,6 +53,11 @@ public class StudentListPanel extends UiPart<Region> {
         studentListView.getSelectionModel().select(student);
     }
 
+    /** Clears the current student selection. */
+    public void clearSelection() {
+        studentListView.getSelectionModel().clearSelection();
+    }
+
     class StudentListViewCell extends ListCell<Student> {
         @Override
         protected void updateItem(Student student, boolean empty) {

@@ -48,7 +48,7 @@ public class EditGuardianCommand extends Command {
 
         model.setGuardian(guardianToEdit, editedGuardian);
         model.updateFilteredGuardianList(PREDICATE_SHOW_ALL_GUARDIANS);
-        return new CommandResult(String.format(MESSAGE_SUCCESS, Messages.format(editedGuardian)));
+        return new CommandResult(String.format(MESSAGE_SUCCESS, Messages.format(editedGuardian)), editedGuardian);
     }
 
     @Override

@@ -5,6 +5,7 @@ import static java.util.Objects.requireNonNull;
 import java.util.Objects;
 
 import seedu.address.commons.util.ToStringBuilder;
+import seedu.address.model.guardian.Guardian;
 import seedu.address.model.student.Student;
 
 /**
@@ -23,23 +24,33 @@ public class CommandResult {
     /** The student that the UI should highlight, if any. */
     private final Student studentToHighlight;
 
+    /** The guardian that the UI should highlight, if any. */
+    private final Guardian guardianToHighlight;
+
     /**
      * Constructs a {@code CommandResult} with the specified fields.
      */
     public CommandResult(String feedbackToUser, boolean showHelp, boolean exit) {
-        this(feedbackToUser, showHelp, exit, null);
+        this(feedbackToUser, showHelp, exit, null, null);
     }
 
     /** Constructs a result that also identifies a student for the UI to highlight. */
     public CommandResult(String feedbackToUser, Student studentToHighlight) {
-        this(feedbackToUser, false, false, studentToHighlight);
+        this(feedbackToUser, false, false, studentToHighlight, null);
     }
 
-    private CommandResult(String feedbackToUser, boolean showHelp, boolean exit, Student studentToHighlight) {
+    /** Constructs a result that identifies a guardian for the UI to highlight. */
+    public CommandResult(String feedbackToUser, Guardian guardianToHighlight) {
+        this(feedbackToUser, false, false, null, guardianToHighlight);
+    }
+
+    private CommandResult(String feedbackToUser, boolean showHelp, boolean exit, Student studentToHighlight,
+                          Guardian guardianToHighlight) {
         this.feedbackToUser = requireNonNull(feedbackToUser);
         this.showHelp = showHelp;
         this.exit = exit;
         this.studentToHighlight = studentToHighlight;
+        this.guardianToHighlight = guardianToHighlight;
     }
 
     /**
@@ -64,6 +75,10 @@ public class CommandResult {
 
     public Student getStudentToHighlight() {
         return studentToHighlight;
+    }
+
+    public Guardian getGuardianToHighlight() {
+        return guardianToHighlight;
     }
 
     @Override

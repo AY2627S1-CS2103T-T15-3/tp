@@ -204,6 +204,12 @@ public class MainWindow extends UiPart<Stage> {
                 guardianListPanel.clearSelection();
             }
 
+            if (commandResult.getGuardianToHighlight() != null) {
+                guardianListPanel.refresh();
+                guardianListPanel.highlightGuardian(commandResult.getGuardianToHighlight());
+                studentListPanel.clearSelection();
+            }
+
             if (commandResult.isShowHelp()) {
                 handleHelp();
             }

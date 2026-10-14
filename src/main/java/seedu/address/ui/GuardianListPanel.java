@@ -39,6 +39,16 @@ public class GuardianListPanel extends UiPart<Region> {
         guardianListView.getSelectionModel().clearSelection();
     }
 
+    /** Refreshes guardian cards after a guardian is edited. */
+    public void refresh() {
+        guardianListView.refresh();
+    }
+
+    /** Highlights the specified guardian if it is in the displayed list. */
+    public void highlightGuardian(Guardian guardian) {
+        guardianListView.getSelectionModel().select(guardian);
+    }
+
     class GuardianListViewCell extends ListCell<Guardian> {
         @Override
         protected void updateItem(Guardian guardian, boolean empty) {
