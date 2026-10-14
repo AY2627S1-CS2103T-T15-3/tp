@@ -2,6 +2,7 @@ package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import seedu.address.commons.util.ToStringBuilder;
@@ -75,6 +76,25 @@ public class EditGuardianDescriptor {
     /** Returns true if at least one guardian field has been supplied. */
     public boolean isAnyFieldEdited() {
         return name != null || phone != null || email != null || address != null;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == this) {
+            return true;
+        }
+        if (!(other instanceof EditGuardianDescriptor otherDescriptor)) {
+            return false;
+        }
+        return Objects.equals(name, otherDescriptor.name)
+                && Objects.equals(phone, otherDescriptor.phone)
+                && Objects.equals(email, otherDescriptor.email)
+                && Objects.equals(address, otherDescriptor.address);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, phone, email, address);
     }
 
     @Override
