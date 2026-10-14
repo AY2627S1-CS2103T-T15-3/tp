@@ -33,6 +33,12 @@ AddressBook Level 3 (AB3) is a **desktop application for managing contacts, opti
 
    * `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01` : Adds a contact named `John Doe` to the Address Book.
 
+   * `edit-s 1 p/98765432` : Updates the phone number of the first student.
+
+   * `edit-g 1 a/25 Happy Road` : Updates the address of the first guardian.
+
+   * `link-g 1 g/1` : Links the first student to the first guardian.
+
    * `delete 3` : Deletes the 3rd contact shown in the current list.
 
    * `clear` : Deletes all contacts.
@@ -112,6 +118,50 @@ Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]... `
 Examples:
 *  `edit 1 p/91234567 e/johndoe@example.com` Edits the phone number and email address of the 1st person to be `91234567` and `johndoe@example.com` respectively.
 *  `edit 2 n/Betsy Crower t/` Edits the name of the 2nd person to be `Betsy Crower` and clears all existing tags.
+
+### Editing a student: `edit-s`
+
+Edits selected details of an existing student. The index refers to the displayed student list, including a filtered list.
+
+Format: `edit-s INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [l/LEVEL] [s/SUBJECT]...`
+
+* `INDEX` must be a positive integer within the displayed student list.
+* At least one field must be provided. Fields that are not provided keep their current values.
+* If `s/` is provided, it replaces the student's complete subject list. Retype existing subjects to keep them.
+* A student must always have at least one subject.
+* The edited student must not duplicate another student by name and phone number.
+
+Examples:
+* `edit-s 2 p/98765432 l/JC 2`
+* `edit-s 1 s/Mathematics s/Physics`
+
+### Editing a guardian: `edit-g`
+
+Edits selected details of an existing guardian. The index refers to the displayed guardian list, including a filtered list.
+
+Format: `edit-g INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS]`
+
+* `INDEX` must be a positive integer within the displayed guardian list.
+* At least one field must be provided. Fields that are not provided keep their current values.
+* The edited guardian must not duplicate another guardian by name and phone number.
+
+Example:
+* `edit-g 1 a/25 Happy Road e/ben.tan@example.com`
+
+### Linking a guardian to a student: `link-g`
+
+Links an existing guardian to an existing student.
+
+Format: `link-g STUDENT_INDEX g/GUARDIAN_INDEX`
+
+* Both indexes are required and must be positive integers within their respective displayed lists.
+* The student and guardian must already exist.
+* Repeating an existing link does not create another link.
+* The basic MVP stores the relationship; unlinking an individual relationship is not supported yet.
+
+Examples:
+* `link-g 2 g/1`
+* `link-g 3 g/1`
 
 ### Locating persons by name: `find`
 
@@ -199,6 +249,9 @@ Action     | Format, Examples
 **Clear**  | `clear`
 **Delete** | `delete INDEX`<br> e.g., `delete 3`
 **Edit**   | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]... `<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
+**Edit student** | `edit-s INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [l/LEVEL] [s/SUBJECT]...`<br> e.g., `edit-s 2 p/98765432 l/JC 2`
+**Edit guardian** | `edit-g INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS]`<br> e.g., `edit-g 1 a/25 Happy Road`
 **Find**   | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
+**Link guardian** | `link-g STUDENT_INDEX g/GUARDIAN_INDEX`<br> e.g., `link-g 2 g/1`
 **List**   | `list`
 **Help**   | `help`
