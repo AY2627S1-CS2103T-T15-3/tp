@@ -90,8 +90,8 @@ public class AddressBookParserTest {
     public void parseCommand_removeGuardian() throws Exception {
         RemoveGuardianCommand command = (RemoveGuardianCommand) parser.parseCommand("remove-g 1");
         assertEquals(new RemoveGuardianCommand(INDEX_FIRST_PERSON), command);
-    }  
-    
+    }
+
     @Test
     public void parseCommand_removeStudent() throws Exception {
         RemoveStudentCommand command = (RemoveStudentCommand) parser.parseCommand(
