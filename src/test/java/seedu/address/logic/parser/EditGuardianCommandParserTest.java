@@ -41,6 +41,8 @@ public class EditGuardianCommandParserTest {
     @Test
     public void parse_missingField_failure() {
         assertParseFailure(parser, "2", EditGuardianCommand.MESSAGE_NOT_EDITED);
+        assertParseFailure(parser, "", "Invalid command format.\n" + EditGuardianCommand.MESSAGE_USAGE);
+        assertParseFailure(parser, "n/Ben", "Invalid command format.\n" + EditGuardianCommand.MESSAGE_USAGE);
     }
 
     @Test
@@ -58,6 +60,7 @@ public class EditGuardianCommandParserTest {
     @Test
     public void parse_unknownPrefix_failure() {
         assertParseFailure(parser, "1 x/Test", "Unknown parameter: x/");
+        assertParseFailure(parser, "1 n/Ben x/Test", "Unknown parameter: x/");
     }
 
     @Test
