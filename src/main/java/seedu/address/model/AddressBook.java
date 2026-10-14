@@ -116,8 +116,12 @@ public class AddressBook implements ReadOnlyAddressBook {
      * Replaces the given student {@code target} with {@code editedStudent}.
      */
     public void setStudent(Student target, Student editedStudent) {
+        requireNonNull(target);
         requireNonNull(editedStudent);
         students.setStudent(target, editedStudent);
+        studentGuardianLinks.replaceAll(link -> link.getStudent().equals(target)
+                ? new StudentGuardianLink(editedStudent, link.getGuardian())
+                : link);
     }
 
     /**
@@ -149,8 +153,12 @@ public class AddressBook implements ReadOnlyAddressBook {
 
     /** Replaces the given guardian with {@code editedGuardian}. */
     public void setGuardian(Guardian target, Guardian editedGuardian) {
+        requireNonNull(target);
         requireNonNull(editedGuardian);
         guardians.setGuardian(target, editedGuardian);
+        studentGuardianLinks.replaceAll(link -> link.getGuardian().equals(target)
+                ? new StudentGuardianLink(link.getStudent(), editedGuardian)
+                : link);
     }
 
     /** Removes {@code guardian} from the address book. */

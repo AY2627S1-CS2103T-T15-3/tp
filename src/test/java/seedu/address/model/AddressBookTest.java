@@ -181,6 +181,38 @@ public class AddressBookTest {
     }
 
     @Test
+    public void studentGuardianLinkOperations_editStudent_preservesUpdatedLink() {
+        Student student = student("Henry Tan", "91234567", "henry@example.com");
+        Student editedStudent = student("Henry Tan", "99887766", "henry@example.com");
+        Guardian guardian = guardian("Ben Tan", "92345678", "ben@example.com");
+        addressBook.addStudent(student);
+        addressBook.addGuardian(guardian);
+        addressBook.addStudentGuardianLink(new StudentGuardianLink(student, guardian));
+
+        addressBook.setStudent(student, editedStudent);
+
+        assertEquals(List.of(guardian), addressBook.getGuardiansForStudent(editedStudent));
+        assertFalse(addressBook.hasStudentGuardianLink(new StudentGuardianLink(student, guardian)));
+        assertTrue(addressBook.hasStudentGuardianLink(new StudentGuardianLink(editedStudent, guardian)));
+    }
+
+    @Test
+    public void studentGuardianLinkOperations_editGuardian_preservesUpdatedLink() {
+        Student student = student("Henry Tan", "91234567", "henry@example.com");
+        Guardian guardian = guardian("Ben Tan", "92345678", "ben@example.com");
+        Guardian editedGuardian = guardian("Ben Tan", "99887766", "ben@example.com");
+        addressBook.addStudent(student);
+        addressBook.addGuardian(guardian);
+        addressBook.addStudentGuardianLink(new StudentGuardianLink(student, guardian));
+
+        addressBook.setGuardian(guardian, editedGuardian);
+
+        assertEquals(List.of(editedGuardian), addressBook.getGuardiansForStudent(student));
+        assertFalse(addressBook.hasStudentGuardianLink(new StudentGuardianLink(student, guardian)));
+        assertTrue(addressBook.hasStudentGuardianLink(new StudentGuardianLink(student, editedGuardian)));
+    }
+
+    @Test
     public void studentGuardianLinkOperations_nullLink_throwsNullPointerException() {
         assertThrows(NullPointerException.class, () -> addressBook.hasStudentGuardianLink(null));
         assertThrows(NullPointerException.class, () -> addressBook.addStudentGuardianLink(null));
