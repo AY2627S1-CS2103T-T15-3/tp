@@ -129,7 +129,9 @@ public class AddressBookParserTest {
     @Test
     public void parseCommand_listStudent() throws Exception {
         assertTrue(parser.parseCommand(ListStudentCommand.COMMAND_WORD) instanceof ListStudentCommand);
-        assertTrue(parser.parseCommand(ListStudentCommand.COMMAND_WORD + " 3") instanceof ListStudentCommand);
+        assertThrows(ParseException.class,
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, ListStudentCommand.MESSAGE_USAGE), ()
+                -> parser.parseCommand(ListStudentCommand.COMMAND_WORD + " 3"));
     }
 
     @Test

@@ -1,6 +1,7 @@
 package seedu.address.logic.commands;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static seedu.address.logic.Messages.MESSAGE_STUDENTS_LISTED_OVERVIEW;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -31,7 +32,8 @@ public class ListStudentCommandTest {
 
         CommandResult result = new ListStudentCommand().execute(model);
 
-        assertEquals(ListStudentCommand.MESSAGE_SUCCESS, result.getFeedbackToUser());
+        assertEquals(String.format(MESSAGE_STUDENTS_LISTED_OVERVIEW, model.getFilteredStudentList().size()),
+                result.getFeedbackToUser());
         assertEquals(List.of(alice, bob), model.getFilteredStudentList());
     }
 
