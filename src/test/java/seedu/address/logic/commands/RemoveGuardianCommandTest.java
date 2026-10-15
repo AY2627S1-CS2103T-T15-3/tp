@@ -41,6 +41,7 @@ public class RemoveGuardianCommandTest {
 
         CommandResult result = new RemoveGuardianCommand(INDEX_FIRST_PERSON).execute(model);
 
+        assertTrue(result.shouldRefreshStudentList());
         assertEquals(String.format(RemoveGuardianCommand.MESSAGE_REMOVE_GUARDIAN_SUCCESS,
                 Messages.format(BEN)), result.getFeedbackToUser());
         assertEquals(List.of(BILLIE), model.getFilteredGuardianList());
@@ -67,6 +68,7 @@ public class RemoveGuardianCommandTest {
 
         CommandResult result = new RemoveGuardianCommand(INDEX_FIRST_PERSON).execute(model);
 
+        assertTrue(result.shouldRefreshStudentList());
         assertEquals(String.format(RemoveGuardianCommand.MESSAGE_REMOVE_GUARDIAN_SUCCESS,
                 Messages.format(BILLIE)), result.getFeedbackToUser());
         assertFalse(model.hasGuardian(BILLIE));
