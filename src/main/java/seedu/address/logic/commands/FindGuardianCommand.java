@@ -27,10 +27,10 @@ public class FindGuardianCommand extends Command {
         requireNonNull(model);
         model.updateFilteredGuardianList(predicate);
 
-        int result_count = model.getFilteredGuardianList().size();
-        if (result_count > 0) {
+        int resultCount = model.getFilteredGuardianList().size();
+        if (resultCount > 0) {
             return new CommandResult(
-                    String.format(Messages.MESSAGE_GUARDIANS_LISTED_OVERVIEW, result_count));
+                    String.format(Messages.MESSAGE_GUARDIANS_LISTED_OVERVIEW, resultCount));
         } else {
             return new CommandResult(Messages.MESSAGE_NO_GUARDIANS_MATCH_SEARCH);
         }
