@@ -312,25 +312,28 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 **MSS**
 
-1. User chooses to add a student.
-2. TutorTrack requests the student's details.
-3. User enters the student's details.
-4. TutorTrack adds the student.
+1. User requests to add a student.
+2. User provides the student's name, phone number, email address, postal
+   address, academic level, and at least one subject.
+3. TutorTrack adds the student to the student records.
+4. TutorTrack confirms that the student was added.
 
    Use case ends.
 
 **Extensions**
 
-* 3a. There is an error in the entered data.
+* 2a. The provided details are invalid, incomplete, or contain an unsupported
+  or repeated parameter.
 
-  * 3a1. TutorTrack requests the correct data.
-  * 3a2. User enters new data.
+  * 2a1. TutorTrack informs the user of the error.
+  * 2a2. User provides corrected details.
 
-    Steps 3a1-3a2 are repeated until the data entered is correct. Use case resumes from step 4.
+    Steps 2a1-2a2 are repeated until the details are valid and complete. Use
+    case resumes from step 3.
 
-* 3b. The student is a duplicate.
+* 2b. A student with the same normalized name and phone number already exists.
 
-  * 3b1. TutorTrack shows an error message.
+  * 2b1. TutorTrack informs the user that the student already exists.
 
     Use case ends.
 
@@ -339,26 +342,32 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 **MSS**
 
 1. User requests to add a guardian.
-2. TutorTrack requests the guardian's details.
-3. User enters the guardian's details.
-4. TutorTrack adds the guardian.
+2. User provides the guardian's name, phone number, email address, and postal
+   address.
+3. TutorTrack adds the guardian's contact details to the guardian records.
+4. TutorTrack confirms that the guardian was added.
 
    Use case ends.
 
 **Extensions**
 
-* 3a. There is an error in the entered data.
+* 2a. The provided details are invalid, incomplete, or contain an unsupported
+  or repeated parameter.
 
-  * 3a1. TutorTrack requests the correct data.
-  * 3a2. User enters new data.
+  * 2a1. TutorTrack informs the user of the error.
+  * 2a2. User provides corrected details.
 
-    Steps 3a1-3a2 are repeated until the data entered is correct. Use case resumes from step 4.
+    Steps 2a1-2a2 are repeated until the details are valid and complete. Use
+    case resumes from step 3.
 
-* 3b. The guardian is a duplicate.
+* 2b. A guardian with the same normalized name and phone number already exists.
 
-  * 3b1. TutorTrack shows an error message.
+  * 2b1. TutorTrack informs the user that the guardian already exists.
 
     Use case ends.
+
+The guardian is not associated with a student by this use case; linking is a
+separate use case.
 
 **Use case: U3 - List students**
 

@@ -91,6 +91,78 @@ Examples:
 * `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01`
 * `add n/Betsy Crowe t/friend e/betsycrowe@example.com a/Newgate Prison p/1234567 t/criminal`
 
+### Adding a student: `add-s`
+
+Adds a student to TutorTrack.
+
+Format: `add-s n/NAME p/PHONE e/EMAIL a/ADDRESS l/LEVEL s/SUBJECT [s/SUBJECT]...`
+
+All of `n/NAME`, `p/PHONE`, `e/EMAIL`, `a/ADDRESS`, `l/LEVEL`, and at least one
+`s/SUBJECT` are required. The additional `s/SUBJECT` parameters are optional
+and may be repeated. The supported prefixes are `n/`, `p/`, `e/`, `a/`, `l/`,
+and `s/`. The parameters can be entered in any order.
+
+Validation rules:
+* `NAME` must be 1-100 characters long and contain only letters, digits,
+  spaces, hyphens, or apostrophes.
+* `PHONE` must contain 3-15 digits and may start with `+`.
+* `EMAIL` must have the format `local-part@domain`, contain no spaces, and use
+  a domain with at least one dot, such as `example.com`.
+* `ADDRESS` must be 1-200 characters long and may contain letters, digits,
+  spaces, and the punctuation `, . # / ( ) ' -`.
+* `LEVEL` must be 1-50 characters long and contain only letters, digits, and
+  spaces.
+* `SUBJECT` must be 1-50 characters long and may contain letters, digits,
+  spaces, hyphens, or parentheses.
+
+Examples:
+* `add-s n/Henry Tan p/91234567 e/henry@example.com a/12 ABCD Ave 3 l/Secondary 3 s/Mathematics s/Physics`
+* `add-s n/Mary-Jane O'Connor p/+6591234567 e/mary@example.com a/12 ABCD Ave 3, #04-15 l/JC 1 s/A-Level (H2)`
+
+On success, the student is added to the student list and TutorTrack displays a
+message such as `New student added: Henry Tan; Phone: 91234567; Email: henry@example.com; Address: 12 ABCD Ave 3; Level: Secondary 3; Subjects: Mathematics, Physics`.
+
+If a student with the same normalized name and phone number already exists,
+the command is rejected with:
+
+`This student already exists in TutorTrack.`
+
+Invalid command formats are rejected with:
+
+`Invalid command format.`<br>
+`Usage: add-s n/NAME p/PHONE e/EMAIL a/ADDRESS l/LEVEL s/SUBJECT [s/SUBJECT]...`
+
+### Adding a guardian: `add-g`
+
+Adds a guardian's contact details to TutorTrack. This command does not link the
+guardian to a student; linking is handled separately.
+
+Format: `add-g n/NAME p/PHONE e/EMAIL a/ADDRESS`
+
+All of `n/NAME`, `p/PHONE`, `e/EMAIL`, and `a/ADDRESS` are required and must be
+specified exactly once. There are no optional fields. The supported prefixes
+are `n/`, `p/`, `e/`, and `a/`. The parameters can be entered in any order.
+
+The validation rules for `NAME`, `PHONE`, `EMAIL`, and `ADDRESS` are the same
+as those listed for [`add-s`](#adding-a-student-add-s).
+
+Examples:
+* `add-g n/Ben Tan p/92345678 e/ben.tan@gmail.com a/12 ABCD Ave 3`
+* `add-g n/Billie O'Connor p/+6598765432 e/billie@example.com a/25 Happy Road`
+
+On success, the guardian is added to the guardian list and TutorTrack displays
+a message such as `New guardian added: Ben Tan; Phone: 92345678; Email: ben.tan@gmail.com; Address: 12 ABCD Ave 3`.
+
+If a guardian with the same normalized name and phone number already exists,
+the command is rejected with:
+
+`This guardian already exists in TutorTrack.`
+
+Invalid command formats are rejected with:
+
+`Invalid command format.`<br>
+`Usage: add-g n/NAME p/PHONE e/EMAIL a/ADDRESS`
+
 ### Listing all persons: `list`
 
 Shows a list of all persons in the address book.
@@ -196,6 +268,8 @@ _Details coming soon ..._
 Action     | Format, Examples
 -----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 **Add**    | `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]... ` <br> e.g., `add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665 t/friend t/colleague`
+**Add student** | `add-s n/NAME p/PHONE e/EMAIL a/ADDRESS l/LEVEL s/SUBJECT [s/SUBJECT]...` <br> e.g., `add-s n/Henry Tan p/91234567 e/henry@example.com a/12 ABCD Ave 3 l/Secondary 3 s/Mathematics s/Physics`
+**Add guardian** | `add-g n/NAME p/PHONE e/EMAIL a/ADDRESS` <br> e.g., `add-g n/Ben Tan p/92345678 e/ben.tan@gmail.com a/12 ABCD Ave 3`
 **Clear**  | `clear`
 **Delete** | `delete INDEX`<br> e.g., `delete 3`
 **Edit**   | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]... `<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
