@@ -132,26 +132,6 @@ Invalid command formats are rejected with:
 `Invalid command format.`<br>
 `Usage: add-s n/NAME p/PHONE e/EMAIL a/ADDRESS l/LEVEL s/SUBJECT [s/SUBJECT]...`
 
-Invalid values produce the following messages:
-* Invalid names: `Student names must be 1-100 characters long and may contain only alphanumeric characters, spaces, hyphens and apostrophes.`
-* Invalid phone numbers: `Phone numbers must contain 3-15 digits and may start with '+'.`
-* Invalid emails: `Emails should be of the format local-part@domain, must not contain spaces, and must have a domain such as example.com.`
-* Invalid addresses: `Addresses must be 1-200 characters long, must not be blank, and may contain only letters, digits, spaces and the punctuation , . # - / ( ) '.`
-* Invalid levels: `Academic level must be 1-50 characters long and may contain only alphanumeric characters and spaces.`
-* Invalid subjects: `Subjects must be 1-50 characters long and may contain only alphanumeric characters, spaces, hyphens and parentheses.`
-
-Examples of invalid input:
-* `add-s n/Henry Tan p/91234567 e/henry@example.com a/12 ABCD Ave 3 l/Secondary 3`
-  is rejected because `s/SUBJECT` is missing.
-* `add-s n/Henry&Tan p/91234567 e/henry@example.com a/12 ABCD Ave 3 l/Secondary 3 s/Mathematics`
-  is rejected because the name contains an unsupported character.
-* `add-s n/Henry Tan p/12 345 e/henry@example.com a/12 ABCD Ave 3 l/Secondary 3 s/Mathematics`
-  is rejected with `Phone numbers must contain 3-15 digits and may start with '+'.`
-* Repeating a single-value prefix, such as `n/`, is rejected with
-  `The n/ parameter must not be specified more than once.`
-* An unsupported prefix, such as `x/value`, is rejected with
-  `Unknown parameter: x/`.
-
 ### Adding a guardian: `add-g`
 
 Adds a guardian's contact details to TutorTrack. This command does not link the
@@ -182,22 +162,6 @@ Invalid command formats are rejected with:
 
 `Invalid command format.`<br>
 `Usage: add-g n/NAME p/PHONE e/EMAIL a/ADDRESS`
-
-Invalid values produce the following messages:
-* Invalid names: `Guardian names must be 1-100 characters long and may contain only alphanumeric characters, spaces, hyphens and apostrophes.`
-* Invalid phone numbers: `Phone numbers must contain 3-15 digits and may start with '+'.`
-* Invalid emails: `Emails should be of the format local-part@domain, must not contain spaces, and must have a domain such as example.com.`
-* Invalid addresses: `Addresses must be 1-200 characters long, must not be blank, and may contain only letters, digits, spaces and the punctuation , . # - / ( ) '.`
-
-Examples of invalid input:
-* `add-g n/Ben Tan p/92345678 e/ben@example.com` is rejected because `a/ADDRESS`
-  is missing.
-* `add-g n/Ben&Tan p/92345678 e/ben@example.com a/12 ABCD Ave 3` is rejected
-  because the name contains an unsupported character.
-* Repeating a single-value prefix, such as `n/`, is rejected with
-  `The n/ parameter must not be specified more than once.`
-* An unsupported prefix, such as `r/Father`, is rejected with
-  `Unknown parameter: r/`.
 
 ### Listing all persons: `list`
 
