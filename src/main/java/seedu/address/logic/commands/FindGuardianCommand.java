@@ -14,7 +14,7 @@ import seedu.address.model.guardian.GuardianNameContainsKeywordsPredicate;
 public class FindGuardianCommand extends Command {
     public static final String COMMAND_WORD = "find-g";
 
-    public static final String MESSAGE_USAGE = "Usage: " + COMMAND_WORD + "KEYWORD [MORE_KEYWORDS]...";
+    public static final String MESSAGE_USAGE = "Usage: " + COMMAND_WORD + " KEYWORD [MORE_KEYWORDS]...";
 
     private final GuardianNameContainsKeywordsPredicate predicate;
 

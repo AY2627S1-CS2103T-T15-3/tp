@@ -9,7 +9,7 @@ import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.student.StudentNameContainsKeywordsPredicate;
 
 /**
- * Parses input arguments and creates a new {FindStudentCommand object.
+ * Parses input arguments and creates a new FindStudentCommand object.
  */
 public class FindStudentCommandParser implements Parser<FindStudentCommand> {
 
