@@ -14,10 +14,7 @@ import seedu.address.model.guardian.GuardianNameContainsKeywordsPredicate;
 public class FindGuardianCommand extends Command {
     public static final String COMMAND_WORD = "find-g";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Finds all guardians whose names contain any of "
-            + "the specified keywords (case-insensitive) and displays them as a list with index numbers.\n"
-            + "Parameters: KEYWORD [MORE_KEYWORDS]...\n"
-            + "Example: " + COMMAND_WORD + " alice bob charlie";
+    public static final String MESSAGE_USAGE = "Usage: " + COMMAND_WORD + "KEYWORD [MORE_KEYWORDS]...";
 
     private final GuardianNameContainsKeywordsPredicate predicate;
 
@@ -29,8 +26,15 @@ public class FindGuardianCommand extends Command {
     public CommandResult execute(Model model) {
         requireNonNull(model);
         model.updateFilteredGuardianList(predicate);
-        return new CommandResult(
-                String.format(Messages.MESSAGE_GUARDIANS_LISTED_OVERVIEW, model.getFilteredGuardianList().size()));
+
+        int result_count = model.getFilteredGuardianList().size();
+        if (result_count > 0) {
+            return new CommandResult(
+                    String.format(Messages.MESSAGE_GUARDIANS_LISTED_OVERVIEW, result_count));
+        } else {
+            return new CommandResult(Messages.MESSAGE_NO_GUARDIANS_MATCH_SEARCH);
+        }
+
     }
 
     @Override

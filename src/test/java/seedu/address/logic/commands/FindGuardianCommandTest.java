@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.Messages.MESSAGE_GUARDIANS_LISTED_OVERVIEW;
+import static seedu.address.logic.Messages.MESSAGE_NO_GUARDIANS_MATCH_SEARCH;
 
 import java.util.List;
 
@@ -68,7 +69,7 @@ public class FindGuardianCommandTest {
         model.addGuardian(guardian("Alice Tan"));
         CommandResult result = new FindGuardianCommand(
                 new GuardianNameContainsKeywordsPredicate(List.of())).execute(model);
-        assertEquals(String.format(MESSAGE_GUARDIANS_LISTED_OVERVIEW, 0), result.getFeedbackToUser());
+        assertEquals(MESSAGE_NO_GUARDIANS_MATCH_SEARCH, result.getFeedbackToUser());
         assertTrue(model.getFilteredGuardianList().isEmpty());
     }
 
