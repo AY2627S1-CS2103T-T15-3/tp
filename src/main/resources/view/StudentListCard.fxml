@@ -33,6 +33,9 @@
       <FlowPane fx:id="subjects" hgap="5">
         <Label text="Subjects:" styleClass="cell_small_label" />
       </FlowPane>
+      <FlowPane fx:id="guardians" hgap="5">
+        <Label text="Guardians:" styleClass="cell_small_label" />
+      </FlowPane>
     </VBox>
   </GridPane>
 </HBox>

@@ -1,10 +1,12 @@
 package seedu.address.model;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 import javafx.collections.ObservableList;
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.model.guardian.Guardian;
+import seedu.address.model.link.StudentGuardianLink;
 import seedu.address.model.person.Person;
 import seedu.address.model.student.Student;
 
@@ -144,4 +146,22 @@ public interface Model {
      * @throws NullPointerException if {@code predicate} is null.
      */
     void updateFilteredGuardianList(Predicate<Guardian> predicate);
+
+    /** Returns true if the student-guardian link already exists. */
+    boolean hasStudentGuardianLink(StudentGuardianLink link);
+
+    /**
+     * Returns an unmodifiable list of guardians linked to {@code student}.
+     *
+     * @param student the student whose linked guardians are requested
+     * @return the guardians linked to the student, in link creation order
+     */
+    List<Guardian> getGuardiansForStudent(Student student);
+
+    /**
+     * Adds a student-guardian link. Re-adding an existing link has no effect.
+     *
+     * @param link the link to add
+     */
+    void addStudentGuardianLink(StudentGuardianLink link);
 }
