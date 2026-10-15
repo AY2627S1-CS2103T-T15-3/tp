@@ -1,16 +1,28 @@
 package seedu.address.storage;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.testutil.Assert.assertThrows;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.commons.util.JsonUtil;
 import seedu.address.model.AddressBook;
+import seedu.address.model.guardian.Guardian;
+import seedu.address.model.link.StudentGuardianLink;
+import seedu.address.model.person.Address;
+import seedu.address.model.person.Email;
+import seedu.address.model.person.Name;
+import seedu.address.model.person.Phone;
+import seedu.address.model.student.Level;
+import seedu.address.model.student.Student;
+import seedu.address.model.student.Subject;
 import seedu.address.testutil.TypicalPersons;
 
 public class JsonSerializableAddressBookTest {
@@ -68,6 +80,57 @@ public class JsonSerializableAddressBookTest {
 
         assertThrows(IllegalValueException.class, JsonSerializableAddressBook.MESSAGE_DUPLICATE_GUARDIAN,
                 data::toModelType);
+    }
+
+    @Test
+    public void constructorAndToModelType_links_preserveOrder() throws Exception {
+        AddressBook source = new AddressBook();
+        Student student = student("Lucy Lim", "91234567");
+        Guardian firstGuardian = guardian("Ben Tan", "92345678");
+        Guardian secondGuardian = guardian("Billie Ng", "94567890");
+        source.addStudent(student);
+        source.addGuardian(firstGuardian);
+        source.addGuardian(secondGuardian);
+        source.addStudentGuardianLink(new StudentGuardianLink(student, firstGuardian));
+        source.addStudentGuardianLink(new StudentGuardianLink(student, secondGuardian));
+
+        AddressBook restored = new JsonSerializableAddressBook(source).toModelType();
+
+        assertEquals(source, restored);
+        assertEquals(List.of(firstGuardian, secondGuardian), restored.getGuardiansForStudent(student));
+    }
+
+    @Test
+    public void toModelType_missingLinksField_loadsWithNoLinks() throws Exception {
+        JsonSerializableAddressBook data = JsonUtil.readJsonFile(TYPICAL_PERSONS_FILE,
+                JsonSerializableAddressBook.class).get();
+
+        assertTrue(data.toModelType().getStudentGuardianLinkList().isEmpty());
+    }
+
+    @Test
+    public void toModelType_linkWithMissingContact_throwsIllegalValueException() {
+        JsonAdaptedStudent student = new JsonAdaptedStudent("Lucy Lim", "91234567", "lucy@example.com",
+                "21 Happy Road", "JC 1", List.of("Mathematics"));
+        JsonAdaptedGuardian guardian = new JsonAdaptedGuardian("Ben Tan", "92345678", "ben@example.com",
+                "25 Happy Road");
+        JsonAdaptedStudentGuardianLink missingLink = new JsonAdaptedStudentGuardianLink(
+                "Unknown Student", "99999999", "Ben Tan", "92345678");
+        JsonSerializableAddressBook data = new JsonSerializableAddressBook(List.of(), List.of(student),
+                List.of(guardian), List.of(missingLink));
+
+        assertThrows(IllegalValueException.class, JsonSerializableAddressBook.MESSAGE_INVALID_LINK,
+                data::toModelType);
+    }
+
+    private static Student student(String name, String phone) {
+        return new Student(new Name(name), new Phone(phone), new Email("lucy@example.com"),
+                new Address("21 Happy Road"), new Level("JC 1"), Set.of(new Subject("Mathematics")));
+    }
+
+    private static Guardian guardian(String name, String phone) {
+        return new Guardian(new Name(name), new Phone(phone), new Email("guardian@example.com"),
+                new Address("25 Happy Road"));
     }
 
 }

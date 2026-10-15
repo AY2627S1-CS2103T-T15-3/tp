@@ -3,6 +3,7 @@ package seedu.address.model;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
+import java.util.List;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 
@@ -11,6 +12,7 @@ import javafx.collections.transformation.FilteredList;
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.model.guardian.Guardian;
+import seedu.address.model.link.StudentGuardianLink;
 import seedu.address.model.person.Person;
 import seedu.address.model.student.Student;
 
@@ -190,6 +192,23 @@ public class ModelManager implements Model {
     public void updateFilteredGuardianList(Predicate<Guardian> predicate) {
         requireNonNull(predicate);
         filteredGuardians.setPredicate(predicate);
+    }
+
+    @Override
+    public boolean hasStudentGuardianLink(StudentGuardianLink link) {
+        return addressBook.hasStudentGuardianLink(link);
+    }
+
+    @Override
+    public List<Guardian> getGuardiansForStudent(Student student) {
+        requireNonNull(student);
+        return addressBook.getGuardiansForStudent(student);
+    }
+
+    @Override
+    public void addStudentGuardianLink(StudentGuardianLink link) {
+        requireNonNull(link);
+        addressBook.addStudentGuardianLink(link);
     }
 
     @Override

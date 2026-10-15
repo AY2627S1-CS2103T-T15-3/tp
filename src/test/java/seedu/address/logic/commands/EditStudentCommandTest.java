@@ -41,6 +41,8 @@ public class EditStudentCommandTest {
         assertEquals(new Phone("98765432"), edited.getPhone());
         assertEquals(String.format(EditStudentCommand.MESSAGE_SUCCESS, Messages.format(edited)),
                 result.getFeedbackToUser());
+        assertEquals(edited, result.getStudentToHighlight());
+        assertEquals(null, result.getGuardianToHighlight());
     }
 
     @Test

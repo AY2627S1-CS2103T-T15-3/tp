@@ -7,7 +7,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+import seedu.address.model.guardian.Guardian;
+import seedu.address.model.person.Address;
+import seedu.address.model.person.Email;
+import seedu.address.model.person.Name;
+import seedu.address.model.person.Phone;
+
 public class CommandResultTest {
+    private static final Guardian GUARDIAN = new Guardian(new Name("Ben Tan"), new Phone("92345678"),
+            new Email("ben@example.com"), new Address("25 Happy Road"));
+
     @Test
     public void equals() {
         CommandResult commandResult = new CommandResult("feedback");
@@ -59,5 +68,13 @@ public class CommandResultTest {
                 + commandResult.getFeedbackToUser() + ", showHelp=" + commandResult.isShowHelp()
                 + ", exit=" + commandResult.isExit() + "}";
         assertEquals(expected, commandResult.toString());
+    }
+
+    @Test
+    public void guardianHighlight_constructorStoresGuardian() {
+        CommandResult result = new CommandResult("feedback", GUARDIAN);
+
+        assertEquals(GUARDIAN, result.getGuardianToHighlight());
+        assertEquals(null, result.getStudentToHighlight());
     }
 }

@@ -1,7 +1,10 @@
 package seedu.address.model;
 
+import java.util.List;
+
 import javafx.collections.ObservableList;
 import seedu.address.model.guardian.Guardian;
+import seedu.address.model.link.StudentGuardianLink;
 import seedu.address.model.person.Person;
 import seedu.address.model.student.Student;
 
@@ -30,6 +33,11 @@ public interface ReadOnlyAddressBook {
      */
     default ObservableList<Guardian> getGuardianList() {
         return javafx.collections.FXCollections.emptyObservableList();
+    }
+
+    /** Returns the student-guardian links in link creation order. */
+    default List<StudentGuardianLink> getStudentGuardianLinkList() {
+        return List.of();
     }
 
 }
