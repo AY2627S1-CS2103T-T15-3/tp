@@ -42,7 +42,7 @@ public class GuardianNameContainsKeywordsPredicateTest {
     }
 
     @Test
-    public void test_nameContainsKeywords_returnsTrue() {
+    public void test_nameContainsFullKeywords_returnsTrue() {
         // One keyword
         GuardianNameContainsKeywordsPredicate predicate =
                 new GuardianNameContainsKeywordsPredicate(List.of("Alice"));
@@ -58,6 +58,26 @@ public class GuardianNameContainsKeywordsPredicateTest {
 
         // Mixed-case keywords
         assertTrue(new GuardianNameContainsKeywordsPredicate(List.of("aLIce", "bOB"))
+                .test(guardian("Alice Bob")));
+    }
+
+    @Test
+    public void test_nameContainsPrefixKeywords_returnsTrue() {
+        // One keyword
+        GuardianNameContainsKeywordsPredicate predicate =
+                new GuardianNameContainsKeywordsPredicate(List.of("Ali"));
+        assertTrue(predicate.test(guardian("Alice Bob")));
+
+        // Multiple keywords
+        assertTrue(new GuardianNameContainsKeywordsPredicate(List.of("Ali", "Bo"))
+                .test(guardian("Alice Bob")));
+
+        // Only one matching keyword
+        assertTrue(new GuardianNameContainsKeywordsPredicate(List.of("Bo", "Car"))
+                .test(guardian("Alice Carol")));
+
+        // Mixed-case keywords
+        assertTrue(new GuardianNameContainsKeywordsPredicate(List.of("aLIc", "bO"))
                 .test(guardian("Alice Bob")));
     }
 

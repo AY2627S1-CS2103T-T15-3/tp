@@ -1,9 +1,9 @@
 package seedu.address.model.guardian;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
-import seedu.address.commons.util.StringUtil;
 import seedu.address.commons.util.ToStringBuilder;
 
 /**
@@ -19,7 +19,8 @@ public class GuardianNameContainsKeywordsPredicate implements Predicate<Guardian
     @Override
     public boolean test(Guardian guardian) {
         return keywords.stream()
-                .anyMatch(keyword -> StringUtil.containsWordIgnoreCase(guardian.getName().fullName, keyword));
+                .anyMatch(keyword -> Arrays.stream(guardian.getName().fullName.split("\\s+"))
+                        .anyMatch(word -> word.toLowerCase().startsWith(keyword.toLowerCase())));
     }
 
     @Override
