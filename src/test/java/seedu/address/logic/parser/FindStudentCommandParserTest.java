@@ -9,6 +9,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.commands.FindStudentCommand;
+import seedu.address.model.person.Name;
 import seedu.address.model.student.StudentNameContainsKeywordsPredicate;
 
 public class FindStudentCommandParserTest {
@@ -29,5 +30,10 @@ public class FindStudentCommandParserTest {
 
         // multiple whitespaces between keywords
         assertParseSuccess(parser, " \n Alice \n \t Bob  \t", expected);
+    }
+
+    @Test
+    public void parse_invalidName_throwsParseException() {
+        assertParseFailure(parser, "!@aa", Name.MESSAGE_CONSTRAINTS);
     }
 }

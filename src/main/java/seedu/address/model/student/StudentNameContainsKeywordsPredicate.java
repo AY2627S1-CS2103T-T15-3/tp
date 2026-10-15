@@ -1,9 +1,9 @@
 package seedu.address.model.student;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
-import seedu.address.commons.util.StringUtil;
 import seedu.address.commons.util.ToStringBuilder;
 
 /**
@@ -19,7 +19,8 @@ public class StudentNameContainsKeywordsPredicate implements Predicate<Student> 
     @Override
     public boolean test(Student student) {
         return keywords.stream()
-                .anyMatch(keyword -> StringUtil.containsWordIgnoreCase(student.getName().fullName, keyword));
+                .anyMatch(keyword -> Arrays.stream(student.getName().fullName.split("\\s+"))
+                        .anyMatch(word -> word.toLowerCase().startsWith(keyword.toLowerCase())));
     }
 
     @Override

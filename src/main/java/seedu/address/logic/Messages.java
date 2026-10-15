@@ -22,6 +22,8 @@ public class Messages {
     public static final String MESSAGE_PERSONS_LISTED_OVERVIEW = "%1$d person(s) listed!";
     public static final String MESSAGE_STUDENTS_LISTED_OVERVIEW = "%1$d student(s) listed.";
     public static final String MESSAGE_GUARDIANS_LISTED_OVERVIEW = "%1$d guardian(s) listed.";
+    public static final String MESSAGE_NO_GUARDIANS_MATCH_SEARCH = "No guardians match the given search.";
+    public static final String MESSAGE_NO_STUDENTS_MATCH_SEARCH = "No students match the given search.";
     public static final String MESSAGE_NO_STUDENTS_MATCH_FILTER = "No students match the given filter.";
     public static final String MESSAGE_DUPLICATE_FIELDS =
                 "Multiple values specified for the following single-valued field(s): ";
