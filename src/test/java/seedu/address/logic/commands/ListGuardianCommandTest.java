@@ -1,6 +1,7 @@
 package seedu.address.logic.commands;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static seedu.address.logic.Messages.MESSAGE_GUARDIANS_LISTED_OVERVIEW;
 
 import java.util.List;
 
@@ -27,7 +28,8 @@ public class ListGuardianCommandTest {
 
         CommandResult result = new ListGuardianCommand().execute(model);
 
-        assertEquals(ListGuardianCommand.MESSAGE_SUCCESS, result.getFeedbackToUser());
+        assertEquals(String.format(MESSAGE_GUARDIANS_LISTED_OVERVIEW, model.getFilteredGuardianList().size()),
+                result.getFeedbackToUser());
         assertEquals(List.of(alice, bob), model.getFilteredGuardianList());
     }
 
