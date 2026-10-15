@@ -3,11 +3,13 @@ package seedu.address.model;
 import static java.util.Objects.requireNonNull;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javafx.collections.ObservableList;
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.model.guardian.Guardian;
 import seedu.address.model.guardian.UniqueGuardianList;
+import seedu.address.model.link.StudentGuardianLink;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
 import seedu.address.model.student.Student;
@@ -22,6 +24,7 @@ public class AddressBook implements ReadOnlyAddressBook {
     private final UniquePersonList persons = new UniquePersonList();
     private final UniqueStudentList students = new UniqueStudentList();
     private final UniqueGuardianList guardians = new UniqueGuardianList();
+    private final List<StudentGuardianLink> studentGuardianLinks = new java.util.ArrayList<>();
 
     public AddressBook() {}
 
@@ -52,6 +55,8 @@ public class AddressBook implements ReadOnlyAddressBook {
         setPersons(newData.getPersonList());
         setStudents(newData.getStudentList());
         setGuardians(newData.getGuardianList());
+        studentGuardianLinks.clear();
+        studentGuardianLinks.addAll(newData.getStudentGuardianLinkList());
     }
 
     //// person-level operations
@@ -113,8 +118,12 @@ public class AddressBook implements ReadOnlyAddressBook {
      * Replaces the given student {@code target} with {@code editedStudent}.
      */
     public void setStudent(Student target, Student editedStudent) {
+        requireNonNull(target);
         requireNonNull(editedStudent);
         students.setStudent(target, editedStudent);
+        studentGuardianLinks.replaceAll(link -> link.getStudent().equals(target)
+                ? new StudentGuardianLink(editedStudent, link.getGuardian())
+                : link);
     }
 
     /**
@@ -146,8 +155,12 @@ public class AddressBook implements ReadOnlyAddressBook {
 
     /** Replaces the given guardian with {@code editedGuardian}. */
     public void setGuardian(Guardian target, Guardian editedGuardian) {
+        requireNonNull(target);
         requireNonNull(editedGuardian);
         guardians.setGuardian(target, editedGuardian);
+        studentGuardianLinks.replaceAll(link -> link.getGuardian().equals(target)
+                ? new StudentGuardianLink(link.getStudent(), editedGuardian)
+                : link);
     }
 
     /** Removes {@code guardian} from the address book. */
@@ -158,6 +171,30 @@ public class AddressBook implements ReadOnlyAddressBook {
     /** Replaces the contents of the guardian list with {@code guardians}. */
     public void setGuardians(List<Guardian> guardians) {
         this.guardians.setGuardians(guardians);
+    }
+
+    /** Returns true if the given student-guardian link exists. */
+    public boolean hasStudentGuardianLink(StudentGuardianLink link) {
+        return studentGuardianLinks.contains(requireNonNull(link));
+    }
+
+    /**
+     * Returns the guardians linked to {@code student}, in link creation order.
+     */
+    public List<Guardian> getGuardiansForStudent(Student student) {
+        requireNonNull(student);
+        return studentGuardianLinks.stream()
+                .filter(link -> link.getStudent().equals(student))
+                .map(StudentGuardianLink::getGuardian)
+                .collect(Collectors.toUnmodifiableList());
+    }
+
+    /** Adds a student-guardian link. Duplicate links are ignored. */
+    public void addStudentGuardianLink(StudentGuardianLink link) {
+        StudentGuardianLink nonNullLink = requireNonNull(link);
+        if (!studentGuardianLinks.contains(nonNullLink)) {
+            studentGuardianLinks.add(nonNullLink);
+        }
     }
 
     //// util methods
@@ -185,6 +222,11 @@ public class AddressBook implements ReadOnlyAddressBook {
     }
 
     @Override
+    public List<StudentGuardianLink> getStudentGuardianLinkList() {
+        return List.copyOf(studentGuardianLinks);
+    }
+
+    @Override
     public boolean equals(Object other) {
         if (other == this) {
             return true;
@@ -197,11 +239,12 @@ public class AddressBook implements ReadOnlyAddressBook {
 
         return persons.equals(otherAddressBook.persons)
                 && students.equals(otherAddressBook.students)
-                && guardians.equals(otherAddressBook.guardians);
+                && guardians.equals(otherAddressBook.guardians)
+                && studentGuardianLinks.equals(otherAddressBook.studentGuardianLinks);
     }
 
     @Override
     public int hashCode() {
-        return java.util.Objects.hash(persons, students, guardians);
+        return java.util.Objects.hash(persons, students, guardians, studentGuardianLinks);
     }
 }

@@ -112,4 +112,27 @@ public class EditGuardianDescriptorTest {
 
         assertTrue(result.contains("name=Lucy Lim"));
     }
+
+    @Test
+    public void equals_sameValues_returnsTrue() {
+        EditGuardianDescriptor first = new EditGuardianDescriptor();
+        first.setName(new Name("Lucy Lim"));
+        EditGuardianDescriptor second = new EditGuardianDescriptor(first);
+
+        assertTrue(first.equals(first));
+        assertTrue(first.equals(second));
+        assertEquals(first.hashCode(), second.hashCode());
+    }
+
+    @Test
+    public void equals_differentValues_returnsFalse() {
+        EditGuardianDescriptor first = new EditGuardianDescriptor();
+        first.setName(new Name("Lucy Lim"));
+        EditGuardianDescriptor second = new EditGuardianDescriptor();
+        second.setName(new Name("Ben Tan"));
+
+        assertFalse(first.equals(null));
+        assertFalse(first.equals(5));
+        assertFalse(first.equals(second));
+    }
 }

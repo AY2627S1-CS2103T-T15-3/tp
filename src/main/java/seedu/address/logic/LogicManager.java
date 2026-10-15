@@ -2,6 +2,7 @@ package seedu.address.logic;
 
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
+import java.util.List;
 import java.util.logging.Logger;
 
 import javafx.collections.ObservableList;
@@ -74,6 +75,11 @@ public class LogicManager implements Logic {
     @Override
     public ObservableList<Guardian> getFilteredGuardianList() {
         return model.getFilteredGuardianList();
+    }
+
+    @Override
+    public List<Guardian> getGuardiansForStudent(Student student) {
+        return model.getGuardiansForStudent(student);
     }
 
     @Override

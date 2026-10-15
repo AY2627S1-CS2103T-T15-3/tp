@@ -137,6 +137,18 @@ public class ModelManagerTest {
         assertThrows(NullPointerException.class, () -> modelManager.setGuardian(null, guardian));
         assertThrows(NullPointerException.class, () -> modelManager.setGuardian(guardian, null));
         assertThrows(NullPointerException.class, () -> modelManager.updateFilteredGuardianList(null));
+        assertThrows(NullPointerException.class, () -> modelManager.getGuardiansForStudent(null));
+    }
+
+    @Test
+    public void getGuardiansForStudent_returnsLinkedGuardians() {
+        Student student = student("Henry Tan", "91234567", "henry@example.com");
+        Guardian guardian = guardian("Ben Tan", "92345678", "ben@example.com");
+        modelManager.addStudent(student);
+        modelManager.addGuardian(guardian);
+        modelManager.addStudentGuardianLink(new seedu.address.model.link.StudentGuardianLink(student, guardian));
+
+        assertEquals(List.of(guardian), modelManager.getGuardiansForStudent(student));
     }
 
     @Test
