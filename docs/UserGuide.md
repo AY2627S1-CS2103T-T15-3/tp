@@ -157,7 +157,11 @@ Format: `link-g STUDENT_INDEX g/GUARDIAN_INDEX`
 * Both indexes are required and must be positive integers within their respective displayed lists.
 * The student and guardian must already exist.
 * Repeating an existing link does not create another link.
-* The basic MVP stores the relationship; unlinking an individual relationship is not supported yet.
+* After a successful link, the student is highlighted and the guardian selection is cleared.
+* A student can be linked to multiple guardians, and a guardian can be linked to multiple students.
+* Links are saved with the address book and restored when the application is restarted.
+* If a linked student or guardian is edited, the updated details are shown everywhere that contact is linked.
+* Unlinking an individual relationship is not supported yet.
 
 Examples:
 * `link-g 2 g/1`

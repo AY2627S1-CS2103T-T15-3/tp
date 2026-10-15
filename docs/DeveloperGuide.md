@@ -138,6 +138,7 @@ The `Model` component,
 * does not depend on any of the other three components (as the `Model` represents data entities of the domain, they should make sense on their own without depending on other components)
 * exposes student and guardian lists separately so edit commands can resolve indexes from the currently displayed list.
 * stores student–guardian relationships as `StudentGuardianLink` objects and prevents duplicate pairs.
+* updates stored links when a linked student or guardian is edited, so linked cards always show current details.
 
 
 <box type="info" seamless>
@@ -158,6 +159,8 @@ The `Storage` component,
 * can save both address book data and user preference data in JSON format, and read them back into corresponding objects.
 * is implemented by `StorageManager`, which delegates the actual JSON file access to `JsonAddressBookStorage` and `JsonUserPrefsStorage` (one class per data file).
 * depends on some classes in the `Model` component (because the `Storage` component's job is to save/retrieve objects that belong to the `Model`)
+
+Student–guardian links are persisted in the address-book JSON under a `links` array. Each entry stores the student and guardian name and phone, which identify the corresponding existing records without duplicating their full details. Links are resolved after students and guardians are loaded, preserving link creation order. A missing `links` field is treated as an empty list for compatibility with existing address-book files. A link referring to a student or guardian that is not present in the file is rejected as invalid data.
 
 ### Common classes
 
