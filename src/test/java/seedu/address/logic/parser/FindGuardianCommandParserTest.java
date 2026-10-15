@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.commands.FindGuardianCommand;
 import seedu.address.model.guardian.GuardianNameContainsKeywordsPredicate;
+import seedu.address.model.person.Name;
 
 /** Contains unit tests for {@code FindGuardianCommandParser}. */
 public class FindGuardianCommandParserTest {
@@ -31,5 +32,10 @@ public class FindGuardianCommandParserTest {
 
         // multiple whitespaces between keywords
         assertParseSuccess(parser, " \n Alice \n \t Bob  \t", expected);
+    }
+
+    @Test
+    public void parse_invalidName_throwsParseException() {
+        assertParseFailure(parser, "!@aa", Name.MESSAGE_CONSTRAINTS);
     }
 }

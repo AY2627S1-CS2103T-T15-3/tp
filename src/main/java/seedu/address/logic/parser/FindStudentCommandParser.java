@@ -6,6 +6,7 @@ import java.util.List;
 
 import seedu.address.logic.commands.FindStudentCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.person.Name;
 import seedu.address.model.student.StudentNameContainsKeywordsPredicate;
 
 /**
@@ -24,7 +25,13 @@ public class FindStudentCommandParser implements Parser<FindStudentCommand> {
             throw new ParseException(
                     String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindStudentCommand.MESSAGE_USAGE));
         }
+
+        String normalizedArgs = trimmedArgs.replaceAll("\\s+", " ");
+        if (!Name.isValidName(normalizedArgs)) {
+            throw new ParseException(Name.MESSAGE_CONSTRAINTS);
+        }
+
         return new FindStudentCommand(
-                new StudentNameContainsKeywordsPredicate(List.of(trimmedArgs.split("\\s+"))));
+                new StudentNameContainsKeywordsPredicate(List.of(normalizedArgs.split(" "))));
     }
 }

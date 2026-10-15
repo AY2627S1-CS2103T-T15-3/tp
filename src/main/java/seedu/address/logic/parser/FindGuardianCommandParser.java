@@ -7,6 +7,7 @@ import java.util.List;
 import seedu.address.logic.commands.FindGuardianCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.guardian.GuardianNameContainsKeywordsPredicate;
+import seedu.address.model.person.Name;
 
 /**
  * Parses input arguments and creates a new FindGuardianCommand object.
@@ -25,7 +26,13 @@ public class FindGuardianCommandParser implements Parser<FindGuardianCommand> {
             throw new ParseException(
                     String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindGuardianCommand.MESSAGE_USAGE));
         }
+
+        String normalizedArgs = trimmedArgs.replaceAll("\\s+", " ");
+        if (!Name.isValidName(normalizedArgs)) {
+            throw new ParseException(Name.MESSAGE_CONSTRAINTS);
+        }
+
         return new FindGuardianCommand(
-                new GuardianNameContainsKeywordsPredicate(List.of(trimmedArgs.split("\\s+"))));
+                new GuardianNameContainsKeywordsPredicate(List.of(normalizedArgs.split(" "))));
     }
 }
