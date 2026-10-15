@@ -20,4 +20,14 @@ public class ListStudentCommand extends Command {
         return new CommandResult(
                 String.format(MESSAGE_STUDENTS_LISTED_OVERVIEW, model.getFilteredStudentList().size()));
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == this) {
+            return true;
+        }
+
+        // instanceof handles nulls
+        return other instanceof ListStudentCommand;
+    }
 }
