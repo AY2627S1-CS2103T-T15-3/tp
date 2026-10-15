@@ -34,7 +34,6 @@ public class FindGuardianCommand extends Command {
         } else {
             return new CommandResult(Messages.MESSAGE_NO_GUARDIANS_MATCH_SEARCH);
         }
-
     }
 
     @Override

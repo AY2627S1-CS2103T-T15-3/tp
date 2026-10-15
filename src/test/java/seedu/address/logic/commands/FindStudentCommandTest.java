@@ -3,6 +3,7 @@ package seedu.address.logic.commands;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static seedu.address.logic.Messages.MESSAGE_NO_STUDENTS_MATCH_SEARCH;
 import static seedu.address.logic.Messages.MESSAGE_STUDENTS_LISTED_OVERVIEW;
 
 import java.util.LinkedHashSet;
@@ -76,7 +77,7 @@ public class FindStudentCommandTest {
         StudentNameContainsKeywordsPredicate predicate = new StudentNameContainsKeywordsPredicate(List.of());
         CommandResult result = new FindStudentCommand(predicate).execute(model);
 
-        assertEquals(String.format(MESSAGE_STUDENTS_LISTED_OVERVIEW, 0), result.getFeedbackToUser());
+        assertEquals(MESSAGE_NO_STUDENTS_MATCH_SEARCH, result.getFeedbackToUser());
         assertTrue(model.getFilteredStudentList().isEmpty());
     }
 
