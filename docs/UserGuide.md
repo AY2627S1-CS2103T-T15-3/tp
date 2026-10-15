@@ -270,6 +270,49 @@ Examples:
 * `list` followed by `delete 2` deletes the 2nd person in the address book.
 * `find Betsy` followed by `delete 1` deletes the 1st person in the results of the `find` command.
 
+
+### Removing a student: `remove-s`
+
+Removes a specified student from TutorTrack.
+
+Format: `remove-s INDEX`
+
+* Removes the student at the specified `INDEX`. The index refers to the
+index number shown in the currently displayed student list.
+* The index **must be a positive integer** 1, 2, 3, ..., and must not exceed the number
+of students in the displayed list.
+* Removing a student also removes all associated student-guardian links, but the associated
+guardian's contact record is not deleted.
+
+Examples:
+* `remove-s 2` removes the 2nd student in the currently displayed student list.
+* `remove-s 1` removes the 1st student in the currently displayed student list, even if it is filtered.
+
+### Removing a guardian: `remove-g`
+
+Removes a specified guardian from TutorTrack.
+
+Format: `remove-g INDEX`
+
+* Removes the guardian at the specified `INDEX`. The index refers to the
+index number shown in the currently displayed guardian list.
+* The index **must be a positive integer** 1, 2, 3, ..., and must not exceed the number
+  of guardians in the displayed list.
+* Removing a guardian also removes all associated student-guardian links, but the associated
+  student's contact record is not deleted.
+
+Examples:
+* `remove-g 2` removes the 2nd guardian in the currently displayed guardian list.
+* `remove-g 1` removes the 1st guardian in the currently displayed guardian list, even if it is filtered
+
+
+
+
+
+
+
+
+
 ### Clearing all entries: `clear`
 
 Clears all entries from the address book.
