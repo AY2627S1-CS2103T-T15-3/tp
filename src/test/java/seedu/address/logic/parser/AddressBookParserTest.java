@@ -27,6 +27,7 @@ import seedu.address.logic.commands.EditStudentCommand;
 import seedu.address.logic.commands.ExitCommand;
 import seedu.address.logic.commands.FilterCommand;
 import seedu.address.logic.commands.FindCommand;
+import seedu.address.logic.commands.FindGuardianCommand;
 import seedu.address.logic.commands.FindStudentCommand;
 import seedu.address.logic.commands.HelpCommand;
 import seedu.address.logic.commands.LinkGuardianCommand;
@@ -34,6 +35,7 @@ import seedu.address.logic.commands.ListCommand;
 import seedu.address.logic.commands.RemoveGuardianCommand;
 import seedu.address.logic.commands.RemoveStudentCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.guardian.GuardianNameContainsKeywordsPredicate;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
 import seedu.address.model.person.Person;
 import seedu.address.model.student.Level;
@@ -150,6 +152,15 @@ public class AddressBookParserTest {
         FindStudentCommand command = (FindStudentCommand) parser.parseCommand(
                 FindStudentCommand.COMMAND_WORD + " " + keywords.stream().collect(Collectors.joining(" ")));
         assertEquals(new FindStudentCommand(new StudentNameContainsKeywordsPredicate(keywords)), command);
+    }
+
+    @Test
+    public void parseCommand_findGuardian() throws Exception {
+        // Verifies that the top-level parser routes find-g to the guardian-search parser.
+        List<String> keywords = List.of("Alice", "Bob");
+        FindGuardianCommand command = (FindGuardianCommand) parser.parseCommand(
+                FindGuardianCommand.COMMAND_WORD + " " + keywords.stream().collect(Collectors.joining(" ")));
+        assertEquals(new FindGuardianCommand(new GuardianNameContainsKeywordsPredicate(keywords)), command);
     }
 
     @Test

@@ -62,6 +62,26 @@ public class StudentNameContainsKeywordsPredicateTest {
     }
 
     @Test
+    public void test_nameContainsPrefixKeywords_returnsTrue() {
+        // One keyword
+        StudentNameContainsKeywordsPredicate predicate =
+                new StudentNameContainsKeywordsPredicate(List.of("Ali"));
+        assertTrue(predicate.test(student("Alice Bob")));
+
+        // Multiple keywords
+        predicate = new StudentNameContainsKeywordsPredicate(List.of("Ali", "Bo"));
+        assertTrue(predicate.test(student("Alice Bob")));
+
+        // Only one matching keyword
+        predicate = new StudentNameContainsKeywordsPredicate(List.of("Bo", "Car"));
+        assertTrue(predicate.test(student("Alice Carol")));
+
+        // Mixed-case keywords
+        predicate = new StudentNameContainsKeywordsPredicate(List.of("aLIc", "bO"));
+        assertTrue(predicate.test(student("Alice Bob")));
+    }
+
+    @Test
     public void test_nameDoesNotContainKeywords_returnsFalse() {
         // Zero keywords
         StudentNameContainsKeywordsPredicate predicate =

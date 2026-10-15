@@ -15,10 +15,7 @@ public class FindStudentCommand extends Command {
 
     public static final String COMMAND_WORD = "find-s";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Finds all students whose names contain any of "
-            + "the specified keywords (case-insensitive) and displays them as a list with index numbers.\n"
-            + "Parameters: KEYWORD [MORE_KEYWORDS]...\n"
-            + "Example: " + COMMAND_WORD + " alice bob charlie";
+    public static final String MESSAGE_USAGE = "Usage: " + COMMAND_WORD + " KEYWORD [MORE_KEYWORDS]...";
 
     private final StudentNameContainsKeywordsPredicate predicate;
 
@@ -30,8 +27,14 @@ public class FindStudentCommand extends Command {
     public CommandResult execute(Model model) {
         requireNonNull(model);
         model.updateFilteredStudentList(predicate);
-        return new CommandResult(
-                String.format(Messages.MESSAGE_STUDENTS_LISTED_OVERVIEW, model.getFilteredStudentList().size()));
+
+        int resultCount = model.getFilteredStudentList().size();
+        if (resultCount > 0) {
+            return new CommandResult(
+                    String.format(Messages.MESSAGE_STUDENTS_LISTED_OVERVIEW, resultCount));
+        } else {
+            return new CommandResult(Messages.MESSAGE_NO_STUDENTS_MATCH_SEARCH);
+        }
     }
 
     @Override
