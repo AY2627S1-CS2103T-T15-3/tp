@@ -127,10 +127,11 @@ public class AddressBook implements ReadOnlyAddressBook {
     }
 
     /**
-     * Removes {@code student} from the address book.
+     * Removes {@code student} and all associated student-guardian links from the address book
      */
     public void removeStudent(Student student) {
         students.remove(student);
+        studentGuardianLinks.removeIf(link -> link.getStudent().equals(student));
     }
 
     /**
@@ -163,9 +164,10 @@ public class AddressBook implements ReadOnlyAddressBook {
                 : link);
     }
 
-    /** Removes {@code guardian} from the address book. */
+    /** Removes {@code guardian} and all associated student-guardian links from the address book. */
     public void removeGuardian(Guardian guardian) {
         guardians.remove(guardian);
+        studentGuardianLinks.removeIf(link -> link.getGuardian().equals(guardian));
     }
 
     /** Replaces the contents of the guardian list with {@code guardians}. */

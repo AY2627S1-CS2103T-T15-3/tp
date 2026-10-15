@@ -66,8 +66,19 @@ public class CommandResultTest {
         CommandResult commandResult = new CommandResult("feedback");
         String expected = CommandResult.class.getCanonicalName() + "{feedbackToUser="
                 + commandResult.getFeedbackToUser() + ", showHelp=" + commandResult.isShowHelp()
-                + ", exit=" + commandResult.isExit() + "}";
+                + ", exit=" + commandResult.isExit()
+                + ", refreshStudentList=" + commandResult.shouldRefreshStudentList() + "}";
         assertEquals(expected, commandResult.toString());
+    }
+
+    @Test
+    public void refreshStudentList() {
+        assertFalse(new CommandResult("feedback").shouldRefreshStudentList());
+        assertFalse(new CommandResult("feedback", false, false).shouldRefreshStudentList());
+        assertFalse(new CommandResult("feedback", GUARDIAN).shouldRefreshStudentList());
+        assertTrue(new CommandResult("feedback", true).shouldRefreshStudentList());
+        assertEquals(new CommandResult("feedback"), new CommandResult("feedback", false));
+        assertNotEquals(new CommandResult("feedback"), new CommandResult("feedback", true));
     }
 
     @Test

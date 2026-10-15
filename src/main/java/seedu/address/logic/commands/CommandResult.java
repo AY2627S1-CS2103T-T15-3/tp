@@ -21,6 +21,9 @@ public class CommandResult {
     /** The application should exit. */
     private final boolean exit;
 
+    /** The student list should be refreshed. */
+    private final boolean refreshStudentList;
+
     /** The student that the UI should highlight, if any. */
     private final Student studentToHighlight;
 
@@ -31,24 +34,30 @@ public class CommandResult {
      * Constructs a {@code CommandResult} with the specified fields.
      */
     public CommandResult(String feedbackToUser, boolean showHelp, boolean exit) {
-        this(feedbackToUser, showHelp, exit, null, null);
+        this(feedbackToUser, showHelp, exit, null, null, false);
     }
 
     /** Constructs a result that also identifies a student for the UI to highlight. */
     public CommandResult(String feedbackToUser, Student studentToHighlight) {
-        this(feedbackToUser, false, false, studentToHighlight, null);
+        this(feedbackToUser, false, false, studentToHighlight, null, false);
     }
 
     /** Constructs a result that identifies a guardian for the UI to highlight. */
     public CommandResult(String feedbackToUser, Guardian guardianToHighlight) {
-        this(feedbackToUser, false, false, null, guardianToHighlight);
+        this(feedbackToUser, false, false, null, guardianToHighlight, false);
+    }
+
+    /** Constructs a result that specifies whether the UI should refresh the student list. */
+    public CommandResult(String feedbackToUser, boolean refreshStudentList) {
+        this(feedbackToUser, false, false, null, null, refreshStudentList);
     }
 
     private CommandResult(String feedbackToUser, boolean showHelp, boolean exit, Student studentToHighlight,
-                          Guardian guardianToHighlight) {
+                          Guardian guardianToHighlight, boolean refreshStudentList) {
         this.feedbackToUser = requireNonNull(feedbackToUser);
         this.showHelp = showHelp;
         this.exit = exit;
+        this.refreshStudentList = refreshStudentList;
         this.studentToHighlight = studentToHighlight;
         this.guardianToHighlight = guardianToHighlight;
     }
@@ -73,6 +82,10 @@ public class CommandResult {
         return exit;
     }
 
+    public boolean shouldRefreshStudentList() {
+        return refreshStudentList;
+    }
+
     public Student getStudentToHighlight() {
         return studentToHighlight;
     }
@@ -94,12 +107,13 @@ public class CommandResult {
 
         return feedbackToUser.equals(otherCommandResult.feedbackToUser)
                 && showHelp == otherCommandResult.showHelp
-                && exit == otherCommandResult.exit;
+                && exit == otherCommandResult.exit
+                && refreshStudentList == otherCommandResult.refreshStudentList;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(feedbackToUser, showHelp, exit);
+        return Objects.hash(feedbackToUser, showHelp, exit, refreshStudentList);
     }
 
     @Override
@@ -108,6 +122,7 @@ public class CommandResult {
                 .add("feedbackToUser", feedbackToUser)
                 .add("showHelp", showHelp)
                 .add("exit", exit)
+                .add("refreshStudentList", refreshStudentList)
                 .toString();
     }
 

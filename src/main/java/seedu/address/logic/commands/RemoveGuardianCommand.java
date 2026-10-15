@@ -42,7 +42,8 @@ public class RemoveGuardianCommand extends Command {
 
         Guardian guardianToRemove = lastShownList.get(targetIndex.getZeroBased());
         model.deleteGuardian(guardianToRemove);
-        return new CommandResult(String.format(MESSAGE_REMOVE_GUARDIAN_SUCCESS, Messages.format(guardianToRemove)));
+        return new CommandResult(
+                String.format(MESSAGE_REMOVE_GUARDIAN_SUCCESS, Messages.format(guardianToRemove)), true);
     }
 
     @Override

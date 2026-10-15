@@ -198,6 +198,10 @@ public class MainWindow extends UiPart<Stage> {
             logger.info("Result: " + commandResult.getFeedbackToUser());
             resultDisplay.setFeedbackToUser(commandResult.getFeedbackToUser());
 
+            if (commandResult.shouldRefreshStudentList()) {
+                studentListPanel.refresh();
+            }
+
             if (commandResult.getStudentToHighlight() != null) {
                 studentListPanel.refresh();
                 studentListPanel.highlightStudent(commandResult.getStudentToHighlight());
