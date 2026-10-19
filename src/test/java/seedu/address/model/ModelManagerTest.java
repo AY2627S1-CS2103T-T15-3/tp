@@ -109,6 +109,73 @@ public class ModelManagerTest {
     }
 
     @Test
+    public void sortStudentList_sortsByNormalizedName_preservesStoredOrder() {
+        Student zoe = student("zoe Tan", "91234567", "zoe@example.com");
+        Student alice = student("Alice Tan", "92345678", "alice@example.com");
+        Student bob = student("bob Tan", "93456789", "bob@example.com");
+        Student duplicateAlice = student("alice tan", "94567890", "duplicate@example.com");
+
+        modelManager.addStudent(zoe);
+        modelManager.addStudent(alice);
+        modelManager.addStudent(bob);
+        modelManager.addStudent(duplicateAlice);
+
+        modelManager.sortStudentList();
+
+        assertEquals(List.of(alice, duplicateAlice, bob, zoe), modelManager.getFilteredStudentList());
+        assertEquals(List.of(zoe, alice, bob, duplicateAlice), modelManager.getAddressBook().getStudentList());
+    }
+
+    @Test
+    public void sortStudentList_emptyList_remainsEmpty() {
+        modelManager.sortStudentList();
+
+        assertTrue(modelManager.getFilteredStudentList().isEmpty());
+    }
+
+    @Test
+    public void sortStudentList_withFilter_sortsDisplayedStudentsOnly() {
+        Student zoe = student("Zoe Tan", "91234567", "zoe@example.com");
+        Student alice = student("Alice Tan", "92345678", "alice@example.com");
+        Student bob = student("Bob Tan", "93456789", "bob@example.com");
+
+        modelManager.addStudent(zoe);
+        modelManager.addStudent(alice);
+        modelManager.addStudent(bob);
+        modelManager.updateFilteredStudentList(candidate -> candidate != bob);
+
+        modelManager.sortStudentList();
+
+        assertEquals(List.of(alice, zoe), modelManager.getFilteredStudentList());
+        assertEquals(List.of(zoe, alice, bob), modelManager.getAddressBook().getStudentList());
+
+        modelManager.updateFilteredStudentList(candidate -> candidate != zoe);
+        assertEquals(List.of(alice, bob), modelManager.getFilteredStudentList());
+    }
+
+    @Test
+    public void sortStudentList_updatesAfterStudentChanges() {
+        Student charlie = student("Charlie Tan", "91234567", "charlie@example.com");
+        Student alice = student("Alice Tan", "92345678", "alice@example.com");
+        Student bob = student("Bob Tan", "93456789", "bob@example.com");
+        Student aaron = student("Aaron Tan", "91234567", "aaron@example.com");
+
+        modelManager.addStudent(charlie);
+        modelManager.addStudent(alice);
+        modelManager.sortStudentList();
+        assertEquals(List.of(alice, charlie), modelManager.getFilteredStudentList());
+
+        modelManager.addStudent(bob);
+        assertEquals(List.of(alice, bob, charlie), modelManager.getFilteredStudentList());
+
+        modelManager.setStudent(charlie, aaron);
+        assertEquals(List.of(aaron, alice, bob), modelManager.getFilteredStudentList());
+
+        modelManager.deleteStudent(bob);
+        assertEquals(List.of(aaron, alice), modelManager.getFilteredStudentList());
+    }
+
+    @Test
     public void guardianOperations_addFilterSetAndDelete_success() {
         Guardian guardian = guardian("Ben Tan", "92345678", "ben@example.com");
         Guardian editedGuardian = guardian("Ben Tan", "92345678", "other@example.com");
