@@ -1,6 +1,7 @@
 package seedu.address.ui;
 
 import java.nio.file.Path;
+import java.util.List;
 import java.util.logging.Logger;
 
 import javafx.event.ActionEvent;
@@ -15,6 +16,7 @@ import seedu.address.commons.core.GuiSettings;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.logic.Logic;
 import seedu.address.logic.commands.CommandResult;
+import seedu.address.logic.commands.CommandResult.HighlightTarget;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
 
@@ -198,6 +200,8 @@ public class MainWindow extends UiPart<Stage> {
             logger.info("Result: " + commandResult.getFeedbackToUser());
             resultDisplay.setFeedbackToUser(commandResult.getFeedbackToUser());
 
+            updateSearchHighlights(commandResult);
+
             if (commandResult.shouldRefreshStudentList()) {
                 studentListPanel.refresh();
             }
@@ -228,5 +232,15 @@ public class MainWindow extends UiPart<Stage> {
             resultDisplay.setFeedbackToUser(e.getMessage());
             throw e;
         }
+    }
+
+    /** Updates the displayed search highlights based on the executed command. */
+    private void updateSearchHighlights(CommandResult commandResult) {
+        HighlightTarget target = commandResult.getHighlightTarget();
+        List<String> keywords = commandResult.getHighlightKeywords();
+        studentListPanel.setHighlightKeywords(target == HighlightTarget.STUDENTS
+                ? keywords : List.of());
+        guardianListPanel.setHighlightKeywords(target == HighlightTarget.GUARDIANS
+                ? keywords : List.of());
     }
 }

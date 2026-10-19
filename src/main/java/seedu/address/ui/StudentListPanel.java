@@ -20,6 +20,7 @@ public class StudentListPanel extends UiPart<Region> {
     private ListView<Student> studentListView;
 
     private final Function<Student, List<Guardian>> guardianProvider;
+    private List<String> highlightKeywords = List.of();
 
     /**
      * Creates a panel displaying the given list of students.
@@ -41,6 +42,11 @@ public class StudentListPanel extends UiPart<Region> {
                 }
             }
         });
+    }
+
+    public void setHighlightKeywords(List<String> keywords) {
+        highlightKeywords = List.copyOf(keywords);
+        studentListView.refresh();
     }
 
     /** Refreshes cards after a relationship changes. */
@@ -66,7 +72,7 @@ public class StudentListPanel extends UiPart<Region> {
                 setGraphic(null);
                 setText(null);
             } else {
-                setGraphic(new StudentCard(student, getIndex() + 1, guardianProvider).getRoot());
+                setGraphic(new StudentCard(student, getIndex() + 1, guardianProvider, highlightKeywords).getRoot());
             }
         }
     }
