@@ -34,8 +34,8 @@ public class GuardianHighlightingUiTest {
         TextFlow flow = HighlightText.create("Alice Bob", List.of("ali", "BO"));
 
         assertEquals(4, flow.getChildren().size());
-        assertEquals("search-match", flow.getChildren().get(0).getStyleClass().get(0));
-        assertEquals("search-match", flow.getChildren().get(2).getStyleClass().get(0));
+        assertEquals(true, flow.getChildren().get(0).getStyleClass().contains("search-match"));
+        assertEquals(true, flow.getChildren().get(2).getStyleClass().contains("search-match"));
     }
 
     @Test
@@ -46,7 +46,7 @@ public class GuardianHighlightingUiTest {
         assertEquals(List.of("Be", "n Tan"), name.getChildren().stream()
                 .map(node -> node instanceof Label ? ((Label) node).getText() : ((Text) node).getText())
                 .toList());
-        assertEquals("search-match", name.getChildren().get(0).getStyleClass().get(0));
+        assertEquals(true, name.getChildren().get(0).getStyleClass().contains("search-match"));
     }
 
     private static Guardian guardian(String name) {

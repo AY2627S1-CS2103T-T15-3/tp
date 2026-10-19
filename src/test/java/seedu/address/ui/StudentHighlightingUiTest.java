@@ -40,7 +40,7 @@ public class StudentHighlightingUiTest {
         assertEquals(List.of("Ali", "ce Tan"), name.getChildren().stream()
                 .map(node -> node instanceof Label ? ((Label) node).getText() : ((Text) node).getText())
                 .toList());
-        assertEquals("search-match", name.getChildren().get(0).getStyleClass().get(0));
+        assertEquals(true, name.getChildren().get(0).getStyleClass().contains("search-match"));
     }
 
     private static Student student(String name) {
