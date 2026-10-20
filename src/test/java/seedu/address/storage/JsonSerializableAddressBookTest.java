@@ -6,6 +6,9 @@ import static seedu.address.testutil.Assert.assertThrows;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Set;
 
@@ -15,6 +18,7 @@ import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.commons.util.JsonUtil;
 import seedu.address.model.AddressBook;
 import seedu.address.model.guardian.Guardian;
+import seedu.address.model.lesson.Lesson;
 import seedu.address.model.link.StudentGuardianLink;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
@@ -98,6 +102,21 @@ public class JsonSerializableAddressBookTest {
 
         assertEquals(source, restored);
         assertEquals(List.of(firstGuardian, secondGuardian), restored.getGuardiansForStudent(student));
+    }
+
+    @Test
+    public void constructorAndToModelType_lessons_preserveData() throws Exception {
+        AddressBook source = new AddressBook();
+        Student student = student("Lucy Lim", "91234567");
+        Lesson lesson = new Lesson(student, LocalDate.of(2026, 10, 25), LocalTime.of(14, 0),
+                Duration.ofMinutes(60));
+        source.addStudent(student);
+        source.addLesson(lesson);
+
+        AddressBook restored = new JsonSerializableAddressBook(source).toModelType();
+
+        assertEquals(source, restored);
+        assertEquals(List.of(lesson), restored.getLessonList());
     }
 
     @Test
