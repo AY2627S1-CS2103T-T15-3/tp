@@ -21,6 +21,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seedu.address.model.guardian.Guardian;
 import seedu.address.model.lesson.Lesson;
+import seedu.address.model.lesson.exceptions.DuplicateLessonException;
+import seedu.address.model.lesson.exceptions.LessonNotFoundException;
 import seedu.address.model.link.StudentGuardianLink;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
@@ -38,6 +40,7 @@ public class AddressBookTest {
         assertEquals(List.of(), addressBook.getPersonList());
         assertEquals(List.of(), new AddressBookStub(List.of()).getStudentList());
         assertEquals(List.of(), new AddressBookStub(List.of()).getGuardianList());
+        assertEquals(List.of(), new AddressBookStub(List.of()).getLessonList());
     }
 
     @Test
@@ -149,6 +152,53 @@ public class AddressBookTest {
         assertEquals(List.of(lesson(editedStudent, 14)), addressBook.getLessonList());
 
         addressBook.removeStudent(editedStudent);
+
+        assertTrue(addressBook.getLessonList().isEmpty());
+    }
+
+    @Test
+    public void lessonOperations_invalidInputs_throwExceptions() {
+        Student student = student("Henry Tan", "91234567", "henry@example.com");
+        Lesson lesson = lesson(student, 14);
+
+        assertThrows(NullPointerException.class, () ->
+                addressBook.addLesson(null));
+        assertThrows(NullPointerException.class, () ->
+                addressBook.removeLesson(null));
+        assertThrows(NullPointerException.class, () ->
+                addressBook.setLessons(null));
+
+        addressBook.addLesson(lesson);
+        assertThrows(DuplicateLessonException.class, () ->
+                addressBook.addLesson(lesson));
+        assertThrows(LessonNotFoundException.class, () ->
+                addressBook.removeLesson(lesson(student, 16)));
+        assertThrows(UnsupportedOperationException.class, () ->
+                addressBook.getLessonList().remove(0));
+    }
+
+    @Test
+    public void copyAndResetData_preservesLessons() {
+        Student student = student("Henry Tan", "91234567", "henry@example.com");
+        Lesson lesson = lesson(student, 14);
+        addressBook.addStudent(student);
+        addressBook.addLesson(lesson);
+
+        AddressBook copy = new AddressBook(addressBook);
+        AddressBook reset = new AddressBook();
+        reset.resetData(addressBook);
+
+        assertEquals(List.of(lesson), copy.getLessonList());
+        assertEquals(copy, reset);
+    }
+
+    @Test
+    public void resetData_fromReadOnlyAddressBookWithoutLessons_clearsLessons() {
+        Student student = student("Henry Tan", "91234567", "henry@example.com");
+        addressBook.addStudent(student);
+        addressBook.addLesson(lesson(student, 14));
+
+        addressBook.resetData(new AddressBookStub(List.of()));
 
         assertTrue(addressBook.getLessonList().isEmpty());
     }
