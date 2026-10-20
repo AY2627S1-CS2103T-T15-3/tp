@@ -1,4 +1,4 @@
-package seedu.address.model.student.exceptions;
+package seedu.address.model.lesson.exceptions;
 
 /** Signals that an operation would result in duplicate lessons. */
 public class DuplicateLessonException extends RuntimeException {

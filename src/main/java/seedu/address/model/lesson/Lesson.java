@@ -1,4 +1,4 @@
-package seedu.address.model.student;
+package seedu.address.model.lesson;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
@@ -10,6 +10,7 @@ import java.time.LocalTime;
 import java.util.Objects;
 
 import seedu.address.commons.util.ToStringBuilder;
+import seedu.address.model.student.Student;
 
 /**
  * Represents a lesson scheduled for a student.
