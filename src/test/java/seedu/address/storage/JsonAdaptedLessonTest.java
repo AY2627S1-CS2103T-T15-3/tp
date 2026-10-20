@@ -76,4 +76,12 @@ public class JsonAdaptedLessonTest {
         assertThrows(IllegalValueException.class, () ->
                 adaptedLesson.toModelType(STUDENT));
     }
+
+    @Test
+    public void toModelType_nullStudent_throwsNullPointerException() {
+        JsonAdaptedLesson adaptedLesson = new JsonAdaptedLesson(LESSON);
+
+        assertThrows(NullPointerException.class, () ->
+                adaptedLesson.toModelType(null));
+    }
 }

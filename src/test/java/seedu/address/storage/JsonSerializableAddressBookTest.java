@@ -142,6 +142,17 @@ public class JsonSerializableAddressBookTest {
                 data::toModelType);
     }
 
+    @Test
+    public void toModelType_lessonWithMissingStudent_throwsIllegalValueException() {
+        JsonAdaptedLesson lesson = new JsonAdaptedLesson(
+                "Unknown Student", "99999999", "2026-10-25", "14:00", 60);
+        JsonSerializableAddressBook data = new JsonSerializableAddressBook(
+                List.of(), List.of(), List.of(), List.of(), List.of(lesson));
+
+        assertThrows(IllegalValueException.class, JsonSerializableAddressBook.MESSAGE_INVALID_LESSON,
+                data::toModelType);
+    }
+
     private static Student student(String name, String phone) {
         return new Student(new Name(name), new Phone(phone), new Email("lucy@example.com"),
                 new Address("21 Happy Road"), new Level("JC 1"), Set.of(new Subject("Mathematics")));

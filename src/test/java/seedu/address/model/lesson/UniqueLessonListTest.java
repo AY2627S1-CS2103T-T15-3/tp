@@ -1,6 +1,7 @@
 package seedu.address.model.lesson;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -89,6 +90,15 @@ public class UniqueLessonListTest {
     }
 
     @Test
+    public void setLesson_duplicateLesson_throwsDuplicateLessonException() {
+        uniqueLessonList.add(LESSON);
+        uniqueLessonList.add(OTHER_LESSON);
+
+        assertThrows(DuplicateLessonException.class, () ->
+                uniqueLessonList.setLesson(LESSON, OTHER_LESSON));
+    }
+
+    @Test
     public void setLessons_duplicateList_throwsDuplicateLessonException() {
         assertThrows(DuplicateLessonException.class, () ->
                 uniqueLessonList.setLessons(List.of(LESSON, LESSON)));
@@ -101,6 +111,32 @@ public class UniqueLessonListTest {
         uniqueLessonList.setLessons(List.of(OTHER_LESSON));
 
         assertEquals(List.of(OTHER_LESSON), uniqueLessonList.asUnmodifiableObservableList());
+    }
+
+    @Test
+    public void setLessons_uniqueLessonList_replacesContents() {
+        UniqueLessonList replacement = new UniqueLessonList();
+        replacement.add(OTHER_LESSON);
+
+        uniqueLessonList.add(LESSON);
+        uniqueLessonList.setLessons(replacement);
+
+        assertEquals(replacement, uniqueLessonList);
+    }
+
+    @Test
+    public void iterator_equalsHashCodeAndToString_returnsExpectedValues() {
+        uniqueLessonList.add(LESSON);
+        UniqueLessonList copy = new UniqueLessonList();
+        copy.add(LESSON);
+
+        assertEquals(LESSON, uniqueLessonList.iterator().next());
+        assertEquals(uniqueLessonList, copy);
+        assertEquals(uniqueLessonList.hashCode(), copy.hashCode());
+        assertEquals(List.of(LESSON).toString(), uniqueLessonList.toString());
+        assertTrue(uniqueLessonList.equals(uniqueLessonList));
+        assertFalse(uniqueLessonList.equals(null));
+        assertFalse(uniqueLessonList.equals(LESSON));
     }
 
     @Test
