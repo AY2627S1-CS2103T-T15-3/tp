@@ -248,6 +248,11 @@ public class FilterCommandTest {
         }
 
         @Override
+        public void sortStudentList() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
         public boolean hasGuardian(Guardian guardian) {
             throw new AssertionError("This method should not be called.");
         }
