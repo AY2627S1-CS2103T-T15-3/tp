@@ -12,6 +12,7 @@ import javafx.collections.transformation.FilteredList;
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.model.guardian.Guardian;
+import seedu.address.model.lesson.Lesson;
 import seedu.address.model.link.StudentGuardianLink;
 import seedu.address.model.person.Person;
 import seedu.address.model.student.Student;
@@ -154,6 +155,25 @@ public class ModelManager implements Model {
     public void updateFilteredStudentList(Predicate<Student> predicate) {
         requireNonNull(predicate);
         filteredStudents.setPredicate(predicate);
+    }
+
+    //=========== Lesson Operations ========================================================================
+
+    @Override
+    public void addLesson(Lesson lesson) {
+        requireNonNull(lesson);
+        addressBook.addLesson(lesson);
+    }
+
+    @Override
+    public void deleteLesson(Lesson lesson) {
+        requireNonNull(lesson);
+        addressBook.removeLesson(lesson);
+    }
+
+    @Override
+    public ObservableList<Lesson> getLessonList() {
+        return addressBook.getLessonList();
     }
 
     //=========== Guardian Operations ========================================================================

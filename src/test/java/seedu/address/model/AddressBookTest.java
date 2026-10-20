@@ -9,6 +9,9 @@ import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalPersons.ALICE;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -17,6 +20,7 @@ import org.junit.jupiter.api.Test;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seedu.address.model.guardian.Guardian;
+import seedu.address.model.lesson.Lesson;
 import seedu.address.model.link.StudentGuardianLink;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
@@ -113,6 +117,40 @@ public class AddressBookTest {
         assertThrows(NullPointerException.class, () -> addressBook.hasStudent(null));
         assertThrows(NullPointerException.class, () -> addressBook.setStudent(student, null));
         assertThrows(UnsupportedOperationException.class, () -> addressBook.getStudentList().remove(0));
+    }
+
+    @Test
+    public void lessonOperations_addRemoveAndSet_success() {
+        Student student = student("Henry Tan", "91234567", "henry@example.com");
+        Lesson lesson = lesson(student, 14);
+
+        addressBook.addStudent(student);
+        addressBook.addLesson(lesson);
+
+        assertEquals(List.of(lesson), addressBook.getLessonList());
+
+        addressBook.removeLesson(lesson);
+        assertTrue(addressBook.getLessonList().isEmpty());
+
+        addressBook.setLessons(List.of(lesson));
+        assertEquals(List.of(lesson), addressBook.getLessonList());
+    }
+
+    @Test
+    public void studentOperations_updateAndRemoveLessons_success() {
+        Student student = student("Henry Tan", "91234567", "henry@example.com");
+        Student editedStudent = student("Henry Tan", "91234567", "other@example.com");
+        Lesson lesson = lesson(student, 14);
+
+        addressBook.addStudent(student);
+        addressBook.addLesson(lesson);
+        addressBook.setStudent(student, editedStudent);
+
+        assertEquals(List.of(lesson(editedStudent, 14)), addressBook.getLessonList());
+
+        addressBook.removeStudent(editedStudent);
+
+        assertTrue(addressBook.getLessonList().isEmpty());
     }
 
     @Test
@@ -336,6 +374,11 @@ public class AddressBookTest {
         return new Student(new seedu.address.model.person.Name(name), new seedu.address.model.person.Phone(phone),
                 new seedu.address.model.person.Email(email), new seedu.address.model.person.Address("12 Main Street"),
                 new Level("JC 1"), java.util.Set.of(new Subject("Mathematics")));
+    }
+
+    private static Lesson lesson(Student student, int hour) {
+        return new Lesson(student, LocalDate.of(2026, 10, 25), LocalTime.of(hour, 0),
+                Duration.ofMinutes(60));
     }
 
     private static Guardian guardian(String name, String phone, String email) {

@@ -6,6 +6,7 @@ import java.util.function.Predicate;
 import javafx.collections.ObservableList;
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.model.guardian.Guardian;
+import seedu.address.model.lesson.Lesson;
 import seedu.address.model.link.StudentGuardianLink;
 import seedu.address.model.person.Person;
 import seedu.address.model.student.Student;
@@ -112,6 +113,21 @@ public interface Model {
      * @throws NullPointerException if {@code predicate} is null.
      */
     void updateFilteredStudentList(Predicate<Student> predicate);
+
+    /** Adds the given lesson. */
+    default void addLesson(Lesson lesson) {
+        throw new UnsupportedOperationException("Lesson management is not supported");
+    }
+
+    /** Deletes the given lesson. */
+    default void deleteLesson(Lesson lesson) {
+        throw new UnsupportedOperationException("Lesson management is not supported");
+    }
+
+    /** Returns the scheduled lessons. */
+    default ObservableList<Lesson> getLessonList() {
+        return javafx.collections.FXCollections.emptyObservableList();
+    }
 
     /**
      * Returns true if a guardian with the same identity as {@code guardian} exists in the address book.
