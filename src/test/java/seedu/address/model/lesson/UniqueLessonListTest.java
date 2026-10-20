@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -51,6 +52,7 @@ public class UniqueLessonListTest {
 
     @Test
     public void add_uniqueLessons_addsSuccessfully() {
+        assertFalse(uniqueLessonList.contains(LESSON));
         uniqueLessonList.add(LESSON);
         uniqueLessonList.add(OTHER_LESSON);
 
@@ -99,6 +101,15 @@ public class UniqueLessonListTest {
     }
 
     @Test
+    public void setLesson_sameLesson_replacesSuccessfully() {
+        uniqueLessonList.add(LESSON);
+
+        uniqueLessonList.setLesson(LESSON, LESSON);
+
+        assertEquals(List.of(LESSON), uniqueLessonList.asUnmodifiableObservableList());
+    }
+
+    @Test
     public void setLessons_duplicateList_throwsDuplicateLessonException() {
         assertThrows(DuplicateLessonException.class, () ->
                 uniqueLessonList.setLessons(List.of(LESSON, LESSON)));
@@ -122,6 +133,21 @@ public class UniqueLessonListTest {
         uniqueLessonList.setLessons(replacement);
 
         assertEquals(replacement, uniqueLessonList);
+    }
+
+    @Test
+    public void setLessons_emptyList_clearsContents() {
+        uniqueLessonList.add(LESSON);
+
+        uniqueLessonList.setLessons(List.of());
+
+        assertTrue(uniqueLessonList.asUnmodifiableObservableList().isEmpty());
+    }
+
+    @Test
+    public void setLessons_listWithNull_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () ->
+                uniqueLessonList.setLessons(Arrays.asList(LESSON, null)));
     }
 
     @Test

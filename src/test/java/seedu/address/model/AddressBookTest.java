@@ -204,6 +204,35 @@ public class AddressBookTest {
     }
 
     @Test
+    public void lessonOperations_duplicateReplacement_throwsDuplicateLessonException() {
+        Student student = student("Henry Tan", "91234567", "henry@example.com");
+        Lesson firstLesson = lesson(student, 14);
+        Lesson secondLesson = lesson(student, 16);
+        addressBook.addLesson(firstLesson);
+        addressBook.addLesson(secondLesson);
+
+        assertThrows(DuplicateLessonException.class, () ->
+                addressBook.setLessons(List.of(firstLesson, firstLesson)));
+    }
+
+    @Test
+    public void resetData_nullAddressBook_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () ->
+                addressBook.resetData(null));
+    }
+
+    @Test
+    public void equals_differentLessonData_returnsFalse() {
+        Student student = student("Henry Tan", "91234567", "henry@example.com");
+        Lesson lesson = lesson(student, 14);
+        AddressBook copy = new AddressBook();
+        addressBook.addLesson(lesson);
+
+        assertFalse(addressBook.equals(copy));
+        assertFalse(copy.equals(addressBook));
+    }
+
+    @Test
     public void equals_studentDataAndDifferentTypes_returnsExpectedResult() {
         Student student = student("Henry Tan", "91234567", "henry@example.com");
         addressBook.addStudent(student);

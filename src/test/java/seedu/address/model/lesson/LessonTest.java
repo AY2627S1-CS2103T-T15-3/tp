@@ -51,6 +51,13 @@ public class LessonTest {
     }
 
     @Test
+    public void constructor_positiveDurationAtMinimumBoundary_succeeds() {
+        Lesson lesson = new Lesson(STUDENT, DATE, START_TIME, Duration.ofNanos(1));
+
+        assertEquals(Duration.ofNanos(1), lesson.getDuration());
+    }
+
+    @Test
     public void getters_returnConstructorValues() {
         Lesson lesson = new Lesson(STUDENT, DATE, START_TIME, DURATION);
 
@@ -74,16 +81,37 @@ public class LessonTest {
     }
 
     @Test
+    public void overlaps_nullLesson_throwsNullPointerException() {
+        Lesson lesson = new Lesson(STUDENT, DATE, START_TIME, DURATION);
+
+        assertThrows(NullPointerException.class, () ->
+                lesson.overlaps(null));
+    }
+
+    @Test
     public void equals_sameValues_returnsTrue() {
         Lesson lesson = new Lesson(STUDENT, DATE, START_TIME, DURATION);
         Lesson copy = new Lesson(STUDENT, DATE, START_TIME, DURATION);
+        Lesson differentDate = new Lesson(STUDENT, DATE.plusDays(1), START_TIME, DURATION);
+        Lesson differentDuration = new Lesson(STUDENT, DATE, START_TIME, Duration.ofMinutes(90));
         Lesson differentTime = new Lesson(STUDENT, DATE, LocalTime.of(15, 0), DURATION);
 
         assertTrue(lesson.equals(lesson));
         assertTrue(lesson.equals(copy));
         assertFalse(lesson.equals(null));
         assertFalse(lesson.equals(5));
+        assertFalse(lesson.equals(differentDate));
+        assertFalse(lesson.equals(differentDuration));
         assertFalse(lesson.equals(differentTime));
         assertEquals(lesson.hashCode(), copy.hashCode());
+    }
+
+    @Test
+    public void toStringMethod_containsLessonFields() {
+        Lesson lesson = new Lesson(STUDENT, DATE, START_TIME, DURATION);
+
+        assertEquals(Lesson.class.getCanonicalName() + "{student=" + STUDENT.getName()
+                + ", date=" + DATE + ", startTime=" + START_TIME + ", duration=" + DURATION + "}",
+                lesson.toString());
     }
 }
