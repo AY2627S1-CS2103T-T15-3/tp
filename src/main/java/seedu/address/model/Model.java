@@ -115,19 +115,13 @@ public interface Model {
     void updateFilteredStudentList(Predicate<Student> predicate);
 
     /** Adds the given lesson. */
-    default void addLesson(Lesson lesson) {
-        throw new UnsupportedOperationException("Lesson management is not supported");
-    }
+    void addLesson(Lesson lesson);
 
     /** Deletes the given lesson. */
-    default void deleteLesson(Lesson lesson) {
-        throw new UnsupportedOperationException("Lesson management is not supported");
-    }
+    void deleteLesson(Lesson lesson);
 
     /** Returns the scheduled lessons. */
-    default ObservableList<Lesson> getLessonList() {
-        return javafx.collections.FXCollections.emptyObservableList();
-    }
+    ObservableList<Lesson> getLessonList();
 
     /**
      * Sorts the displayed student list by student name in ascending order.

@@ -1,5 +1,7 @@
 package seedu.address.storage;
 
+import static java.util.Objects.requireNonNull;
+
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -46,6 +48,7 @@ class JsonAdaptedLesson {
     }
 
     public Lesson toModelType(Student student) throws IllegalValueException {
+        requireNonNull(student);
         if (studentName == null || studentPhone == null || date == null || startTime == null) {
             throw new IllegalValueException("Lesson contains a missing field.");
         }
