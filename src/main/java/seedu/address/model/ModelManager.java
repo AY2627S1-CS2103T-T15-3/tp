@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.model.guardian.Guardian;
@@ -16,6 +17,7 @@ import seedu.address.model.lesson.Lesson;
 import seedu.address.model.link.StudentGuardianLink;
 import seedu.address.model.person.Person;
 import seedu.address.model.student.Student;
+import seedu.address.model.student.StudentNameComparator;
 
 /**
  * Represents the in-memory model of the address book data.
@@ -27,6 +29,7 @@ public class ModelManager implements Model {
     private final UserPrefs userPrefs;
     private final FilteredList<Person> filteredPersons;
     private final FilteredList<Student> filteredStudents;
+    private final SortedList<Student> sortedStudents;
     private final FilteredList<Guardian> filteredGuardians;
 
     /**
@@ -41,6 +44,7 @@ public class ModelManager implements Model {
         this.userPrefs = new UserPrefs(userPrefs);
         filteredPersons = new FilteredList<>(this.addressBook.getPersonList());
         filteredStudents = new FilteredList<>(this.addressBook.getStudentList());
+        sortedStudents = new SortedList<>(filteredStudents);
         filteredGuardians = new FilteredList<>(this.addressBook.getGuardianList());
     }
 
@@ -148,13 +152,18 @@ public class ModelManager implements Model {
 
     @Override
     public ObservableList<Student> getFilteredStudentList() {
-        return filteredStudents;
+        return sortedStudents;
     }
 
     @Override
     public void updateFilteredStudentList(Predicate<Student> predicate) {
         requireNonNull(predicate);
         filteredStudents.setPredicate(predicate);
+    }
+
+    @Override
+    public void sortStudentList() {
+        sortedStudents.setComparator(new StudentNameComparator());
     }
 
     //=========== Lesson Operations ========================================================================

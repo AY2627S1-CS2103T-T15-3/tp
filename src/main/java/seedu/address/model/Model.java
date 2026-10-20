@@ -130,6 +130,12 @@ public interface Model {
     }
 
     /**
+     * Sorts the displayed student list by student name in ascending order.
+     * The underlying student list and its storage order are not changed.
+     */
+    void sortStudentList();
+
+    /**
      * Returns true if a guardian with the same identity as {@code guardian} exists in the address book.
      */
     boolean hasGuardian(Guardian guardian);
