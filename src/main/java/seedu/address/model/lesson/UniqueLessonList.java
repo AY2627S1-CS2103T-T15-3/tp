@@ -5,17 +5,20 @@ import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import seedu.address.commons.core.LogsCenter;
 import seedu.address.model.lesson.exceptions.DuplicateLessonException;
 import seedu.address.model.lesson.exceptions.LessonNotFoundException;
 
 /**
- * A list of lessons that does not allow nulls or duplicate lessons.
+ * A list of lessons that does not allow nulls, duplicate or overlapping lessons.
  */
 public class UniqueLessonList implements Iterable<Lesson> {
 
+    private static final Logger logger = LogsCenter.getLogger(UniqueLessonList.class);
     private final ObservableList<Lesson> internalList = FXCollections.observableArrayList();
     private final ObservableList<Lesson> internalUnmodifiableList =
             FXCollections.unmodifiableObservableList(internalList);
@@ -32,7 +35,10 @@ public class UniqueLessonList implements Iterable<Lesson> {
         if (contains(toAdd)) {
             throw new DuplicateLessonException();
         }
+        assert internalList.stream().noneMatch(existingLesson -> existingLesson.overlaps(toAdd))
+                : "Lesson overlaps an existing lesson";
         internalList.add(toAdd);
+        logger.info("Added lesson: " + toAdd);
     }
 
     /** Removes an existing lesson from this list. */
@@ -41,6 +47,7 @@ public class UniqueLessonList implements Iterable<Lesson> {
         if (!internalList.remove(toRemove)) {
             throw new LessonNotFoundException();
         }
+        logger.info("Removed lesson: " + toRemove);
     }
 
     /** Replaces an existing lesson with an edited lesson. */
@@ -53,7 +60,12 @@ public class UniqueLessonList implements Iterable<Lesson> {
         if (!target.equals(editedLesson) && contains(editedLesson)) {
             throw new DuplicateLessonException();
         }
+        assert internalList.stream()
+                .filter(existingLesson -> !existingLesson.equals(target))
+                .noneMatch(existingLesson -> existingLesson.overlaps(editedLesson))
+                : "Lesson overlaps an existing lesson";
         internalList.set(index, editedLesson);
+        logger.info("Replaced lesson: " + target + " with " + editedLesson);
     }
 
     public void setLessons(UniqueLessonList replacement) {
