@@ -2,6 +2,8 @@ package seedu.address.logic.parser;
 
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_LEVEL;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_PAID;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_UNPAID;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
 import static seedu.address.testutil.Assert.assertThrows;
@@ -15,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.FilterCommand;
 import seedu.address.model.student.Level;
+import seedu.address.model.student.PaymentMonth;
 import seedu.address.model.student.StudentMatchesFilterPredicate;
 import seedu.address.model.student.Subject;
 
@@ -71,6 +74,43 @@ public class FilterCommandParserTest {
     }
 
     @Test
+    public void parse_paidOnly_success() {
+        assertParseSuccess(parser, " paid/2026-10", paymentCommand("2026-10", null));
+    }
+
+    @Test
+    public void parse_unpaidOnly_success() {
+        assertParseSuccess(parser, " unpaid/2026-10", paymentCommand(null, "2026-10"));
+    }
+
+    @Test
+    public void parse_allCriteria_success() {
+        FilterCommand expectedCommand = new FilterCommand(new StudentMatchesFilterPredicate(
+                Optional.of(new Level("JC 1")), Set.of(new Subject("Mathematics")),
+                Optional.of(new PaymentMonth("2026-09")), Optional.of(new PaymentMonth("2026-10"))));
+
+        assertParseSuccess(parser, " l/JC 1 s/Mathematics paid/2026-09 unpaid/2026-10", expectedCommand);
+
+        // prefixes in a different order
+        assertParseSuccess(parser, " unpaid/2026-10 s/Mathematics paid/2026-09 l/JC 1", expectedCommand);
+    }
+
+    @Test
+    public void parse_repeatedPaymentMonth_failure() {
+        assertParseFailure(parser, " paid/2026-10 paid/2026-11",
+                Messages.getErrorMessageForDuplicatePrefixes(PREFIX_PAID));
+        assertParseFailure(parser, " unpaid/2026-10 unpaid/2026-11",
+                Messages.getErrorMessageForDuplicatePrefixes(PREFIX_UNPAID));
+    }
+
+    @Test
+    public void parse_invalidPaymentMonth_failure() {
+        assertParseFailure(parser, " paid/2026-13", PaymentMonth.MESSAGE_CONSTRAINTS);
+        assertParseFailure(parser, " unpaid/Oct 2026", PaymentMonth.MESSAGE_CONSTRAINTS);
+        assertParseFailure(parser, " l/JC 1 unpaid/", PaymentMonth.MESSAGE_CONSTRAINTS);
+    }
+
+    @Test
     public void parse_noCriteria_failure() {
         assertParseFailure(parser, "", MESSAGE_INVALID_FORMAT);
         assertParseFailure(parser, "     ", MESSAGE_INVALID_FORMAT);
@@ -123,6 +163,12 @@ public class FilterCommandParserTest {
     @Test
     public void parse_invalidLevelAndSubject_reportsLevelFirst() {
         assertParseFailure(parser, " l/JC-1 s/Math*", Level.MESSAGE_CONSTRAINTS);
+    }
+
+    private static FilterCommand paymentCommand(String paidMonth, String unpaidMonth) {
+        return new FilterCommand(new StudentMatchesFilterPredicate(Optional.empty(), Set.of(),
+                Optional.ofNullable(paidMonth).map(PaymentMonth::new),
+                Optional.ofNullable(unpaidMonth).map(PaymentMonth::new)));
     }
 
     private static FilterCommand filterCommand(String level, String... subjects) {
