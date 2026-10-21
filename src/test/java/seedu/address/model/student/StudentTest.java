@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.testutil.Assert.assertThrows;
 
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -114,8 +115,32 @@ public class StudentTest {
 
         String expected = Student.class.getCanonicalName() + "{name=" + NAME + ", phone=" + PHONE
                 + ", email=" + EMAIL + ", address=" + ADDRESS + ", level=" + LEVEL
-                + ", subjects=" + student.getSubjects() + "}";
+                + ", subjects=" + student.getSubjects() + ", paidMonths=" + student.getPaidMonths() + "}";
         assertEquals(expected, student.toString());
+    }
+
+    @Test
+    public void withPaymentFor_recordsPaymentWithoutChangingOriginal() {
+        Student student = studentWith(NAME, PHONE, EMAIL, ADDRESS, LEVEL, subjects("Mathematics"));
+        PaymentMonth october = new PaymentMonth("2026-10");
+
+        Student paidStudent = student.withPaymentFor(october);
+
+        assertTrue(paidStudent.hasPaidFor(october));
+        assertFalse(paidStudent.hasPaidFor(new PaymentMonth("2026-11")));
+        assertFalse(student.hasPaidFor(october));
+        assertFalse(student.equals(paidStudent));
+        assertTrue(student.isSameStudent(paidStudent));
+    }
+
+    @Test
+    public void getPaidMonths_sortedChronologically() {
+        Student student = studentWith(NAME, PHONE, EMAIL, ADDRESS, LEVEL, subjects("Mathematics"))
+                .withPaymentFor(new PaymentMonth("2026-10"))
+                .withPaymentFor(new PaymentMonth("2025-12"));
+
+        assertEquals(List.of(new PaymentMonth("2025-12"), new PaymentMonth("2026-10")),
+                List.copyOf(student.getPaidMonths()));
     }
 
     private static Student studentWith(Name name, Phone phone, Email email, Address address, Level level,

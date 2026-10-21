@@ -239,6 +239,24 @@ Examples:
 * `link-g 2 g/1`
 * `link-g 3 g/1`
 
+### Marking a student's payment as paid: `mark-paid`
+
+Records that a student has paid for a given month of a year.
+
+Format: `mark-paid INDEX m/YYYY-MM`
+
+* Marks the student at the specified `INDEX` as paid for the month `YYYY-MM`. The index refers to the
+index number shown in the currently displayed student list.
+* The index **must be a positive integer** 1, 2, 3, ..., and must not exceed the number
+of students in the displayed list.
+* The month must be in the format `YYYY-MM`, with a two-digit month from `01` to `12`, e.g. `2026-10`.
+* A student who is already marked as paid for that month is left unchanged, and an error is shown.
+* Each student's card shows the months they have paid for, e.g. `Paid: Sep 2026, Oct 2026`.
+
+Examples:
+* `mark-paid 1 m/2026-10` marks the 1st student in the displayed student list as paid for October 2026.
+* `find-s Henry` followed by `mark-paid 1 m/2026-11` marks the 1st student in the results of the `find-s` command as paid for November 2026.
+
 ### Locating persons by name: `find`
 
 Finds persons whose names contain any of the given keywords.
@@ -375,4 +393,5 @@ Action     | Format, Examples
 **Find**   | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
 **Link guardian** | `link-g STUDENT_INDEX g/GUARDIAN_INDEX`<br> e.g., `link-g 2 g/1`
 **List**   | `list`
+**Mark paid** | `mark-paid INDEX m/YYYY-MM`<br> e.g., `mark-paid 1 m/2026-10`
 **Help**   | `help`
