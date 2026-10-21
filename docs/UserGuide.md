@@ -175,6 +175,18 @@ Shows a list of all persons in the address book.
 
 Format: `list`
 
+### Listing all students: `list-s`
+
+Shows a list of all students in TutorTrack.
+
+Format: `list-s`
+
+### Listing all guardians: `list-g`
+
+Shows a list of all guardians in TutorTrack.
+
+Format: `list-g`
+
 ### Editing a person: `edit`
 
 Edits an existing person in the address book.
@@ -255,6 +267,36 @@ Examples:
 * `find John` returns `john` and `John Doe`
 * `find alex david` returns `Alex Yeoh`, `David Li`<br>
   ![result for 'find alex david'](images/findAlexDavidResult.png)
+
+### Locating students by name: `find-s`
+
+Finds students whose names contain any of the given keywords.
+
+Format: `find-s KEYWORD [MORE_KEYWORDS]`
+
+* The search is case-insensitive.
+* Keyword order does not matter.
+* The search considers only student names.
+* Matches by prefix of each part of the name.
+* Students matching at least one keyword are returned (an `OR` search).
+
+Example:
+* `find-s alex david` returns matching students named Alex or David.
+
+### Locating guardians by name: `find-g`
+
+Finds guardians whose names contain any of the given keywords.
+
+Format: `find-g KEYWORD [MORE_KEYWORDS]`
+
+* The search is case-insensitive.
+* Keyword order does not matter.
+* The search considers only guardian names.
+* Matches by prefix of each part of the name.
+* Guardians matching at least one keyword are returned (an `OR` search).
+
+Example:
+* `find-g alex david` returns matching guardians named Alex or David.
 
 ### Deleting a person: `delete`
 
@@ -373,6 +415,10 @@ Action     | Format, Examples
 **Edit student** | `edit-s INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [l/LEVEL] [s/SUBJECT]...`<br> e.g., `edit-s 2 p/98765432 l/JC 2`
 **Edit guardian** | `edit-g INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS]`<br> e.g., `edit-g 1 a/25 Happy Road`
 **Find**   | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
+**Find student** | `find-s KEYWORD [MORE_KEYWORDS]`<br> e.g., `find-s James Jake`
+**Find guardian** | `find-g KEYWORD [MORE_KEYWORDS]`<br> e.g., `find-g James Jake`
 **Link guardian** | `link-g STUDENT_INDEX g/GUARDIAN_INDEX`<br> e.g., `link-g 2 g/1`
 **List**   | `list`
+**List students** | `list-s`
+**List guardians** | `list-g`
 **Help**   | `help`
