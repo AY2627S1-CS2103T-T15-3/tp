@@ -3,6 +3,7 @@ package seedu.address.logic.commands;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static seedu.address.testutil.Assert.assertThrows;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -72,7 +73,7 @@ public class SortStudentCommandTest {
     }
 
     @Test
-    public void execute_sortedList_editAndDeleteUseSortedIndexes() throws Exception {
+    public void execute_sortedList_editUsesSortedIndex() throws Exception {
         Student zoe = student("Zoe Tan", "91234567");
         Student alice = student("Alice Lim", "92345678");
         ModelManager model = modelWith(zoe, alice);
@@ -88,10 +89,20 @@ public class SortStudentCommandTest {
                 .findFirst()
                 .orElseThrow();
         assertEquals(new Email("edited@example.com"), editedAlice.getEmail());
+        assertEquals(List.of(zoe, editedAlice), model.getAddressBook().getStudentList());
+    }
+
+    @Test
+    public void execute_sortedList_deleteUsesSortedIndex() throws Exception {
+        Student zoe = student("Zoe Tan", "91234567");
+        Student alice = student("Alice Lim", "92345678");
+        ModelManager model = modelWith(zoe, alice);
+
+        new SortStudentCommand().execute(model);
 
         new RemoveStudentCommand(Index.fromOneBased(2)).execute(model);
 
-        assertEquals(List.of(editedAlice), model.getAddressBook().getStudentList());
+        assertEquals(List.of(alice), model.getAddressBook().getStudentList());
     }
 
     @Test
@@ -121,6 +132,22 @@ public class SortStudentCommandTest {
 
         assertEquals(List.of(student("Alice Lim", "92345678"), student("Zoe Tan", "91234567")),
                 model.getFilteredStudentList());
+    }
+
+    @Test
+    public void execute_emptyList_remainsEmpty() {
+        ModelManager model = modelWith();
+
+        CommandResult result = new SortStudentCommand().execute(model);
+
+        assertEquals(SortStudentCommand.MESSAGE_SUCCESS, result.getFeedbackToUser());
+        assertTrue(model.getFilteredStudentList().isEmpty());
+        assertTrue(model.getAddressBook().getStudentList().isEmpty());
+    }
+
+    @Test
+    public void execute_nullModel_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> new SortStudentCommand().execute(null));
     }
 
     @Test

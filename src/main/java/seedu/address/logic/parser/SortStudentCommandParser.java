@@ -1,5 +1,6 @@
 package seedu.address.logic.parser;
 
+import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 
 import seedu.address.logic.commands.SortStudentCommand;
@@ -15,6 +16,7 @@ public class SortStudentCommandParser implements Parser<SortStudentCommand> {
      */
     @Override
     public SortStudentCommand parse(String args) throws ParseException {
+        requireNonNull(args);
         if (!args.trim().isEmpty()) {
             throw new ParseException(
                     String.format(MESSAGE_INVALID_COMMAND_FORMAT, SortStudentCommand.MESSAGE_USAGE));
