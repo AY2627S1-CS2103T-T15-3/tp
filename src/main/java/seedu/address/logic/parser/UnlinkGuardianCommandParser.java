@@ -19,7 +19,7 @@ public class UnlinkGuardianCommandParser implements Parser<UnlinkGuardianCommand
     public UnlinkGuardianCommand parse(String args) throws ParseException {
         Map<String, List<String>> values = parseArguments(args);
         String studentIndexValue = values.remove("").getFirst();
-        List<String> guardianIndexValues = values.get(GUARDIAN_PREFIX);
+        List<String> guardianIndexValues = values.remove(GUARDIAN_PREFIX);
 
         if (guardianIndexValues == null || guardianIndexValues.size() != 1 || !values.isEmpty()) {
             throw invalidFormat();

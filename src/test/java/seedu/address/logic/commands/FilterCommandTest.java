@@ -296,6 +296,11 @@ public class FilterCommandTest {
         public void addStudentGuardianLink(seedu.address.model.link.StudentGuardianLink link) {
             throw new AssertionError("This method should not be called.");
         }
+
+        @Override
+        public void removeStudentGuardianLink(seedu.address.model.link.StudentGuardianLink link) {
+            throw new AssertionError("This method should not be called.");
+        }
     }
 
     /**
