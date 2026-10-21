@@ -2,6 +2,7 @@ package seedu.address.storage;
 
 import static seedu.address.testutil.Assert.assertThrows;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -56,6 +57,20 @@ public class JsonAdaptedStudentTest {
         assertThrows(IllegalValueException.class, PaymentMonth.MESSAGE_CONSTRAINTS, () ->
                 new JsonAdaptedStudent("Henry Tan", "91234567", "henry@example.com", "12 ABCD Ave 3", "JC 1",
                         List.of("Math"), List.of("2026-13")).toModelType());
+    }
+
+    @Test
+    public void toModelType_nullPaidMonth_throwsIllegalValueException() {
+        assertThrows(IllegalValueException.class, PaymentMonth.MESSAGE_CONSTRAINTS, () ->
+                new JsonAdaptedStudent("Henry Tan", "91234567", "henry@example.com", "12 ABCD Ave 3", "JC 1",
+                        List.of("Math"), Collections.singletonList(null)).toModelType());
+    }
+
+    @Test
+    public void toModelType_nullSubjects_throwsIllegalValueException() {
+        assertThrows(IllegalValueException.class, Student.MESSAGE_NO_SUBJECTS, () ->
+                new JsonAdaptedStudent("Henry Tan", "91234567", "henry@example.com", "12 ABCD Ave 3", "JC 1",
+                        null, List.of("2026-10")).toModelType());
     }
 
     @Test
