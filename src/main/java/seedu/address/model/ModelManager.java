@@ -221,6 +221,12 @@ public class ModelManager implements Model {
     }
 
     @Override
+    public void removeStudentGuardianLink(StudentGuardianLink link) {
+        requireNonNull(link);
+        addressBook.removeStudentGuardianLink(link);
+    }
+
+    @Override
     public boolean equals(Object other) {
         if (other == this) {
             return true;
