@@ -1,5 +1,7 @@
 package seedu.address.storage;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static seedu.address.testutil.Assert.assertThrows;
 
 import java.util.List;
@@ -13,6 +15,7 @@ import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Phone;
 import seedu.address.model.student.Level;
+import seedu.address.model.student.Remark;
 import seedu.address.model.student.Student;
 import seedu.address.model.student.StudentFieldValidator;
 import seedu.address.model.student.Subject;
@@ -23,7 +26,8 @@ public class JsonAdaptedStudentTest {
     public void constructorFromStudent_andToModelType_success() throws Exception {
         Student source = new Student(Name.fromStudentValue("Henry Tan"), Phone.fromStudentValue("91234567"),
                 Email.fromStudentValue("henry@example.com"), Address.fromStudentValue("12 ABCD Ave 3"),
-                new Level("Secondary 3"), Set.of(new Subject("Mathematics"), new Subject("Physics")));
+                new Level("Secondary 3"), Set.of(new Subject("Mathematics"), new Subject("Physics")),
+                new Remark("Practice fractions"));
 
         Student result = new JsonAdaptedStudent(source).toModelType();
 
@@ -72,6 +76,42 @@ public class JsonAdaptedStudentTest {
         assertThrows(IllegalValueException.class, Subject.MESSAGE_CONSTRAINTS, () ->
                 adapted("Henry Tan", "91234567", "henry@example.com", "12 ABCD Ave 3", "JC 1",
                         List.of("Math & Physics")).toModelType());
+    }
+
+    @Test
+    public void toModelType_emptyOrNullRemark_returnsCanonicalEmpty() throws Exception {
+        for (String remark : new String[] {null, ""}) {
+            assertSame(Remark.EMPTY, adaptedWithRemark(remark).toModelType().getRemark());
+        }
+    }
+
+    @Test
+    public void toModelType_validRemark_usesValueObjectNormalization() throws Exception {
+        assertEquals(new Remark("Practice  fractions"),
+                adaptedWithRemark("  Practice  fractions  ").toModelType().getRemark());
+    }
+
+    @Test
+    public void toModelType_invalidRemark_throwsIllegalValueException() {
+        String[] invalidRemarks = {
+            // Whitespace-only remarks.
+            " ", "\u2003", "\u00a0",
+            // Overlength remarks, including supplementary characters.
+            "x".repeat(301), "\ud83d\ude00".repeat(301),
+            // Line breaks and control characters.
+            "text\n", "\ttext", "text\rtext", "text\u0000", "text\u0085",
+            // Unicode line and paragraph separators.
+            "text\u2028", "text\u2029"
+        };
+        for (String remark : invalidRemarks) {
+            assertThrows(IllegalValueException.class, Remark.MESSAGE_CONSTRAINTS, () ->
+                    adaptedWithRemark(remark).toModelType());
+        }
+    }
+
+    private static JsonAdaptedStudent adaptedWithRemark(String remark) {
+        return new JsonAdaptedStudent("Henry Tan", "91234567", "henry@example.com", "12 ABCD Ave 3",
+                "JC 1", List.of("Mathematics", "Physics"), remark);
     }
 
     private static JsonAdaptedStudent adapted(String name, String phone, String email, String address, String level,

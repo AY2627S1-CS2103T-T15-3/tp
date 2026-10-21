@@ -16,6 +16,7 @@ import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Phone;
 import seedu.address.model.student.Level;
+import seedu.address.model.student.Remark;
 import seedu.address.model.student.Student;
 import seedu.address.model.student.Subject;
 
@@ -26,7 +27,7 @@ public class EditStudentDescriptorTest {
             new Email("lucy@example.com"),
             new Address("21 Happy Road"),
             new Level("JC 1"),
-            subjects("Mathematics", "Physics"));
+            subjects("Mathematics", "Physics"), new Remark("Practice fractions"));
 
     @Test
     public void createEditedStudent_noFields_preservesOriginal() {
@@ -49,6 +50,7 @@ public class EditStudentDescriptorTest {
         assertEquals(ORIGINAL.getAddress(), edited.getAddress());
         assertEquals(ORIGINAL.getLevel(), edited.getLevel());
         assertEquals(ORIGINAL.getSubjects(), edited.getSubjects());
+        assertEquals(ORIGINAL.getRemark(), edited.getRemark());
         assertTrue(descriptor.isAnyFieldEdited());
     }
 
@@ -64,6 +66,7 @@ public class EditStudentDescriptorTest {
         assertEquals(new Level("JC 2"), edited.getLevel());
         assertEquals(ORIGINAL.getPhone(), edited.getPhone());
         assertEquals(ORIGINAL.getSubjects(), edited.getSubjects());
+        assertEquals(ORIGINAL.getRemark(), edited.getRemark());
     }
 
     @Test
@@ -74,6 +77,7 @@ public class EditStudentDescriptorTest {
         Student edited = descriptor.createEditedStudent(ORIGINAL);
 
         assertEquals(subjects("Chemistry", "Biology"), edited.getSubjects());
+        assertEquals(ORIGINAL.getRemark(), edited.getRemark());
         assertEquals(ORIGINAL.getName(), edited.getName());
     }
 

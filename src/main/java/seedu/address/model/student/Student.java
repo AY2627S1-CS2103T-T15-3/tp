@@ -31,6 +31,7 @@ public class Student {
     private final Address address;
     private final Level level;
     private final Set<Subject> subjects;
+    private final Remark remark;
 
     /**
      * Creates a {@code Student} with the given contact and academic details.
@@ -44,13 +45,20 @@ public class Student {
      * @param subjects the student's subjects
      */
     public Student(Name name, Phone phone, Email email, Address address, Level level, Set<Subject> subjects) {
-        requireAllNonNull(name, phone, email, address, level, subjects);
+        this(name, phone, email, address, level, subjects, Remark.EMPTY);
+    }
+
+    /** Creates a student with the given contact details, academic details and remark. */
+    public Student(Name name, Phone phone, Email email, Address address, Level level, Set<Subject> subjects,
+            Remark remark) {
+        requireAllNonNull(name, phone, email, address, level, subjects, remark);
         requireAllNonNull(subjects);
         checkArgument(StudentFieldValidator.isValidName(name.fullName), StudentFieldValidator.NAME_MESSAGE);
         checkArgument(StudentFieldValidator.isValidPhone(phone.value), StudentFieldValidator.PHONE_MESSAGE);
         checkArgument(StudentFieldValidator.isValidEmail(email.value), StudentFieldValidator.EMAIL_MESSAGE);
         checkArgument(StudentFieldValidator.isValidAddress(address.value), StudentFieldValidator.ADDRESS_MESSAGE);
         checkArgument(!subjects.isEmpty(), MESSAGE_NO_SUBJECTS);
+        this.remark = remark;
         this.name = name;
         this.phone = phone;
         this.email = email;
@@ -101,6 +109,16 @@ public class Student {
         return subjects;
     }
 
+    /** Returns the student's remark, which is empty when no remark is present. */
+    public Remark getRemark() {
+        return remark;
+    }
+
+    /** Returns a new student with the supplied remark and all other attributes preserved. */
+    public Student withRemark(Remark remark) {
+        return new Student(name, phone, email, address, level, subjects, remark);
+    }
+
     /**
      * Normalizes a name for student identity comparison.
      *
@@ -141,12 +159,13 @@ public class Student {
                 && email.equals(otherStudent.email)
                 && address.equals(otherStudent.address)
                 && level.equals(otherStudent.level)
-                && subjects.equals(otherStudent.subjects);
+                && subjects.equals(otherStudent.subjects)
+                && remark.equals(otherStudent.remark);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, phone, email, address, level, subjects);
+        return Objects.hash(name, phone, email, address, level, subjects, remark);
     }
 
     /**
@@ -161,6 +180,7 @@ public class Student {
                 .add("address", address)
                 .add("level", level)
                 .add("subjects", subjects)
+                .add("remark", remark)
                 .toString();
     }
 }

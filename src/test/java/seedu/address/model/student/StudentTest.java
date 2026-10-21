@@ -114,8 +114,56 @@ public class StudentTest {
 
         String expected = Student.class.getCanonicalName() + "{name=" + NAME + ", phone=" + PHONE
                 + ", email=" + EMAIL + ", address=" + ADDRESS + ", level=" + LEVEL
-                + ", subjects=" + student.getSubjects() + "}";
+                + ", subjects=" + student.getSubjects() + ", remark=" + student.getRemark() + "}";
         assertEquals(expected, student.toString());
+    }
+
+    @Test
+    public void constructor_defaultAndExplicitEmptyRemark_areCompatible() {
+        Student original = studentWith(NAME, PHONE, EMAIL, ADDRESS, LEVEL, subjects("Mathematics"));
+        assertEquals(Remark.EMPTY, original.getRemark());
+        assertEquals(original, new Student(NAME, PHONE, EMAIL, ADDRESS, LEVEL, subjects("Mathematics"),
+                Remark.EMPTY));
+        assertThrows(NullPointerException.class, () -> new Student(
+                NAME, PHONE, EMAIL, ADDRESS, LEVEL, subjects("Mathematics"), null));
+        assertThrows(NullPointerException.class, () -> original.withRemark(null));
+    }
+
+    @Test
+    public void withRemark_preservesAttributesAndDefensiveCopying() {
+        Set<Subject> source = subjects("Physics", "Mathematics");
+        Student original = new Student(NAME, PHONE, EMAIL, ADDRESS, LEVEL, source);
+        Remark remark = new Remark("Practice fractions");
+        Student updated = original.withRemark(remark);
+        source.clear();
+
+        assertFalse(original == updated);
+        assertEquals(NAME, updated.getName());
+        assertEquals(PHONE, updated.getPhone());
+        assertEquals(EMAIL, updated.getEmail());
+        assertEquals(ADDRESS, updated.getAddress());
+        assertEquals(LEVEL, updated.getLevel());
+        assertEquals(original.getSubjects(), updated.getSubjects());
+        assertEquals(java.util.List.of(new Subject("Physics"), new Subject("Mathematics")),
+                new java.util.ArrayList<>(updated.getSubjects()));
+        assertThrows(UnsupportedOperationException.class, () -> addSubject(updated));
+        assertEquals(remark, updated.getRemark());
+        assertEquals(Remark.EMPTY, original.getRemark());
+        assertEquals(original, updated.withRemark(Remark.EMPTY));
+        assertEquals(new Remark("New remark"), updated.withRemark(new Remark("New remark")).getRemark());
+    }
+
+    @Test
+    public void remark_changesFullEqualityButPreservesIdentity() {
+        Student original = studentWith(NAME, PHONE, EMAIL, ADDRESS, LEVEL, subjects("Mathematics"));
+        Student updated = original.withRemark(new Remark("Practice fractions"));
+        Student copy = original.withRemark(new Remark(" Practice fractions "));
+        assertFalse(original.equals(updated));
+        assertTrue(original.isSameStudent(updated));
+        assertTrue(updated.isSameStudent(original));
+        assertEquals(updated, copy);
+        assertEquals(updated.hashCode(), copy.hashCode());
+        assertTrue(updated.toString().contains("remark=Practice fractions"));
     }
 
     private static Student studentWith(Name name, Phone phone, Email email, Address address, Level level,

@@ -64,8 +64,10 @@ AddressBook Level 3 (AB3) is a **desktop application for managing contacts, opti
 * Items followed by `...` can appear zero or more times.<br>
   For example, `[t/TAG]... ` may be omitted, or written as `t/friend` or `t/friend t/family`.
 
-* Parameters can be in any order.<br>
+* Prefixed parameters can be in any order.<br>
   For example, if the command specifies `n/NAME p/PHONE_NUMBER`, `p/PHONE_NUMBER n/NAME` is also acceptable.
+
+* For `set-remark-s` and `clear-remark-s`, the index must come first. In `set-remark-s`, everything after the index is remark text; no prefix is needed.
 
 * Extraneous parameters for commands that take no parameters, such as `help`, `list`, `exit`, and `clear`, are ignored.<br>
   For example, `help 123` is interpreted as `help`.
@@ -206,6 +208,35 @@ Format: `edit-s INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [l/LEVEL] [s/SUBJ
 Examples:
 * `edit-s 2 p/98765432 l/JC 2`
 * `edit-s 1 s/Mathematics s/Physics`
+
+### Setting a student remark: `set-remark-s`
+
+Adds or updates a remark for a specified student.
+
+Format: `set-remark-s INDEX REMARK`
+
+* `INDEX` must be a positive integer within the currently displayed student list.
+* `REMARK` must be nonblank and cannot exceed 300 Unicode code points.
+* Each student has one remark; setting a new remark replaces the previous remark, if any.
+
+Examples:
+
+Assuming Henry Tan, phone `91234567`, is student 1 in the displayed list:
+* `set-remark-s 1 Practise fractions before the next lesson` displays the corresponding remark on Henry's information card.
+* `set-remark-s 1 Bring the algebra worksheet on Friday` replaces Henry's previous remark with the new remark.
+
+
+### Clearing a student remark: `clear-remark-s`
+
+Removes a student's remark.
+
+Format: `clear-remark-s INDEX`
+
+* `INDEX` must be a positive integer within the currently displayed student list.
+* Clearing a remark hides the remark filed on the student's information card.
+
+Example:
+* `clear-remark-s 1` clears the remark of the first displayed student, as well as hides the remark field on their information card
 
 ### Editing a guardian: `edit-g`
 
@@ -367,6 +398,8 @@ Action     | Format, Examples
 **Add**    | `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]... ` <br> e.g., `add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665 t/friend t/colleague`
 **Add student** | `add-s n/NAME p/PHONE e/EMAIL a/ADDRESS l/LEVEL s/SUBJECT [s/SUBJECT]...` <br> e.g., `add-s n/Henry Tan p/91234567 e/henry@example.com a/12 ABCD Ave 3 l/Secondary 3 s/Mathematics s/Physics`
 **Add guardian** | `add-g n/NAME p/PHONE e/EMAIL a/ADDRESS` <br> e.g., `add-g n/Ben Tan p/92345678 e/ben.tan@gmail.com a/12 ABCD Ave 3`
+**Set student remark** | `set-remark-s INDEX REMARK`<br> e.g., `set-remark-s 1 Practise fractions before the next lesson`
+**Clear student remark** | `clear-remark-s INDEX`<br> e.g., `clear-remark-s 1`
 **Clear**  | `clear`
 **Delete** | `delete INDEX`<br> e.g., `delete 3`
 **Edit**   | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]... `<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`

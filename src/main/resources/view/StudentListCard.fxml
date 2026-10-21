@@ -10,11 +10,11 @@
 <?import javafx.scene.layout.VBox?>
 
 <HBox id="cardPane" fx:id="cardPane" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
-  <GridPane HBox.hgrow="ALWAYS">
+  <GridPane minWidth="0" HBox.hgrow="ALWAYS">
     <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10" prefWidth="300" />
     </columnConstraints>
-    <VBox alignment="CENTER_LEFT" minHeight="130" GridPane.columnIndex="0">
+    <VBox alignment="CENTER_LEFT" minWidth="0" minHeight="130" GridPane.columnIndex="0">
       <padding>
         <Insets top="5" right="5" bottom="5" left="15" />
       </padding>
@@ -36,6 +36,8 @@
       <FlowPane fx:id="guardians" hgap="5">
         <Label text="Guardians:" styleClass="cell_small_label" />
       </FlowPane>
+      <Label fx:id="remark" styleClass="cell_small_label" wrapText="true"
+             minWidth="0" minHeight="-Infinity" maxWidth="Infinity" />
     </VBox>
   </GridPane>
 </HBox>
