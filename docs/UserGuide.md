@@ -274,6 +274,25 @@ Examples:
 * `find alex david` returns `Alex Yeoh`, `David Li`<br>
   ![result for 'find alex david'](images/findAlexDavidResult.png)
 
+### Filtering students: `filter`
+
+Shows only the students who match all of the given criteria. The guardian list is not changed.
+
+Format: `filter [l/LEVEL] [s/SUBJECT]... [paid/YYYY-MM] [unpaid/YYYY-MM]`
+
+* At least one criterion must be provided.
+* `l/LEVEL` shows students at that academic level. The match ignores case and extra spaces, e.g. `jc 1` matches `JC 1`.
+* `s/SUBJECT` shows students who take that subject. If several subjects are given, a student must take **all** of them.
+* `paid/YYYY-MM` shows students who have been marked as paid for that month using `mark-paid`.
+* `unpaid/YYYY-MM` shows students who have **not** been marked as paid for that month.
+* `l/`, `paid/` and `unpaid/` can each be given at most once.
+* Student indexes in later commands, such as `mark-paid` or `edit-s`, refer to the filtered list.
+
+Examples:
+* `filter l/JC 1 s/Mathematics` shows JC 1 students who take Mathematics.
+* `filter unpaid/2026-10` shows students who have not paid for October 2026.
+* `filter l/Secondary 3 paid/2026-09 unpaid/2026-10` shows Secondary 3 students who paid for September 2026 but not for October 2026.
+
 ### Deleting a person: `delete`
 
 Deletes the specified person from the address book.
@@ -390,6 +409,7 @@ Action     | Format, Examples
 **Edit**   | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]... `<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
 **Edit student** | `edit-s INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [l/LEVEL] [s/SUBJECT]...`<br> e.g., `edit-s 2 p/98765432 l/JC 2`
 **Edit guardian** | `edit-g INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS]`<br> e.g., `edit-g 1 a/25 Happy Road`
+**Filter** | `filter [l/LEVEL] [s/SUBJECT]... [paid/YYYY-MM] [unpaid/YYYY-MM]`<br> e.g., `filter l/JC 1 unpaid/2026-10`
 **Find**   | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
 **Link guardian** | `link-g STUDENT_INDEX g/GUARDIAN_INDEX`<br> e.g., `link-g 2 g/1`
 **List**   | `list`

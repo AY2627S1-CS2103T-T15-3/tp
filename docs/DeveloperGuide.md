@@ -215,6 +215,7 @@ The following sequence diagram shows how the `mark-paid` command goes through th
 
 * `edit-s` -- `EditStudentDescriptor#createEditedStudent` copies the original student's paid months into the edited student, so editing a student's details does not erase their payment history.
 * `remove-s` -- Payment history is stored on the `Student`, so it is removed together with the student.
+* `filter` -- `StudentMatchesFilterPredicate` takes an optional paid month and an optional unpaid month, parsed from the `paid/` and `unpaid/` prefixes. It uses `Student#hasPaidFor(PaymentMonth)` to keep only students who have paid for the paid month and have not paid for the unpaid month. These conditions are combined (AND) with the level and subject criteria.
 * **Storage** -- `JsonAdaptedStudent` stores paid months as a `paidMonths` array of `YYYY-MM` strings. A missing `paidMonths` field is treated as an empty list, so data files created before this feature still load. An invalid entry (e.g. `2026-13`) is rejected as invalid data.
 
 #### Design considerations:
@@ -609,8 +610,8 @@ separate use case.
 
 **MSS**
 
-1. User requests to filter contacts by criteria (contact type, year of study).
-2. TutorTrack shows the contacts that match all the criteria.
+1. User requests to filter students by one or more criteria (academic level, subjects, a month paid for, a month not paid for).
+2. TutorTrack shows the students that match all the criteria.
 
     Use case ends.
 
@@ -820,6 +821,22 @@ testers are expected to do more *exploratory* testing.
 
    1. Close and relaunch the app.<br>
       Expected: The student's paid months are unchanged.
+
+1. Filtering students by payment status
+
+   1. Prerequisites: The first student is marked as paid for October 2026, and the other students are not.
+
+   1. Test case: `filter unpaid/2026-10`<br>
+      Expected: Every student except the one marked as paid is listed. The status message shows the number of students listed.
+
+   1. Test case: `filter paid/2026-10`<br>
+      Expected: Only the student marked as paid is listed.
+
+   1. Test case: `filter paid/2026-10 unpaid/2026-10`<br>
+      Expected: No students are listed. The status message says that no students match the filter.
+
+   1. Test case: `filter unpaid/2026-13`, `filter paid/2026-10 paid/2026-11`<br>
+      Expected: The list is not changed. The status message shows the month format error, or a duplicate-field error.
 
 ### Saving data
 
