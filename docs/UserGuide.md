@@ -255,7 +255,7 @@ of students in the displayed list.
 
 Examples:
 * `mark-paid 1 m/2026-10` marks the 1st student in the displayed student list as paid for October 2026.
-* `find-s Henry` followed by `mark-paid 1 m/2026-11` marks the 1st student in the results of the `find-s` command as paid for November 2026.
+* `mark-paid 2 m/2026-11` marks the 2nd student in the displayed student list as paid for November 2026.
 
 ### Locating persons by name: `find`
 
