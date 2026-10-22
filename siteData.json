@@ -51,6 +51,7 @@
         "storage-component": "Storage component",
         "common-classes": "Common classes",
         "implementation": "Implementation",
+        "payment-tracking-feature": "Payment tracking feature",
         "proposed-undo-redo-feature": "[Proposed] Undo/redo feature",
         "proposed-data-archiving": "[Proposed] Data archiving",
         "documentation-logging-testing-dev-ops": "Documentation, logging, testing, dev-ops",
@@ -63,6 +64,7 @@
         "appendix-instructions-for-manual-testing": "Appendix: Instructions for manual testing",
         "launch-and-shutdown": "Launch and shutdown",
         "deleting-a-person": "Deleting a person",
+        "marking-a-student-s-payment": "Marking a student's payment",
         "saving-data": "Saving data"
       },
       "headingKeywords": {}
@@ -119,7 +121,9 @@
         "editing-a-student-edit-s": "Editing a student: edit-s",
         "editing-a-guardian-edit-g": "Editing a guardian: edit-g",
         "linking-a-guardian-to-a-student-link-g": "Linking a guardian to a student: link-g",
+        "marking-a-student-s-payment-as-paid-mark-paid": "Marking a student's payment as paid: mark-paid",
         "locating-persons-by-name-find": "Locating persons by name: find",
+        "filtering-students-filter": "Filtering students: filter",
         "deleting-a-person-delete": "Deleting a person: delete",
         "removing-a-student-remove-s": "Removing a student: remove-s",
         "removing-a-guardian-remove-g": "Removing a guardian: remove-g",

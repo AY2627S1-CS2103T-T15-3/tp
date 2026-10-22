@@ -1,0 +1,85 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":MarkPaidCommandParser" as MarkPaidCommandParser LOGIC_COLOR
+participant "c:MarkPaidCommand" as MarkPaidCommand LOGIC_COLOR
+participant "r:CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant "s:Student" as Student MODEL_COLOR
+participant "m:Model" as Model MODEL_COLOR
+end box
+
+[-> LogicManager : execute("mark-paid 1 m/2026-10")
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand("mark-paid 1 m/2026-10")
+activate AddressBookParser
+
+create MarkPaidCommandParser
+AddressBookParser -> MarkPaidCommandParser
+activate MarkPaidCommandParser
+
+MarkPaidCommandParser --> AddressBookParser
+deactivate MarkPaidCommandParser
+
+AddressBookParser -> MarkPaidCommandParser : parse(" 1 m/2026-10")
+activate MarkPaidCommandParser
+
+create MarkPaidCommand
+MarkPaidCommandParser -> MarkPaidCommand : MarkPaidCommand(1, 2026-10)
+activate MarkPaidCommand
+
+MarkPaidCommand --> MarkPaidCommandParser
+deactivate MarkPaidCommand
+
+MarkPaidCommandParser --> AddressBookParser : c
+deactivate MarkPaidCommandParser
+'Hidden arrow to position the destroy marker below the end of the activation bar.
+MarkPaidCommandParser -[hidden]-> AddressBookParser
+destroy MarkPaidCommandParser
+
+AddressBookParser --> LogicManager : c
+deactivate AddressBookParser
+
+LogicManager -> MarkPaidCommand : execute(m)
+activate MarkPaidCommand
+
+MarkPaidCommand -> Model : getFilteredStudentList()
+activate Model
+Model --> MarkPaidCommand : students
+deactivate Model
+
+MarkPaidCommand -> Student : hasPaidFor(2026-10)
+activate Student
+Student --> MarkPaidCommand : false
+deactivate Student
+
+MarkPaidCommand -> Student : withPaymentFor(2026-10)
+activate Student
+Student --> MarkPaidCommand : paidStudent
+deactivate Student
+
+MarkPaidCommand -> Model : setStudent(s, paidStudent)
+activate Model
+Model --> MarkPaidCommand
+deactivate Model
+
+create CommandResult
+MarkPaidCommand -> CommandResult
+activate CommandResult
+
+CommandResult --> MarkPaidCommand
+deactivate CommandResult
+
+MarkPaidCommand --> LogicManager : r
+deactivate MarkPaidCommand
+
+[<--LogicManager
+deactivate LogicManager
+@enduml
