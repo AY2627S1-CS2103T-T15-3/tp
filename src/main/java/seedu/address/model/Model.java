@@ -6,6 +6,7 @@ import java.util.function.Predicate;
 import javafx.collections.ObservableList;
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.model.guardian.Guardian;
+import seedu.address.model.lesson.Lesson;
 import seedu.address.model.link.StudentGuardianLink;
 import seedu.address.model.person.Person;
 import seedu.address.model.student.Student;
@@ -113,6 +114,15 @@ public interface Model {
      */
     void updateFilteredStudentList(Predicate<Student> predicate);
 
+    /** Adds the given lesson. */
+    void addLesson(Lesson lesson);
+
+    /** Deletes the given lesson. */
+    void deleteLesson(Lesson lesson);
+
+    /** Returns the scheduled lessons. */
+    ObservableList<Lesson> getLessonList();
+
     /**
      * Sorts the displayed student list by student name in ascending order.
      * The underlying student list and its storage order are not changed.
@@ -170,4 +180,11 @@ public interface Model {
      * @param link the link to add
      */
     void addStudentGuardianLink(StudentGuardianLink link);
+
+    /**
+     * Removes a student-guardian link. If the link does not exist, no action is taken.
+     *
+     * @param link the link to remove
+     */
+    void removeStudentGuardianLink(StudentGuardianLink link);
 }

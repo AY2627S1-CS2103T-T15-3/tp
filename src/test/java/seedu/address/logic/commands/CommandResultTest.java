@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 
 import seedu.address.model.guardian.Guardian;
@@ -87,5 +89,23 @@ public class CommandResultTest {
 
         assertEquals(GUARDIAN, result.getGuardianToHighlight());
         assertEquals(null, result.getStudentToHighlight());
+    }
+
+    @Test
+    public void searchHighlight_constructorStoresTargetAndKeywords() {
+        List<String> keywords = List.of("ali", "bo");
+        CommandResult result = new CommandResult("feedback", keywords,
+                CommandResult.HighlightTarget.STUDENTS);
+
+        assertEquals(keywords, result.getHighlightKeywords());
+        assertEquals(CommandResult.HighlightTarget.STUDENTS, result.getHighlightTarget());
+    }
+
+    @Test
+    public void defaultHighlight_isEmptyAndHasNoTarget() {
+        CommandResult result = new CommandResult("feedback");
+
+        assertEquals(List.of(), result.getHighlightKeywords());
+        assertEquals(CommandResult.HighlightTarget.NONE, result.getHighlightTarget());
     }
 }

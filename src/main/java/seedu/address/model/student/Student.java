@@ -9,6 +9,8 @@ import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.model.person.Address;
@@ -31,6 +33,21 @@ public class Student {
     private final Address address;
     private final Level level;
     private final Set<Subject> subjects;
+    private final SortedSet<PaymentMonth> paidMonths;
+
+    /**
+     * Creates a {@code Student} with the given contact and academic details and no recorded payments.
+     *
+     * @param name the student's name
+     * @param phone the student's phone number
+     * @param email the student's email address
+     * @param address the student's postal address
+     * @param level the student's academic level
+     * @param subjects the student's subjects
+     */
+    public Student(Name name, Phone phone, Email email, Address address, Level level, Set<Subject> subjects) {
+        this(name, phone, email, address, level, subjects, Set.of());
+    }
 
     /**
      * Creates a {@code Student} with the given contact and academic details.
@@ -42,10 +59,13 @@ public class Student {
      * @param address the student's postal address
      * @param level the student's academic level
      * @param subjects the student's subjects
+     * @param paidMonths the months for which the student has paid
      */
-    public Student(Name name, Phone phone, Email email, Address address, Level level, Set<Subject> subjects) {
-        requireAllNonNull(name, phone, email, address, level, subjects);
+    public Student(Name name, Phone phone, Email email, Address address, Level level, Set<Subject> subjects,
+            Set<PaymentMonth> paidMonths) {
+        requireAllNonNull(name, phone, email, address, level, subjects, paidMonths);
         requireAllNonNull(subjects);
+        requireAllNonNull(paidMonths);
         checkArgument(StudentFieldValidator.isValidName(name.fullName), StudentFieldValidator.NAME_MESSAGE);
         checkArgument(StudentFieldValidator.isValidPhone(phone.value), StudentFieldValidator.PHONE_MESSAGE);
         checkArgument(StudentFieldValidator.isValidEmail(email.value), StudentFieldValidator.EMAIL_MESSAGE);
@@ -57,6 +77,7 @@ public class Student {
         this.address = address;
         this.level = level;
         this.subjects = Collections.unmodifiableSet(new LinkedHashSet<>(subjects));
+        this.paidMonths = Collections.unmodifiableSortedSet(new TreeSet<>(paidMonths));
     }
 
     /**
@@ -102,6 +123,37 @@ public class Student {
     }
 
     /**
+     * Returns an immutable set of the months the student has paid for, in chronological order.
+     */
+    public SortedSet<PaymentMonth> getPaidMonths() {
+        return paidMonths;
+    }
+
+    /**
+     * Returns true if the student has paid for the given month.
+     *
+     * @param paymentMonth the month to check
+     * @return true if a payment is recorded for the month
+     */
+    public boolean hasPaidFor(PaymentMonth paymentMonth) {
+        requireNonNull(paymentMonth);
+        return paidMonths.contains(paymentMonth);
+    }
+
+    /**
+     * Returns a copy of this student with a payment recorded for the given month.
+     *
+     * @param paymentMonth the month the student has paid for
+     * @return the updated student
+     */
+    public Student withPaymentFor(PaymentMonth paymentMonth) {
+        requireNonNull(paymentMonth);
+        Set<PaymentMonth> updatedPaidMonths = new TreeSet<>(paidMonths);
+        updatedPaidMonths.add(paymentMonth);
+        return new Student(name, phone, email, address, level, subjects, updatedPaidMonths);
+    }
+
+    /**
      * Normalizes a name for student identity comparison.
      *
      * @param name the name to normalize
@@ -141,12 +193,13 @@ public class Student {
                 && email.equals(otherStudent.email)
                 && address.equals(otherStudent.address)
                 && level.equals(otherStudent.level)
-                && subjects.equals(otherStudent.subjects);
+                && subjects.equals(otherStudent.subjects)
+                && paidMonths.equals(otherStudent.paidMonths);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, phone, email, address, level, subjects);
+        return Objects.hash(name, phone, email, address, level, subjects, paidMonths);
     }
 
     /**
@@ -161,6 +214,7 @@ public class Student {
                 .add("address", address)
                 .add("level", level)
                 .add("subjects", subjects)
+                .add("paidMonths", paidMonths)
                 .toString();
     }
 }

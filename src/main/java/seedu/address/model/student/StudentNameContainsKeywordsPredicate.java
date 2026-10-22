@@ -13,7 +13,11 @@ public class StudentNameContainsKeywordsPredicate implements Predicate<Student> 
     private final List<String> keywords;
 
     public StudentNameContainsKeywordsPredicate(List<String> keywords) {
-        this.keywords = keywords;
+        this.keywords = List.copyOf(keywords);
+    }
+
+    public List<String> getKeywords() {
+        return keywords;
     }
 
     @Override

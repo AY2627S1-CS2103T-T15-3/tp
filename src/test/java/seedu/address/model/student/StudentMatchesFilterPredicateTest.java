@@ -21,11 +21,16 @@ public class StudentMatchesFilterPredicateTest {
     private static final Student STUDENT = new Student(new Name("Henry Tan"), new Phone("91234567"),
             new Email("henry@example.com"), new Address("12 ABCD Ave 3"), new Level("JC 1"),
             subjects("Mathematics", "Physics"));
+    private static final Student PAID_STUDENT = STUDENT.withPaymentFor(new PaymentMonth("2026-10"));
 
     @Test
     public void constructor_null_throwsNullPointerException() {
         assertThrows(NullPointerException.class, () -> new StudentMatchesFilterPredicate(null, Set.of()));
         assertThrows(NullPointerException.class, () -> new StudentMatchesFilterPredicate(Optional.empty(), null));
+        assertThrows(NullPointerException.class, () -> new StudentMatchesFilterPredicate(Optional.empty(), Set.of(),
+                null, Optional.empty()));
+        assertThrows(NullPointerException.class, () -> new StudentMatchesFilterPredicate(Optional.empty(), Set.of(),
+                Optional.empty(), null));
     }
 
     @Test
@@ -57,6 +62,52 @@ public class StudentMatchesFilterPredicateTest {
         // different subjects -> returns false
         assertFalse(firstPredicate.equals(predicate("JC 1", "Physics")));
         assertFalse(firstPredicate.equals(predicate("JC 1", "Mathematics", "Physics")));
+
+        // different payment months -> returns false
+        assertFalse(paymentPredicate("2026-10", null).equals(paymentPredicate("2026-11", null)));
+        assertFalse(paymentPredicate(null, "2026-10").equals(paymentPredicate(null, "2026-11")));
+        assertFalse(paymentPredicate("2026-10", null).equals(paymentPredicate(null, "2026-10")));
+
+        // same payment months -> returns true
+        assertTrue(paymentPredicate("2026-10", "2026-11").equals(paymentPredicate("2026-10", "2026-11")));
+    }
+
+    @Test
+    public void test_paidMonth() {
+        // paid for the month -> returns true
+        assertTrue(paymentPredicate("2026-10", null).test(PAID_STUDENT));
+
+        // not paid for the month -> returns false
+        assertFalse(paymentPredicate("2026-11", null).test(PAID_STUDENT));
+        assertFalse(paymentPredicate("2026-10", null).test(STUDENT));
+    }
+
+    @Test
+    public void test_unpaidMonth() {
+        // not paid for the month -> returns true
+        assertTrue(paymentPredicate(null, "2026-10").test(STUDENT));
+        assertTrue(paymentPredicate(null, "2026-11").test(PAID_STUDENT));
+
+        // paid for the month -> returns false
+        assertFalse(paymentPredicate(null, "2026-10").test(PAID_STUDENT));
+    }
+
+    @Test
+    public void test_paidAndUnpaidMonths() {
+        // paid for the first month but not the second -> returns true
+        assertTrue(paymentPredicate("2026-10", "2026-11").test(PAID_STUDENT));
+
+        // same month for both -> returns false
+        assertFalse(paymentPredicate("2026-10", "2026-10").test(PAID_STUDENT));
+    }
+
+    @Test
+    public void test_levelSubjectsAndPayment() {
+        StudentMatchesFilterPredicate predicate = new StudentMatchesFilterPredicate(Optional.of(new Level("JC 1")),
+                subjects("Mathematics"), Optional.empty(), Optional.of(new PaymentMonth("2026-10")));
+
+        assertTrue(predicate.test(STUDENT));
+        assertFalse(predicate.test(PAID_STUDENT));
     }
 
     @Test
@@ -131,7 +182,8 @@ public class StudentMatchesFilterPredicateTest {
         StudentMatchesFilterPredicate predicate = new StudentMatchesFilterPredicate(level, subjects);
 
         String expected = StudentMatchesFilterPredicate.class.getCanonicalName()
-                + "{level=" + level + ", subjects=" + subjects + "}";
+                + "{level=" + level + ", subjects=" + subjects
+                + ", paidMonth=" + Optional.empty() + ", unpaidMonth=" + Optional.empty() + "}";
         assertEquals(expected, predicate.toString());
     }
 
@@ -140,6 +192,15 @@ public class StudentMatchesFilterPredicateTest {
      */
     private static StudentMatchesFilterPredicate predicate(String level, String... subjects) {
         return new StudentMatchesFilterPredicate(Optional.ofNullable(level).map(Level::new), subjects(subjects));
+    }
+
+    /**
+     * Returns a predicate with only the given {@code paidMonth} and {@code unpaidMonth}, each absent if null.
+     */
+    private static StudentMatchesFilterPredicate paymentPredicate(String paidMonth, String unpaidMonth) {
+        return new StudentMatchesFilterPredicate(Optional.empty(), Set.of(),
+                Optional.ofNullable(paidMonth).map(PaymentMonth::new),
+                Optional.ofNullable(unpaidMonth).map(PaymentMonth::new));
     }
 
     private static Set<Subject> subjects(String... subjects) {
