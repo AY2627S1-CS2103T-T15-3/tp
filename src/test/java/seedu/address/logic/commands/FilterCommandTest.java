@@ -29,6 +29,7 @@ import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
 import seedu.address.model.student.Level;
+import seedu.address.model.student.PaymentMonth;
 import seedu.address.model.student.Student;
 import seedu.address.model.student.StudentMatchesFilterPredicate;
 import seedu.address.model.student.Subject;
@@ -65,6 +66,32 @@ public class FilterCommandTest {
 
         assertEquals(String.format(MESSAGE_STUDENTS_LISTED_OVERVIEW, 3), result.getFeedbackToUser());
         assertEquals(List.of(HENRY, IVY, JOEL), model.getFilteredStudentList());
+    }
+
+    @Test
+    public void execute_unpaidMonth_unpaidStudentsFound() {
+        PaymentMonth october = new PaymentMonth("2026-10");
+        Student paidHenry = HENRY.withPaymentFor(october);
+        ModelStubWithStudents model = new ModelStubWithStudents(paidHenry, IVY, JOEL);
+
+        CommandResult result = new FilterCommand(new StudentMatchesFilterPredicate(Optional.empty(), Set.of(),
+                Optional.empty(), Optional.of(october))).execute(model);
+
+        assertEquals(String.format(MESSAGE_STUDENTS_LISTED_OVERVIEW, 2), result.getFeedbackToUser());
+        assertEquals(List.of(IVY, JOEL), model.getFilteredStudentList());
+    }
+
+    @Test
+    public void execute_paidMonth_paidStudentFound() {
+        PaymentMonth october = new PaymentMonth("2026-10");
+        Student paidHenry = HENRY.withPaymentFor(october);
+        ModelStubWithStudents model = new ModelStubWithStudents(paidHenry, IVY, JOEL);
+
+        CommandResult result = new FilterCommand(new StudentMatchesFilterPredicate(Optional.empty(), Set.of(),
+                Optional.of(october), Optional.empty())).execute(model);
+
+        assertEquals(String.format(MESSAGE_STUDENTS_LISTED_OVERVIEW, 1), result.getFeedbackToUser());
+        assertEquals(List.of(paidHenry), model.getFilteredStudentList());
     }
 
     @Test

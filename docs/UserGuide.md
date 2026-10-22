@@ -239,6 +239,24 @@ Examples:
 * `link-g 2 g/1`
 * `link-g 3 g/1`
 
+### Marking a student's payment as paid: `mark-paid`
+
+Records that a student has paid for a given month of a year.
+
+Format: `mark-paid INDEX m/YYYY-MM`
+
+* Marks the student at the specified `INDEX` as paid for the month `YYYY-MM`. The index refers to the
+index number shown in the currently displayed student list.
+* The index **must be a positive integer** 1, 2, 3, ..., and must not exceed the number
+of students in the displayed list.
+* The month must be in the format `YYYY-MM`, with a two-digit month from `01` to `12`, e.g. `2026-10`.
+* A student who is already marked as paid for that month is left unchanged, and an error is shown.
+* Each student's card shows the months they have paid for, e.g. `Paid: Sep 2026, Oct 2026`.
+
+Examples:
+* `mark-paid 1 m/2026-10` marks the 1st student in the displayed student list as paid for October 2026.
+* `mark-paid 2 m/2026-11` marks the 2nd student in the displayed student list as paid for November 2026.
+
 ### Locating persons by name: `find`
 
 Finds persons whose names contain any of the given keywords.
@@ -255,6 +273,25 @@ Examples:
 * `find John` returns `john` and `John Doe`
 * `find alex david` returns `Alex Yeoh`, `David Li`<br>
   ![result for 'find alex david'](images/findAlexDavidResult.png)
+
+### Filtering students: `filter`
+
+Shows only the students who match all of the given criteria. The guardian list is not changed.
+
+Format: `filter [l/LEVEL] [s/SUBJECT]... [paid/YYYY-MM] [unpaid/YYYY-MM]`
+
+* At least one criterion must be provided.
+* `l/LEVEL` shows students at that academic level. The match ignores case and extra spaces, e.g. `jc 1` matches `JC 1`.
+* `s/SUBJECT` shows students who take that subject. If several subjects are given, a student must take **all** of them.
+* `paid/YYYY-MM` shows students who have been marked as paid for that month using `mark-paid`.
+* `unpaid/YYYY-MM` shows students who have **not** been marked as paid for that month.
+* `l/`, `paid/` and `unpaid/` can each be given at most once.
+* Student indexes in later commands, such as `mark-paid` or `edit-s`, refer to the filtered list.
+
+Examples:
+* `filter l/JC 1 s/Mathematics` shows JC 1 students who take Mathematics.
+* `filter unpaid/2026-10` shows students who have not paid for October 2026.
+* `filter l/Secondary 3 paid/2026-09 unpaid/2026-10` shows Secondary 3 students who paid for September 2026 but not for October 2026.
 
 ### Deleting a person: `delete`
 
@@ -372,7 +409,9 @@ Action     | Format, Examples
 **Edit**   | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]... `<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
 **Edit student** | `edit-s INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [l/LEVEL] [s/SUBJECT]...`<br> e.g., `edit-s 2 p/98765432 l/JC 2`
 **Edit guardian** | `edit-g INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS]`<br> e.g., `edit-g 1 a/25 Happy Road`
+**Filter** | `filter [l/LEVEL] [s/SUBJECT]... [paid/YYYY-MM] [unpaid/YYYY-MM]`<br> e.g., `filter l/JC 1 unpaid/2026-10`
 **Find**   | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
 **Link guardian** | `link-g STUDENT_INDEX g/GUARDIAN_INDEX`<br> e.g., `link-g 2 g/1`
 **List**   | `list`
+**Mark paid** | `mark-paid INDEX m/YYYY-MM`<br> e.g., `mark-paid 1 m/2026-10`
 **Help**   | `help`

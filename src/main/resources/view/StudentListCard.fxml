@@ -31,6 +31,7 @@
       <Label fx:id="email" styleClass="cell_small_label" />
       <Label fx:id="address" styleClass="cell_small_label" />
       <Label fx:id="level" styleClass="cell_small_label" />
+      <Label fx:id="payments" styleClass="cell_small_label" />
       <FlowPane fx:id="subjects" hgap="5">
         <Label text="Subjects:" styleClass="cell_small_label" />
       </FlowPane>

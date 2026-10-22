@@ -15,6 +15,7 @@ import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Phone;
 import seedu.address.model.student.Level;
+import seedu.address.model.student.PaymentMonth;
 import seedu.address.model.student.StudentFieldValidator;
 import seedu.address.model.student.Subject;
 import seedu.address.model.tag.Tag;
@@ -216,6 +217,16 @@ public class ParserUtil {
             throw new ParseException(Level.MESSAGE_CONSTRAINTS);
         }
         return new Level(normalizedLevel);
+    }
+
+    /** Parses a payment month in the format YYYY-MM. */
+    public static PaymentMonth parsePaymentMonth(String paymentMonth) throws ParseException {
+        requireNonNull(paymentMonth);
+        String trimmedPaymentMonth = paymentMonth.trim();
+        if (!PaymentMonth.isValidPaymentMonth(trimmedPaymentMonth)) {
+            throw new ParseException(PaymentMonth.MESSAGE_CONSTRAINTS);
+        }
+        return new PaymentMonth(trimmedPaymentMonth);
     }
 
     /** Parses a student subject using the add-s validation rules. */

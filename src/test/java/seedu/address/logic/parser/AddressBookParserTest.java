@@ -34,6 +34,7 @@ import seedu.address.logic.commands.LinkGuardianCommand;
 import seedu.address.logic.commands.ListCommand;
 import seedu.address.logic.commands.ListGuardianCommand;
 import seedu.address.logic.commands.ListStudentCommand;
+import seedu.address.logic.commands.MarkPaidCommand;
 import seedu.address.logic.commands.RemoveGuardianCommand;
 import seedu.address.logic.commands.RemoveStudentCommand;
 import seedu.address.logic.commands.SortStudentCommand;
@@ -42,6 +43,7 @@ import seedu.address.model.guardian.GuardianNameContainsKeywordsPredicate;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
 import seedu.address.model.person.Person;
 import seedu.address.model.student.Level;
+import seedu.address.model.student.PaymentMonth;
 import seedu.address.model.student.StudentMatchesFilterPredicate;
 import seedu.address.model.student.StudentNameContainsKeywordsPredicate;
 import seedu.address.model.student.Subject;
@@ -109,6 +111,13 @@ public class AddressBookParserTest {
         RemoveStudentCommand command = (RemoveStudentCommand) parser.parseCommand(
                 RemoveStudentCommand.COMMAND_WORD + " " + INDEX_FIRST_PERSON.getOneBased());
         assertEquals(new RemoveStudentCommand(INDEX_FIRST_PERSON), command);
+    }
+
+    @Test
+    public void parseCommand_markPaid() throws Exception {
+        MarkPaidCommand command = (MarkPaidCommand) parser.parseCommand(
+                MarkPaidCommand.COMMAND_WORD + " " + INDEX_FIRST_PERSON.getOneBased() + " m/2026-10");
+        assertEquals(new MarkPaidCommand(INDEX_FIRST_PERSON, new PaymentMonth("2026-10")), command);
     }
 
     @Test

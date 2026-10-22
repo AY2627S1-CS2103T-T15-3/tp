@@ -16,6 +16,7 @@ import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Phone;
 import seedu.address.model.student.Level;
+import seedu.address.model.student.PaymentMonth;
 import seedu.address.model.student.Student;
 import seedu.address.model.student.Subject;
 
@@ -34,6 +35,17 @@ public class EditStudentDescriptorTest {
 
         assertEquals(ORIGINAL, descriptor.createEditedStudent(ORIGINAL));
         assertTrue(!descriptor.isAnyFieldEdited());
+    }
+
+    @Test
+    public void createEditedStudent_preservesPaidMonths() {
+        Student paidStudent = ORIGINAL.withPaymentFor(new PaymentMonth("2026-10"));
+        EditStudentDescriptor descriptor = new EditStudentDescriptor();
+        descriptor.setPhone(new Phone("98765432"));
+
+        Student edited = descriptor.createEditedStudent(paidStudent);
+
+        assertEquals(paidStudent.getPaidMonths(), edited.getPaidMonths());
     }
 
     @Test
