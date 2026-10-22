@@ -181,6 +181,28 @@ public class AddressBookTest {
     }
 
     @Test
+    public void studentGuardianLinkOperations_removeLink_success() {
+        Student student = student("Henry Tan", "91234567", "henry@example.com");
+        Guardian guardian = guardian("Ben Tan", "92345678", "ben@example.com");
+        Guardian otherGuardian = guardian("Billie Ng", "94567890", "billie@example.com");
+        StudentGuardianLink link = new StudentGuardianLink(student, guardian);
+        StudentGuardianLink otherLink = new StudentGuardianLink(student, otherGuardian);
+        addressBook.addStudentGuardianLink(link);
+        addressBook.addStudentGuardianLink(otherLink);
+
+        addressBook.removeStudentGuardianLink(link);
+
+        assertFalse(addressBook.hasStudentGuardianLink(link));
+        assertTrue(addressBook.hasStudentGuardianLink(otherLink));
+        assertEquals(List.of(otherGuardian), addressBook.getGuardiansForStudent(student));
+    }
+
+    @Test
+    public void studentGuardianLinkOperations_removeNullLink_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> addressBook.removeStudentGuardianLink(null));
+    }
+
+    @Test
     public void studentGuardianLinkOperations_editStudent_preservesUpdatedLink() {
         Student student = student("Henry Tan", "91234567", "henry@example.com");
         Student editedStudent = student("Henry Tan", "99887766", "henry@example.com");

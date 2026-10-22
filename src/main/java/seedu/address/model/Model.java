@@ -170,4 +170,11 @@ public interface Model {
      * @param link the link to add
      */
     void addStudentGuardianLink(StudentGuardianLink link);
+
+    /**
+     * Removes a student-guardian link. If the link does not exist, no action is taken.
+     *
+     * @param link the link to remove
+     */
+    void removeStudentGuardianLink(StudentGuardianLink link);
 }

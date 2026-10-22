@@ -199,6 +199,11 @@ public class AddressBook implements ReadOnlyAddressBook {
         }
     }
 
+    /** Removes the given student-guardian link. */
+    public void removeStudentGuardianLink(StudentGuardianLink link) {
+        studentGuardianLinks.remove(requireNonNull(link));
+    }
+
     //// util methods
 
     @Override

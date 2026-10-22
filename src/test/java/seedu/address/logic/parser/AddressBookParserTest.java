@@ -38,6 +38,7 @@ import seedu.address.logic.commands.MarkPaidCommand;
 import seedu.address.logic.commands.RemoveGuardianCommand;
 import seedu.address.logic.commands.RemoveStudentCommand;
 import seedu.address.logic.commands.SortStudentCommand;
+import seedu.address.logic.commands.UnlinkGuardianCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.guardian.GuardianNameContainsKeywordsPredicate;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
@@ -85,6 +86,12 @@ public class AddressBookParserTest {
     public void parseCommand_linkGuardian() throws Exception {
         Command command = parser.parseCommand("link-g 1 g/2");
         assertTrue(command instanceof LinkGuardianCommand);
+    }
+
+    @Test
+    public void parseCommand_unlinkGuardian() throws Exception {
+        Command command = parser.parseCommand("unlink-g 1 g/2");
+        assertTrue(command instanceof UnlinkGuardianCommand);
     }
 
     @Test
