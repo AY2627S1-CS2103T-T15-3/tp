@@ -94,6 +94,11 @@ The sequence diagram below illustrates the interactions within the `Logic` compo
 
 <puml src="diagrams/DeleteSequenceDiagram.puml" alt="Interactions Inside the Logic Component for the `delete 1` Command" />
 
+The following sequence diagram shows how `unlink-g` removes an existing student-guardian link.
+
+<puml src="diagrams/UnlinkGuardianSequenceDiagram.puml"
+      alt="Interactions for the unlink-g command" />
+
 <box type="info" seamless>
 
 **Note:** The lifeline for `DeleteCommandParser` should end at the destroy marker (X), but due to a limitation of PlantUML, the lifeline continues till the end of diagram.
@@ -121,8 +126,10 @@ The student and guardian MVP commands follow the same parser-command flow:
 * `EditStudentCommandParser` parses `edit-s` indexes and optional student fields before creating an `EditStudentCommand`.
 * `EditGuardianCommandParser` parses `edit-g` indexes and optional guardian fields before creating an `EditGuardianCommand`.
 * `LinkGuardianCommandParser` parses a student index and a `g/` guardian index before creating a `LinkGuardianCommand`.
+* `UnlinkGuardianCommandParser` parses a student index and a `g/` guardian index before creating an `UnlinkGuardianCommand`.
 * The edit commands update only supplied fields and preserve the remaining values.
 * `LinkGuardianCommand` creates a `StudentGuardianLink` in the model and treats a repeated pair as an existing link.
+* `UnlinkGuardianCommand` checks that the selected link exists before asking the model to remove it.
 
 ### Model component
 **API** : [`Model.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/model/Model.java)
@@ -138,6 +145,7 @@ The `Model` component,
 * does not depend on any of the other three components (as the `Model` represents data entities of the domain, they should make sense on their own without depending on other components)
 * exposes student and guardian lists separately so edit commands can resolve indexes from the currently displayed list.
 * stores student–guardian relationships as `StudentGuardianLink` objects and prevents duplicate pairs.
+* removes an individual student–guardian relationship without deleting either contact.
 * updates stored links when a linked student or guardian is edited, so linked cards always show current details.
 
 
