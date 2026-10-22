@@ -121,6 +121,8 @@
         "listing-all-guardians-list-g": "Listing all guardians: list-g",
         "editing-a-person-edit": "Editing a person: edit",
         "editing-a-student-edit-s": "Editing a student: edit-s",
+        "setting-a-student-remark-set-remark-s": "Setting a student remark: set-remark-s",
+        "clearing-a-student-remark-clear-remark-s": "Clearing a student remark: clear-remark-s",
         "editing-a-guardian-edit-g": "Editing a guardian: edit-g",
         "linking-a-guardian-to-a-student-link-g": "Linking a guardian to a student: link-g",
         "marking-a-student-s-payment-as-paid-mark-paid": "Marking a student's payment as paid: mark-paid",
