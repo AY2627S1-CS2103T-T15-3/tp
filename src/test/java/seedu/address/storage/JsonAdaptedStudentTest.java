@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static seedu.address.testutil.Assert.assertThrows;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -15,6 +16,7 @@ import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Phone;
 import seedu.address.model.student.Level;
+import seedu.address.model.student.PaymentMonth;
 import seedu.address.model.student.Remark;
 import seedu.address.model.student.Student;
 import seedu.address.model.student.StudentFieldValidator;
@@ -27,11 +29,52 @@ public class JsonAdaptedStudentTest {
         Student source = new Student(Name.fromStudentValue("Henry Tan"), Phone.fromStudentValue("91234567"),
                 Email.fromStudentValue("henry@example.com"), Address.fromStudentValue("12 ABCD Ave 3"),
                 new Level("Secondary 3"), Set.of(new Subject("Mathematics"), new Subject("Physics")),
-                new Remark("Practice fractions"));
+                new Remark("Practice fractions"), Set.of(new PaymentMonth("2026-10")));
 
         Student result = new JsonAdaptedStudent(source).toModelType();
 
         org.junit.jupiter.api.Assertions.assertEquals(source, result);
+    }
+
+    @Test
+    public void constructorFromStudent_withPaidMonths_roundTrips() throws Exception {
+        Student source = new Student(Name.fromStudentValue("Henry Tan"), Phone.fromStudentValue("91234567"),
+                Email.fromStudentValue("henry@example.com"), Address.fromStudentValue("12 ABCD Ave 3"),
+                new Level("Secondary 3"), Set.of(new Subject("Mathematics")),
+                Set.of(new PaymentMonth("2026-09"), new PaymentMonth("2026-10")));
+
+        Student result = new JsonAdaptedStudent(source).toModelType();
+
+        org.junit.jupiter.api.Assertions.assertEquals(source, result);
+    }
+
+    @Test
+    public void toModelType_missingPaidMonths_treatedAsNonePaid() throws Exception {
+        Student result = new JsonAdaptedStudent("Henry Tan", "91234567", "henry@example.com", "12 ABCD Ave 3",
+                "JC 1", List.of("Math"), null, null).toModelType();
+
+        org.junit.jupiter.api.Assertions.assertTrue(result.getPaidMonths().isEmpty());
+    }
+
+    @Test
+    public void toModelType_invalidPaidMonth_throwsIllegalValueException() {
+        assertThrows(IllegalValueException.class, PaymentMonth.MESSAGE_CONSTRAINTS, () ->
+                new JsonAdaptedStudent("Henry Tan", "91234567", "henry@example.com", "12 ABCD Ave 3", "JC 1",
+                        List.of("Math"), null, List.of("2026-13")).toModelType());
+    }
+
+    @Test
+    public void toModelType_nullPaidMonth_throwsIllegalValueException() {
+        assertThrows(IllegalValueException.class, PaymentMonth.MESSAGE_CONSTRAINTS, () ->
+                new JsonAdaptedStudent("Henry Tan", "91234567", "henry@example.com", "12 ABCD Ave 3", "JC 1",
+                        List.of("Math"), null, Collections.singletonList(null)).toModelType());
+    }
+
+    @Test
+    public void toModelType_nullSubjects_throwsIllegalValueException() {
+        assertThrows(IllegalValueException.class, Student.MESSAGE_NO_SUBJECTS, () ->
+                new JsonAdaptedStudent("Henry Tan", "91234567", "henry@example.com", "12 ABCD Ave 3", "JC 1",
+                        null, null, List.of("2026-10")).toModelType());
     }
 
     @Test
@@ -111,7 +154,7 @@ public class JsonAdaptedStudentTest {
 
     private static JsonAdaptedStudent adaptedWithRemark(String remark) {
         return new JsonAdaptedStudent("Henry Tan", "91234567", "henry@example.com", "12 ABCD Ave 3",
-                "JC 1", List.of("Mathematics", "Physics"), remark);
+                "JC 1", List.of("Mathematics", "Physics"), remark, null);
     }
 
     private static JsonAdaptedStudent adapted(String name, String phone, String email, String address, String level,

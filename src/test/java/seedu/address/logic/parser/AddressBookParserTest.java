@@ -35,14 +35,18 @@ import seedu.address.logic.commands.LinkGuardianCommand;
 import seedu.address.logic.commands.ListCommand;
 import seedu.address.logic.commands.ListGuardianCommand;
 import seedu.address.logic.commands.ListStudentCommand;
+import seedu.address.logic.commands.MarkPaidCommand;
 import seedu.address.logic.commands.RemoveGuardianCommand;
 import seedu.address.logic.commands.RemoveStudentCommand;
 import seedu.address.logic.commands.SetStudentRemarkCommand;
+import seedu.address.logic.commands.SortStudentCommand;
+import seedu.address.logic.commands.UnlinkGuardianCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.guardian.GuardianNameContainsKeywordsPredicate;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
 import seedu.address.model.person.Person;
 import seedu.address.model.student.Level;
+import seedu.address.model.student.PaymentMonth;
 import seedu.address.model.student.Remark;
 import seedu.address.model.student.StudentMatchesFilterPredicate;
 import seedu.address.model.student.StudentNameContainsKeywordsPredicate;
@@ -120,6 +124,12 @@ public class AddressBookParserTest {
     }
 
     @Test
+    public void parseCommand_unlinkGuardian() throws Exception {
+        Command command = parser.parseCommand("unlink-g 1 g/2");
+        assertTrue(command instanceof UnlinkGuardianCommand);
+    }
+
+    @Test
     public void parseCommand_clear() throws Exception {
         assertTrue(parser.parseCommand(ClearCommand.COMMAND_WORD) instanceof ClearCommand);
         assertTrue(parser.parseCommand(ClearCommand.COMMAND_WORD + " 3") instanceof ClearCommand);
@@ -143,6 +153,13 @@ public class AddressBookParserTest {
         RemoveStudentCommand command = (RemoveStudentCommand) parser.parseCommand(
                 RemoveStudentCommand.COMMAND_WORD + " " + INDEX_FIRST_PERSON.getOneBased());
         assertEquals(new RemoveStudentCommand(INDEX_FIRST_PERSON), command);
+    }
+
+    @Test
+    public void parseCommand_markPaid() throws Exception {
+        MarkPaidCommand command = (MarkPaidCommand) parser.parseCommand(
+                MarkPaidCommand.COMMAND_WORD + " " + INDEX_FIRST_PERSON.getOneBased() + " m/2026-10");
+        assertEquals(new MarkPaidCommand(INDEX_FIRST_PERSON, new PaymentMonth("2026-10")), command);
     }
 
     @Test
@@ -226,6 +243,14 @@ public class AddressBookParserTest {
         assertThrows(ParseException.class,
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, ListStudentCommand.MESSAGE_USAGE), ()
                 -> parser.parseCommand(ListStudentCommand.COMMAND_WORD + " 3"));
+    }
+
+    @Test
+    public void parseCommand_sortStudent() throws Exception {
+        assertEquals(new SortStudentCommand(), parser.parseCommand(SortStudentCommand.COMMAND_WORD));
+        assertThrows(ParseException.class,
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, SortStudentCommand.MESSAGE_USAGE), ()
+                -> parser.parseCommand(SortStudentCommand.COMMAND_WORD + " reverse"));
     }
 
     @Test

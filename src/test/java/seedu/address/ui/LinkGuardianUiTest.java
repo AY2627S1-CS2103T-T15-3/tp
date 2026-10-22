@@ -53,7 +53,11 @@ public class LinkGuardianUiTest {
 
     @BeforeAll
     public static void initializeJavaFx() {
-        Platform.startup(() -> { });
+        try {
+            Platform.startup(() -> { });
+        } catch (IllegalStateException ignored) {
+            // JavaFX was already initialized by another UI test class.
+        }
     }
 
     @Test

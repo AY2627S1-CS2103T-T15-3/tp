@@ -28,9 +28,12 @@ import seedu.address.logic.commands.LinkGuardianCommand;
 import seedu.address.logic.commands.ListCommand;
 import seedu.address.logic.commands.ListGuardianCommand;
 import seedu.address.logic.commands.ListStudentCommand;
+import seedu.address.logic.commands.MarkPaidCommand;
 import seedu.address.logic.commands.RemoveGuardianCommand;
 import seedu.address.logic.commands.RemoveStudentCommand;
 import seedu.address.logic.commands.SetStudentRemarkCommand;
+import seedu.address.logic.commands.SortStudentCommand;
+import seedu.address.logic.commands.UnlinkGuardianCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 
 /**
@@ -72,12 +75,14 @@ public class AddressBookParser {
             case EditCommand.COMMAND_WORD -> new EditCommandParser().parse(arguments);
             case EditGuardianCommand.COMMAND_WORD -> new EditGuardianCommandParser().parse(arguments);
             case LinkGuardianCommand.COMMAND_WORD -> new LinkGuardianCommandParser().parse(arguments);
+            case UnlinkGuardianCommand.COMMAND_WORD -> new UnlinkGuardianCommandParser().parse(arguments);
             case EditStudentCommand.COMMAND_WORD -> new EditStudentCommandParser().parse(arguments);
             case DeleteCommand.COMMAND_WORD -> new DeleteCommandParser().parse(arguments);
             case RemoveGuardianCommand.COMMAND_WORD -> new RemoveGuardianCommandParser().parse(arguments);
             case RemoveStudentCommand.COMMAND_WORD -> new RemoveStudentCommandParser().parse(arguments);
             case SetStudentRemarkCommand.COMMAND_WORD -> new SetStudentRemarkCommandParser().parse(arguments);
             case ClearStudentRemarkCommand.COMMAND_WORD -> new ClearStudentRemarkCommandParser().parse(arguments);
+            case MarkPaidCommand.COMMAND_WORD -> new MarkPaidCommandParser().parse(arguments);
             case ClearCommand.COMMAND_WORD -> new ClearCommand();
             case FilterCommand.COMMAND_WORD -> new FilterCommandParser().parse(arguments);
             case FindCommand.COMMAND_WORD -> new FindCommandParser().parse(arguments);
@@ -86,6 +91,7 @@ public class AddressBookParser {
             case ListCommand.COMMAND_WORD -> new ListCommand();
             case ListGuardianCommand.COMMAND_WORD -> new ListGuardianCommandParser().parse(arguments);
             case ListStudentCommand.COMMAND_WORD -> new ListStudentCommandParser().parse(arguments);
+            case SortStudentCommand.COMMAND_WORD -> new SortStudentCommandParser().parse(arguments);
             case ExitCommand.COMMAND_WORD -> new ExitCommand();
             case HelpCommand.COMMAND_WORD -> new HelpCommand();
             default -> {

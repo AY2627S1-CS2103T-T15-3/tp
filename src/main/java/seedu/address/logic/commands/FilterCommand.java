@@ -2,7 +2,9 @@ package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_LEVEL;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_PAID;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_SUBJECT;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_UNPAID;
 
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
@@ -10,7 +12,7 @@ import seedu.address.model.Model;
 import seedu.address.model.student.StudentMatchesFilterPredicate;
 
 /**
- * Filters the student list to the students who match the given level and subjects.
+ * Filters the student list to the students who match the given level, subjects and payment status.
  * The guardian list is not changed.
  */
 public class FilterCommand extends Command {
@@ -19,7 +21,9 @@ public class FilterCommand extends Command {
 
     public static final String MESSAGE_USAGE = "Usage: " + COMMAND_WORD + " "
             + "[" + PREFIX_LEVEL + "LEVEL] "
-            + "[" + PREFIX_SUBJECT + "SUBJECT]...";
+            + "[" + PREFIX_SUBJECT + "SUBJECT]... "
+            + "[" + PREFIX_PAID + "YYYY-MM] "
+            + "[" + PREFIX_UNPAID + "YYYY-MM]";
 
     private final StudentMatchesFilterPredicate predicate;
 

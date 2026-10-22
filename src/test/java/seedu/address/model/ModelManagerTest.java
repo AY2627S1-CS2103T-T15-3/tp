@@ -8,6 +8,9 @@ import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalPersons.ALICE;
 import static seedu.address.testutil.TypicalPersons.BENSON;
 
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Set;
 
@@ -15,6 +18,7 @@ import org.junit.jupiter.api.Test;
 
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.model.guardian.Guardian;
+import seedu.address.model.lesson.Lesson;
 import seedu.address.model.link.StudentGuardianLink;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
@@ -175,6 +179,43 @@ public class ModelManagerTest {
 
         modelManager.deleteStudent(bob);
         assertEquals(List.of(aaron, alice), modelManager.getFilteredStudentList());
+    }
+
+    @Test
+    public void lessonOperations_addAndDelete_success() {
+        Student student = student("Henry Tan", "91234567", "henry@example.com");
+        Lesson lesson = new Lesson(student, LocalDate.of(2026, 10, 25), LocalTime.of(14, 0),
+                Duration.ofMinutes(60));
+
+        modelManager.addStudent(student);
+        modelManager.addLesson(lesson);
+
+        assertEquals(List.of(lesson), modelManager.getLessonList());
+
+        modelManager.deleteLesson(lesson);
+
+        assertTrue(modelManager.getLessonList().isEmpty());
+    }
+
+    @Test
+    public void lessonOperations_nullInputs_throwNullPointerException() {
+        assertThrows(NullPointerException.class, () ->
+                modelManager.addLesson(null));
+        assertThrows(NullPointerException.class, () ->
+                modelManager.deleteLesson(null));
+    }
+
+    @Test
+    public void deleteStudent_removesAssociatedLessons() {
+        Student student = student("Henry Tan", "91234567", "henry@example.com");
+        Lesson lesson = new Lesson(student, LocalDate.of(2026, 10, 25), LocalTime.of(14, 0),
+                Duration.ofMinutes(60));
+
+        modelManager.addStudent(student);
+        modelManager.addLesson(lesson);
+        modelManager.deleteStudent(student);
+
+        assertTrue(modelManager.getLessonList().isEmpty());
     }
 
     @Test

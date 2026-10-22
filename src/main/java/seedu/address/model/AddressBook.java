@@ -9,6 +9,8 @@ import javafx.collections.ObservableList;
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.model.guardian.Guardian;
 import seedu.address.model.guardian.UniqueGuardianList;
+import seedu.address.model.lesson.Lesson;
+import seedu.address.model.lesson.UniqueLessonList;
 import seedu.address.model.link.StudentGuardianLink;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
@@ -24,6 +26,7 @@ public class AddressBook implements ReadOnlyAddressBook {
     private final UniquePersonList persons = new UniquePersonList();
     private final UniqueStudentList students = new UniqueStudentList();
     private final UniqueGuardianList guardians = new UniqueGuardianList();
+    private final UniqueLessonList lessons = new UniqueLessonList();
     private final List<StudentGuardianLink> studentGuardianLinks = new java.util.ArrayList<>();
 
     public AddressBook() {}
@@ -55,6 +58,7 @@ public class AddressBook implements ReadOnlyAddressBook {
         setPersons(newData.getPersonList());
         setStudents(newData.getStudentList());
         setGuardians(newData.getGuardianList());
+        setLessons(newData.getLessonList());
         studentGuardianLinks.clear();
         studentGuardianLinks.addAll(newData.getStudentGuardianLinkList());
     }
@@ -121,6 +125,11 @@ public class AddressBook implements ReadOnlyAddressBook {
         requireNonNull(target);
         requireNonNull(editedStudent);
         students.setStudent(target, editedStudent);
+        lessons.setLessons(lessons.asUnmodifiableObservableList().stream()
+                .map(lesson -> lesson.getStudent().equals(target)
+                        ? new Lesson(editedStudent, lesson.getDate(), lesson.getStartTime(), lesson.getDuration())
+                        : lesson)
+                .toList());
         studentGuardianLinks.replaceAll(link -> link.getStudent().equals(target)
                 ? new StudentGuardianLink(editedStudent, link.getGuardian())
                 : link);
@@ -131,6 +140,9 @@ public class AddressBook implements ReadOnlyAddressBook {
      */
     public void removeStudent(Student student) {
         students.remove(student);
+        lessons.setLessons(lessons.asUnmodifiableObservableList().stream()
+                .filter(lesson -> !lesson.getStudent().equals(student))
+                .toList());
         studentGuardianLinks.removeIf(link -> link.getStudent().equals(student));
     }
 
@@ -139,6 +151,21 @@ public class AddressBook implements ReadOnlyAddressBook {
      */
     public void setStudents(List<Student> students) {
         this.students.setStudents(students);
+    }
+
+    /** Adds a lesson to the address book. */
+    public void addLesson(Lesson lesson) {
+        lessons.add(lesson);
+    }
+
+    /** Removes a lesson from the address book. */
+    public void removeLesson(Lesson lesson) {
+        lessons.remove(lesson);
+    }
+
+    /** Replaces the contents of the lesson list. */
+    public void setLessons(List<Lesson> lessons) {
+        this.lessons.setLessons(lessons);
     }
 
     //// guardian-level operations
@@ -199,6 +226,11 @@ public class AddressBook implements ReadOnlyAddressBook {
         }
     }
 
+    /** Removes the given student-guardian link. */
+    public void removeStudentGuardianLink(StudentGuardianLink link) {
+        studentGuardianLinks.remove(requireNonNull(link));
+    }
+
     //// util methods
 
     @Override
@@ -229,6 +261,11 @@ public class AddressBook implements ReadOnlyAddressBook {
     }
 
     @Override
+    public ObservableList<Lesson> getLessonList() {
+        return lessons.asUnmodifiableObservableList();
+    }
+
+    @Override
     public boolean equals(Object other) {
         if (other == this) {
             return true;
@@ -242,11 +279,12 @@ public class AddressBook implements ReadOnlyAddressBook {
         return persons.equals(otherAddressBook.persons)
                 && students.equals(otherAddressBook.students)
                 && guardians.equals(otherAddressBook.guardians)
+                && lessons.equals(otherAddressBook.lessons)
                 && studentGuardianLinks.equals(otherAddressBook.studentGuardianLinks);
     }
 
     @Override
     public int hashCode() {
-        return java.util.Objects.hash(persons, students, guardians, studentGuardianLinks);
+        return java.util.Objects.hash(persons, students, guardians, lessons, studentGuardianLinks);
     }
 }

@@ -9,6 +9,8 @@ import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.model.person.Address;
@@ -32,9 +34,33 @@ public class Student {
     private final Level level;
     private final Set<Subject> subjects;
     private final Remark remark;
+    private final SortedSet<PaymentMonth> paidMonths;
 
     /**
-     * Creates a {@code Student} with the given contact and academic details.
+     * Creates a student with no remark and no recorded payments.
+     */
+    public Student(Name name, Phone phone, Email email, Address address, Level level, Set<Subject> subjects) {
+        this(name, phone, email, address, level, subjects, Remark.EMPTY, Set.of());
+    }
+
+    /**
+     * Creates a student with a remark and no recorded payments.
+     */
+    public Student(Name name, Phone phone, Email email, Address address, Level level, Set<Subject> subjects,
+            Remark remark) {
+        this(name, phone, email, address, level, subjects, remark, Set.of());
+    }
+
+    /**
+     * Creates a student with recorded payments and no remark.
+     */
+    public Student(Name name, Phone phone, Email email, Address address, Level level, Set<Subject> subjects,
+            Set<PaymentMonth> paidMonths) {
+        this(name, phone, email, address, level, subjects, Remark.EMPTY, paidMonths);
+    }
+
+    /**
+     * Creates a student with the given contact details, academic details, remark and payment history.
      * Equivalent subjects are stored only once while preserving insertion order.
      *
      * @param name the student's name
@@ -43,28 +69,28 @@ public class Student {
      * @param address the student's postal address
      * @param level the student's academic level
      * @param subjects the student's subjects
+     * @param remark the student's remark
+     * @param paidMonths the months for which the student has paid
      */
-    public Student(Name name, Phone phone, Email email, Address address, Level level, Set<Subject> subjects) {
-        this(name, phone, email, address, level, subjects, Remark.EMPTY);
-    }
-
-    /** Creates a student with the given contact details, academic details and remark. */
     public Student(Name name, Phone phone, Email email, Address address, Level level, Set<Subject> subjects,
-            Remark remark) {
-        requireAllNonNull(name, phone, email, address, level, subjects, remark);
+            Remark remark, Set<PaymentMonth> paidMonths) {
+        requireAllNonNull(name, phone, email, address, level, subjects, remark, paidMonths);
         requireAllNonNull(subjects);
+        requireAllNonNull(paidMonths);
         checkArgument(StudentFieldValidator.isValidName(name.fullName), StudentFieldValidator.NAME_MESSAGE);
         checkArgument(StudentFieldValidator.isValidPhone(phone.value), StudentFieldValidator.PHONE_MESSAGE);
         checkArgument(StudentFieldValidator.isValidEmail(email.value), StudentFieldValidator.EMAIL_MESSAGE);
         checkArgument(StudentFieldValidator.isValidAddress(address.value), StudentFieldValidator.ADDRESS_MESSAGE);
         checkArgument(!subjects.isEmpty(), MESSAGE_NO_SUBJECTS);
-        this.remark = remark;
+
         this.name = name;
         this.phone = phone;
         this.email = email;
         this.address = address;
         this.level = level;
         this.subjects = Collections.unmodifiableSet(new LinkedHashSet<>(subjects));
+        this.remark = remark;
+        this.paidMonths = Collections.unmodifiableSortedSet(new TreeSet<>(paidMonths));
     }
 
     /**
@@ -116,7 +142,38 @@ public class Student {
 
     /** Returns a new student with the supplied remark and all other attributes preserved. */
     public Student withRemark(Remark remark) {
-        return new Student(name, phone, email, address, level, subjects, remark);
+        return new Student(name, phone, email, address, level, subjects, remark, paidMonths);
+    }
+
+    /**
+     * Returns an immutable set of the months the student has paid for, in chronological order.
+     */
+    public SortedSet<PaymentMonth> getPaidMonths() {
+        return paidMonths;
+    }
+
+    /**
+     * Returns true if the student has paid for the given month.
+     *
+     * @param paymentMonth the month to check
+     * @return true if a payment is recorded for the month
+     */
+    public boolean hasPaidFor(PaymentMonth paymentMonth) {
+        requireNonNull(paymentMonth);
+        return paidMonths.contains(paymentMonth);
+    }
+
+    /**
+     * Returns a copy of this student with a payment recorded for the given month.
+     *
+     * @param paymentMonth the month the student has paid for
+     * @return the updated student
+     */
+    public Student withPaymentFor(PaymentMonth paymentMonth) {
+        requireNonNull(paymentMonth);
+        Set<PaymentMonth> updatedPaidMonths = new TreeSet<>(paidMonths);
+        updatedPaidMonths.add(paymentMonth);
+        return new Student(name, phone, email, address, level, subjects, remark, updatedPaidMonths);
     }
 
     /**
@@ -160,12 +217,13 @@ public class Student {
                 && address.equals(otherStudent.address)
                 && level.equals(otherStudent.level)
                 && subjects.equals(otherStudent.subjects)
-                && remark.equals(otherStudent.remark);
+                && remark.equals(otherStudent.remark)
+                && paidMonths.equals(otherStudent.paidMonths);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, phone, email, address, level, subjects, remark);
+        return Objects.hash(name, phone, email, address, level, subjects, remark, paidMonths);
     }
 
     /**
@@ -181,6 +239,7 @@ public class Student {
                 .add("level", level)
                 .add("subjects", subjects)
                 .add("remark", remark)
+                .add("paidMonths", paidMonths)
                 .toString();
     }
 }

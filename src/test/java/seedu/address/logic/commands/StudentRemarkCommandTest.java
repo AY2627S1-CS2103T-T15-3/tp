@@ -9,6 +9,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,12 +29,14 @@ import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.AddressBook;
 import seedu.address.model.ModelManager;
 import seedu.address.model.guardian.Guardian;
+import seedu.address.model.lesson.Lesson;
 import seedu.address.model.link.StudentGuardianLink;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Phone;
 import seedu.address.model.student.Level;
+import seedu.address.model.student.PaymentMonth;
 import seedu.address.model.student.Remark;
 import seedu.address.model.student.Student;
 import seedu.address.model.student.Subject;
@@ -210,6 +215,51 @@ public class StudentRemarkCommandTest {
                     assertEquals(savedJson, Files.readString(dataPath));
                 }
             }
+        }
+    }
+
+    @Test
+    public void logic_studentUpdates_preservePaymentsRemarksAndReferences(@TempDir Path folder) throws Exception {
+        PaymentMonth october = new PaymentMonth("2026-10");
+        model.addLesson(new Lesson(ORIGINAL, LocalDate.of(2026, 10, 25), LocalTime.of(14, 0),
+                Duration.ofHours(1)));
+        JsonAddressBookStorage storage = new JsonAddressBookStorage(folder.resolve("integrated.json"));
+        LogicManager logic = new LogicManager(model, new StorageManager(storage,
+                new JsonUserPrefsStorage(folder.resolve("preferences.json"))));
+
+        for (boolean paymentFirst : List.of(false, true)) {
+            logic.execute("clear-remark-s 1");
+            String month = paymentFirst ? "2026-11" : "2026-10";
+            if (paymentFirst) {
+                logic.execute("mark-paid 1 m/" + month);
+                logic.execute("set-remark-s 1 Practice fractions");
+            } else {
+                logic.execute("set-remark-s 1 Practice fractions");
+                logic.execute("mark-paid 1 m/" + month);
+            }
+            Student expected = model.getFilteredStudentList().get(0);
+            assertEquals(new Remark("Practice fractions"), expected.getRemark());
+            assertTrue(expected.hasPaidFor(october));
+            for (String edit : List.of("n/Lucy Tan", "p/98765432", "e/new@example.com",
+                    "a/12 Main Street", "l/JC 2", "s/Chemistry")) {
+                logic.execute("edit-s 1 " + edit);
+                Student edited = model.getFilteredStudentList().get(0);
+                assertEquals(expected.getRemark(), edited.getRemark());
+                assertEquals(expected.getPaidMonths(), edited.getPaidMonths());
+                assertEquals(List.of(guardian), model.getGuardiansForStudent(edited));
+                assertSame(edited, model.getLessonList().get(0).getStudent());
+                assertSame(edited, model.getAddressBook().getStudentGuardianLinkList().get(0).getStudent());
+                assertEquals(model.getAddressBook(), storage.readAddressBook().orElseThrow());
+                expected = edited;
+            }
+            logic.execute("set-remark-s 1 Review algebra");
+            assertEquals(expected.withRemark(new Remark("Review algebra")), model.getFilteredStudentList().get(0));
+            logic.execute("clear-remark-s 1");
+            Student cleared = model.getFilteredStudentList().get(0);
+            assertEquals(expected.withRemark(Remark.EMPTY), cleared);
+            assertSame(cleared, model.getLessonList().get(0).getStudent());
+            assertEquals(List.of(guardian), model.getGuardiansForStudent(cleared));
+            assertEquals(model.getAddressBook(), storage.readAddressBook().orElseThrow());
         }
     }
 

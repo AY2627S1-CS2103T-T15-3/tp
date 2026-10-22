@@ -106,6 +106,15 @@ public class StudentNameContainsKeywordsPredicateTest {
         assertEquals(expected, predicate.toString());
     }
 
+    @Test
+    public void getKeywords_returnsOriginalKeywords() {
+        List<String> keywords = List.of("Ali", "Bo");
+        StudentNameContainsKeywordsPredicate predicate =
+                new StudentNameContainsKeywordsPredicate(keywords);
+
+        assertEquals(keywords, predicate.getKeywords());
+    }
+
     private static Student student(String name) {
         return new Student(new Name(name), new Phone("91234567"), new Email("student@example.com"),
                 new Address("12 Main Street"), new Level("JC 1"),

@@ -28,6 +28,7 @@ import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Phone;
 import seedu.address.model.student.Level;
+import seedu.address.model.student.PaymentMonth;
 import seedu.address.model.student.Remark;
 import seedu.address.model.student.Student;
 import seedu.address.model.student.Subject;
@@ -126,6 +127,22 @@ public class JsonStudentStorageTest {
         assertEquals(List.of(first, second), legacy.getGuardianList());
         assertEquals(List.of(new StudentGuardianLink(loaded, first), new StudentGuardianLink(loaded, second)),
                 legacy.getStudentGuardianLinkList());
+    }
+
+    @Test
+    public void readAddressBook_optionalRemarkAndPayments_defaultIndependently() throws Exception {
+        for (String remark : List.of("", ", \"remark\": null", ", \"remark\": \"Practice fractions\"")) {
+            for (String payments : List.of("", ", \"paidMonths\": null", ", \"paidMonths\": []",
+                    ", \"paidMonths\": [\"2026-10\", \"2026-09\"]")) {
+                Student loaded = new JsonAddressBookStorage(writeStudentJson(remark + payments))
+                        .readAddressBook().orElseThrow().getStudentList().get(0);
+                assertEquals(remark.contains("Practice") ? new Remark("Practice fractions") : Remark.EMPTY,
+                        loaded.getRemark());
+                assertEquals(payments.contains("2026")
+                        ? List.of(new PaymentMonth("2026-09"), new PaymentMonth("2026-10")) : List.of(),
+                        List.copyOf(loaded.getPaidMonths()));
+            }
+        }
     }
 
     private Path writeStudentJson(String remarkProperty) throws Exception {

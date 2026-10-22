@@ -23,12 +23,14 @@ import seedu.address.model.Model;
 import seedu.address.model.ReadOnlyAddressBook;
 import seedu.address.model.ReadOnlyUserPrefs;
 import seedu.address.model.guardian.Guardian;
+import seedu.address.model.lesson.Lesson;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
 import seedu.address.model.student.Level;
+import seedu.address.model.student.PaymentMonth;
 import seedu.address.model.student.Student;
 import seedu.address.model.student.StudentMatchesFilterPredicate;
 import seedu.address.model.student.Subject;
@@ -65,6 +67,32 @@ public class FilterCommandTest {
 
         assertEquals(String.format(MESSAGE_STUDENTS_LISTED_OVERVIEW, 3), result.getFeedbackToUser());
         assertEquals(List.of(HENRY, IVY, JOEL), model.getFilteredStudentList());
+    }
+
+    @Test
+    public void execute_unpaidMonth_unpaidStudentsFound() {
+        PaymentMonth october = new PaymentMonth("2026-10");
+        Student paidHenry = HENRY.withPaymentFor(october);
+        ModelStubWithStudents model = new ModelStubWithStudents(paidHenry, IVY, JOEL);
+
+        CommandResult result = new FilterCommand(new StudentMatchesFilterPredicate(Optional.empty(), Set.of(),
+                Optional.empty(), Optional.of(october))).execute(model);
+
+        assertEquals(String.format(MESSAGE_STUDENTS_LISTED_OVERVIEW, 2), result.getFeedbackToUser());
+        assertEquals(List.of(IVY, JOEL), model.getFilteredStudentList());
+    }
+
+    @Test
+    public void execute_paidMonth_paidStudentFound() {
+        PaymentMonth october = new PaymentMonth("2026-10");
+        Student paidHenry = HENRY.withPaymentFor(october);
+        ModelStubWithStudents model = new ModelStubWithStudents(paidHenry, IVY, JOEL);
+
+        CommandResult result = new FilterCommand(new StudentMatchesFilterPredicate(Optional.empty(), Set.of(),
+                Optional.of(october), Optional.empty())).execute(model);
+
+        assertEquals(String.format(MESSAGE_STUDENTS_LISTED_OVERVIEW, 1), result.getFeedbackToUser());
+        assertEquals(List.of(paidHenry), model.getFilteredStudentList());
     }
 
     @Test
@@ -253,6 +281,21 @@ public class FilterCommandTest {
         }
 
         @Override
+        public void addLesson(Lesson lesson) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void deleteLesson(Lesson lesson) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public ObservableList<Lesson> getLessonList() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
         public boolean hasGuardian(Guardian guardian) {
             throw new AssertionError("This method should not be called.");
         }
@@ -294,6 +337,11 @@ public class FilterCommandTest {
 
         @Override
         public void addStudentGuardianLink(seedu.address.model.link.StudentGuardianLink link) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void removeStudentGuardianLink(seedu.address.model.link.StudentGuardianLink link) {
             throw new AssertionError("This method should not be called.");
         }
     }
