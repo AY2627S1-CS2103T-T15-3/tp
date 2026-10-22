@@ -57,10 +57,13 @@ public class FindGuardianCommandTest {
         model.addGuardian(bob);
         model.addGuardian(carol);
 
+        List<String> keywords = List.of("tan", "ng");
         CommandResult result = new FindGuardianCommand(
-                new GuardianNameContainsKeywordsPredicate(List.of("tan", "ng"))).execute(model);
+                new GuardianNameContainsKeywordsPredicate(keywords)).execute(model);
 
         assertEquals(String.format(MESSAGE_GUARDIANS_LISTED_OVERVIEW, 2), result.getFeedbackToUser());
+        assertEquals(keywords, result.getHighlightKeywords());
+        assertEquals(CommandResult.HighlightTarget.GUARDIANS, result.getHighlightTarget());
         assertEquals(List.of(alice, carol), model.getFilteredGuardianList());
     }
 
@@ -70,6 +73,8 @@ public class FindGuardianCommandTest {
         CommandResult result = new FindGuardianCommand(
                 new GuardianNameContainsKeywordsPredicate(List.of())).execute(model);
         assertEquals(MESSAGE_NO_GUARDIANS_MATCH_SEARCH, result.getFeedbackToUser());
+        assertEquals(List.of(), result.getHighlightKeywords());
+        assertEquals(CommandResult.HighlightTarget.GUARDIANS, result.getHighlightTarget());
         assertTrue(model.getFilteredGuardianList().isEmpty());
     }
 

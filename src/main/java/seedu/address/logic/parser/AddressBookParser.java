@@ -29,6 +29,7 @@ import seedu.address.logic.commands.ListGuardianCommand;
 import seedu.address.logic.commands.ListStudentCommand;
 import seedu.address.logic.commands.RemoveGuardianCommand;
 import seedu.address.logic.commands.RemoveStudentCommand;
+import seedu.address.logic.commands.SortStudentCommand;
 import seedu.address.logic.commands.UnlinkGuardianCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 

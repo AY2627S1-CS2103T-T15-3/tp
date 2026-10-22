@@ -104,6 +104,15 @@ public class GuardianNameContainsKeywordsPredicateTest {
         assertEquals(expected, predicate.toString());
     }
 
+    @Test
+    public void getKeywords_returnsOriginalKeywords() {
+        List<String> keywords = List.of("Ali", "Bo");
+        GuardianNameContainsKeywordsPredicate predicate =
+                new GuardianNameContainsKeywordsPredicate(keywords);
+
+        assertEquals(keywords, predicate.getKeywords());
+    }
+
     private static Guardian guardian(String name) {
         return new Guardian(new Name(name), new Phone("91234567"), new Email("guardian@example.com"),
                 new Address("12 Main Street"));

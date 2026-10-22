@@ -13,7 +13,11 @@ public class GuardianNameContainsKeywordsPredicate implements Predicate<Guardian
     private final List<String> keywords;
 
     public GuardianNameContainsKeywordsPredicate(List<String> keywords) {
-        this.keywords = keywords;
+        this.keywords = List.copyOf(keywords);
+    }
+
+    public List<String> getKeywords() {
+        return keywords;
     }
 
     @Override
