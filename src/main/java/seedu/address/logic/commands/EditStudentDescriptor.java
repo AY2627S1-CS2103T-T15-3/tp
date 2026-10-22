@@ -50,6 +50,7 @@ public class EditStudentDescriptor {
                 getAddress().orElse(student.getAddress()),
                 getLevel().orElse(student.getLevel()),
                 getSubjects().orElse(student.getSubjects()),
+                student.getRemark(),
                 student.getPaidMonths());
     }
 

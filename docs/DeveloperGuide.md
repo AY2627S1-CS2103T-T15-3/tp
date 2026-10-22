@@ -121,11 +121,13 @@ The student and guardian MVP commands follow the same parser-command flow:
 * `EditStudentCommandParser` parses `edit-s` indexes and optional student fields before creating an `EditStudentCommand`.
 * `EditGuardianCommandParser` parses `edit-g` indexes and optional guardian fields before creating an `EditGuardianCommand`.
 * `LinkGuardianCommandParser` parses a student index and a `g/` guardian index before creating a `LinkGuardianCommand`.
+* `SetStudentRemarkCommandParser` parses `set-remark-s` and creates a `SetStudentRemarkCommand` that newly sets or replaces a student's remark.
+* `ClearStudentRemarkCommandParser` parses `clear-remark-s` and creates a `ClearStudentRemarkCommand` that clears a student's remark.
 * `ListStudentCommandParser` parses `list-s` and creates a `ListStudentCommand` that shows all students.
 * `ListGuardianCommandParser` parses `list-g` and creates a `ListGuardianCommand` that shows all guardians.
 * `FindStudentCommandParser` parses name keywords for `find-s` before creating a `FindStudentCommand`.
 * `FindGuardianCommandParser` parses name keywords for `find-g` before creating a `FindGuardianCommand`.
-* The edit commands update only supplied fields and preserve the remaining values.
+* The edit commands update only supplied fields and preserve the remaining values, including student remarks and payment history.
 * `LinkGuardianCommand` creates a `StudentGuardianLink` in the model and treats a repeated pair as an existing link.
 * The list commands reset their respective filtered lists to show all students or guardians.
 * The find commands filter their respective lists by name, matching any full-word keyword case-insensitively.
@@ -144,8 +146,9 @@ The `Model` component,
 * does not depend on any of the other three components (as the `Model` represents data entities of the domain, they should make sense on their own without depending on other components)
 * exposes student and guardian lists separately so edit commands can resolve indexes from the currently displayed list.
 * stores student–guardian relationships as `StudentGuardianLink` objects and prevents duplicate pairs.
-* updates stored links when a linked student or guardian is edited, so linked cards always show current details.
+* updates stored links when a linked student or guardian is edited, including a remark or payment change, so linked cards always show current details. Student replacements also update associated lessons.
 * stores each student's payment history as a sorted set of `PaymentMonth` objects inside the `Student` (see [Payment tracking feature](#payment-tracking-feature)).
+
 
 
 <box type="info" seamless>
@@ -169,7 +172,10 @@ The `Storage` component,
 
 Student–guardian links are persisted in the address-book JSON under a `links` array. Each entry stores the student and guardian name and phone, which identify the corresponding existing records without duplicating their full details. Links are resolved after students and guardians are loaded, preserving link creation order. A missing `links` field is treated as an empty list for compatibility with existing address-book files. A link referring to a student or guardian that is not present in the file is rejected as invalid data.
 
+Student remarks are persisted as a `remark` string on each student. A missing `remark` field is treated as an empty remark for compatibility with existing address-book files.
+
 Each student's paid months are persisted in a `paidMonths` array of `YYYY-MM` strings. A missing `paidMonths` field is treated as an empty list for compatibility with existing address-book files.
+
 
 ### Common classes
 
@@ -218,6 +224,8 @@ The following sequence diagram shows how the `mark-paid` command goes through th
 </box>
 
 **Interaction with other features:**
+
+* **Remarks** -- `withPaymentFor` preserves the student's remark, and `withRemark` preserves all paid months. Setting, replacing or clearing a remark does not change payment history. Student identity remains based on normalized name and phone, while full equality and hashing include both remarks and payments.
 
 * `edit-s` -- `EditStudentDescriptor#createEditedStudent` copies the original student's paid months into the edited student, so editing a student's details does not erase their payment history.
 * `remove-s` -- Payment history is stored on the `Student`, so it is removed together with the student.
@@ -397,6 +405,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 | `* * `   | tutor rescheduling a lesson      | check whether a proposed timing clashes with my existing schedule | easily and confidently reschedule lessons                                    |
 | `* *`    | first-time user                  | see sample student and guardian data                              | understand TutorTrack's capabilities before entering my own data             |
 | `*`      | tutor ready to adopt TutorTrack  | remove all sample data                                            | start managing my actual students without leftover dummy data                |
+| `*`      | tutor                            | set, replace and clear student remarks                            | keep my notes about each student up to date                                  |
 | `*`      | tutor preparing for a lesson     | view my notes about a student                                     | remind myself of important information before teaching them                  |
 | `*`      | tutor with past students         | archive student data                                              | keep my student list uncluttered while not completely deleting past students |
 | `* *`    | tutor managing monthly payments  | mark a student as paid for a month                                | keep an accurate record of which months each student has paid for            |
@@ -702,7 +711,7 @@ separate use case.
 2. User requests to mark a specific student in the list as paid for a given month of a year.
 3. TutorTrack records the payment and shows the student's updated paid months.
 
-    Use case ends.
+   Use case ends.
 
 **Extensions**
 
@@ -727,6 +736,54 @@ separate use case.
     * 2c1. TutorTrack shows an error message, and the student's record is unchanged.
 
       Use case ends.
+
+**Use case: U14 - Set student remark**
+
+**MSS**
+
+1. User views the currently displayed student list.
+2. User requests to set a remark for a specific student in the list, providing the remark text.
+3. TutorTrack adds or updates the student's remark.
+
+   Use case ends.
+
+**Extensions**
+
+* 2a. The given index is invalid.
+
+  * 2a1. TutorTrack shows an error message.
+
+    Use case ends.
+
+* 2b. The remark text is invalid or missing.
+
+  * 2b1. TutorTrack shows an error message.
+
+    Use case ends.
+
+**Use case: U15 - Clear student remark**
+
+**MSS**
+
+1. User views the currently displayed student list.
+2. User requests to clear the remark of a specific student in the list.
+3. TutorTrack clears the student's remark.
+
+   Use case ends.
+
+**Extensions**
+
+* 2a. The given index is invalid.
+
+  * 2a1. TutorTrack shows an error message.
+
+    Use case ends.
+
+* 2b. The student has no existing remark.
+
+  * 2b1. TutorTrack informs the user that there is no remark to clear.
+
+    Use case ends.
 
 ### Non-Functional Requirements
 

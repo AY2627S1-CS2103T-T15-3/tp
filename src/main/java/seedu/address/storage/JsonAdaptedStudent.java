@@ -16,6 +16,7 @@ import seedu.address.model.person.Name;
 import seedu.address.model.person.Phone;
 import seedu.address.model.student.Level;
 import seedu.address.model.student.PaymentMonth;
+import seedu.address.model.student.Remark;
 import seedu.address.model.student.Student;
 import seedu.address.model.student.StudentFieldValidator;
 import seedu.address.model.student.Subject;
@@ -29,25 +30,36 @@ class JsonAdaptedStudent {
     private final String email;
     private final String address;
     private final String level;
+    private final String remark;
     private final List<String> subjects = new ArrayList<>();
     private final List<String> paidMonths = new ArrayList<>();
 
+
+    /**
+     * Creates an adapter without a remark or recorded payments for compatibility
+     * with existing callers.
+     */
     public JsonAdaptedStudent(String name, String phone, String email, String address, String level,
             List<String> subjects) {
-        this(name, phone, email, address, level, subjects, null);
+        this(name, phone, email, address, level, subjects, null, null);
     }
 
-    /** Data files written before payment tracking have no {@code paidMonths}, which is treated as none paid. */
+    /**
+     * Creates an adapter from JSON data.
+     * Missing remarks and payment history are treated as empty.
+     */
     @JsonCreator
     public JsonAdaptedStudent(@JsonProperty("name") String name, @JsonProperty("phone") String phone,
             @JsonProperty("email") String email, @JsonProperty("address") String address,
             @JsonProperty("level") String level, @JsonProperty("subjects") List<String> subjects,
+            @JsonProperty("remark") String remark,
             @JsonProperty("paidMonths") List<String> paidMonths) {
         this.name = name;
         this.phone = phone;
         this.email = email;
         this.address = address;
         this.level = level;
+        this.remark = remark;
         if (subjects != null) {
             this.subjects.addAll(subjects);
         }
@@ -62,6 +74,7 @@ class JsonAdaptedStudent {
         email = source.getEmail().value;
         address = source.getAddress().value;
         level = source.getLevel().value;
+        remark = source.getRemark().value;
         subjects.addAll(source.getSubjects().stream()
                 .map(subject -> subject.value)
                 .collect(Collectors.toList()));
@@ -113,6 +126,15 @@ class JsonAdaptedStudent {
             modelSubjects.add(new Subject(subject));
         }
 
+        // Missing and null properties represent older data; validate all supplied text unchanged.
+        Remark modelRemark = Remark.EMPTY;
+        if (remark != null && !remark.isEmpty()) {
+            if (!Remark.isValidRemark(remark)) {
+                throw new IllegalValueException(Remark.MESSAGE_CONSTRAINTS);
+            }
+            modelRemark = new Remark(remark);
+        }
+
         Set<PaymentMonth> modelPaidMonths = new LinkedHashSet<>();
         for (String paidMonth : paidMonths) {
             if (paidMonth == null || !PaymentMonth.isValidPaymentMonth(paidMonth)) {
@@ -125,7 +147,7 @@ class JsonAdaptedStudent {
                 Phone.fromStudentValue(StudentFieldValidator.normalizePhone(phone)),
                 Email.fromStudentValue(StudentFieldValidator.normalizeEmail(email)),
                 Address.fromStudentValue(StudentFieldValidator.normalizeAddress(address)),
-                new Level(level), modelSubjects, modelPaidMonths);
+                new Level(level), modelSubjects, modelRemark, modelPaidMonths);
     }
 
     private static IllegalValueException missing(String field) {

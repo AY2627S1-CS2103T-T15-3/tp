@@ -38,6 +38,8 @@ public class StudentCard extends UiPart<Region> {
     private FlowPane subjects;
     @FXML
     private FlowPane guardians;
+    @FXML
+    private Label remark;
 
     /**
      * Creates a card displaying the details of a student.
@@ -66,6 +68,9 @@ public class StudentCard extends UiPart<Region> {
         email.setText("Email: " + student.getEmail().value);
         address.setText("Address: " + student.getAddress().value);
         level.setText("Level: " + student.getLevel().value);
+        remark.setText("Remark: " + student.getRemark().value);
+        remark.setVisible(!student.getRemark().isEmpty());
+        remark.setManaged(remark.isVisible());
         payments.setText("Paid: " + (student.getPaidMonths().isEmpty() ? "None"
                 : student.getPaidMonths().stream()
                         .map(PaymentMonth::toDisplayString)

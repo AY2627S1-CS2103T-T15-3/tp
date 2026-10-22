@@ -19,12 +19,14 @@ import org.junit.jupiter.api.Test;
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.model.guardian.Guardian;
 import seedu.address.model.lesson.Lesson;
+import seedu.address.model.link.StudentGuardianLink;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
 import seedu.address.model.person.Phone;
 import seedu.address.model.student.Level;
+import seedu.address.model.student.Remark;
 import seedu.address.model.student.Student;
 import seedu.address.model.student.Subject;
 import seedu.address.testutil.AddressBookBuilder;
@@ -257,6 +259,34 @@ public class ModelManagerTest {
         modelManager.addStudentGuardianLink(new seedu.address.model.link.StudentGuardianLink(student, guardian));
 
         assertEquals(List.of(guardian), modelManager.getGuardiansForStudent(student));
+    }
+
+    @Test
+    public void setStudent_remarkChanges_preserveGuardianLinks() {
+        Student original = student("Henry Tan", "91234567", "henry@example.com");
+        Guardian first = guardian("Ben Tan", "92345678", "ben@example.com");
+        Guardian second = guardian("Amy Tan", "93456789", "amy@example.com");
+        modelManager.addStudent(original);
+        modelManager.addGuardian(first);
+        modelManager.addGuardian(second);
+        modelManager.addStudentGuardianLink(new StudentGuardianLink(original, first));
+        modelManager.addStudentGuardianLink(new StudentGuardianLink(original, second));
+
+        Student current = original;
+        for (Remark remark : List.of(new Remark("Practice fractions"), new Remark("Ready for exam"), Remark.EMPTY)) {
+            Student updated = current.withRemark(remark);
+            modelManager.setStudent(current, updated);
+            assertEquals(List.of(updated), modelManager.getFilteredStudentList());
+            assertEquals(List.of(first, second), modelManager.getGuardiansForStudent(updated));
+            assertEquals(List.of(new StudentGuardianLink(updated, first), new StudentGuardianLink(updated, second)),
+                    modelManager.getAddressBook().getStudentGuardianLinkList());
+            modelManager.addStudentGuardianLink(new StudentGuardianLink(updated, first));
+            assertEquals(2, modelManager.getAddressBook().getStudentGuardianLinkList().size());
+            current = updated;
+        }
+        modelManager.deleteStudent(current);
+        assertTrue(modelManager.getAddressBook().getStudentGuardianLinkList().isEmpty());
+        assertEquals(List.of(first, second), modelManager.getFilteredGuardianList());
     }
 
     @Test

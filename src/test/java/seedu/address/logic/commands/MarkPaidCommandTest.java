@@ -22,6 +22,7 @@ import seedu.address.model.person.Name;
 import seedu.address.model.person.Phone;
 import seedu.address.model.student.Level;
 import seedu.address.model.student.PaymentMonth;
+import seedu.address.model.student.Remark;
 import seedu.address.model.student.Student;
 import seedu.address.model.student.Subject;
 
@@ -107,6 +108,28 @@ public class MarkPaidCommandTest {
         new MarkPaidCommand(Index.fromOneBased(1), OCTOBER).execute(model);
 
         assertEquals(List.of(guardian), model.getGuardiansForStudent(HENRY.withPaymentFor(OCTOBER)));
+    }
+
+    @Test
+    public void execute_sortedUnpaidList_preservesRemarksAndUpdatesDisplayedIndexes() throws Exception {
+        ModelManager model = new ModelManager();
+        Student lucy = LUCY.withRemark(new Remark("Review algebra"));
+        Student henry = HENRY.withRemark(new Remark("Practice fractions"));
+        model.addStudent(lucy);
+        model.addStudent(henry);
+        model.sortStudentList();
+        model.updateFilteredStudentList(student -> !student.hasPaidFor(OCTOBER));
+        assertEquals(List.of(henry, lucy), model.getFilteredStudentList());
+
+        new MarkPaidCommand(Index.fromOneBased(1), OCTOBER).execute(model);
+        assertEquals(List.of(lucy), model.getFilteredStudentList());
+        assertEquals(List.of(lucy, henry.withPaymentFor(OCTOBER)), model.getAddressBook().getStudentList());
+
+        new MarkPaidCommand(Index.fromOneBased(1), OCTOBER).execute(model);
+        assertTrue(model.getFilteredStudentList().isEmpty());
+        model.updateFilteredStudentList(student -> student.hasPaidFor(OCTOBER));
+        assertEquals(List.of(henry.withPaymentFor(OCTOBER), lucy.withPaymentFor(OCTOBER)),
+                model.getFilteredStudentList());
     }
 
     @Test
