@@ -24,11 +24,13 @@ class JsonSerializableAddressBook {
     public static final String MESSAGE_DUPLICATE_PERSON = "Persons list contains duplicate person(s).";
     public static final String MESSAGE_DUPLICATE_GUARDIAN = "Guardians list contains duplicate guardian(s).";
     public static final String MESSAGE_INVALID_LINK = "Student-guardian link references a missing contact.";
+    public static final String MESSAGE_INVALID_LESSON = "Lesson references a missing student.";
 
     private final List<JsonAdaptedPerson> persons = new ArrayList<>();
     private final List<JsonAdaptedStudent> students = new ArrayList<>();
     private final List<JsonAdaptedGuardian> guardians = new ArrayList<>();
     private final List<JsonAdaptedStudentGuardianLink> links = new ArrayList<>();
+    private final List<JsonAdaptedLesson> lessons = new ArrayList<>();
 
     /**
      * Constructs a {@code JsonSerializableAddressBook} with the given persons.
@@ -37,7 +39,8 @@ class JsonSerializableAddressBook {
     public JsonSerializableAddressBook(@JsonProperty("persons") List<JsonAdaptedPerson> persons,
             @JsonProperty("students") List<JsonAdaptedStudent> students,
             @JsonProperty("guardians") List<JsonAdaptedGuardian> guardians,
-            @JsonProperty("links") List<JsonAdaptedStudentGuardianLink> links) {
+            @JsonProperty("links") List<JsonAdaptedStudentGuardianLink> links,
+            @JsonProperty("lessons") List<JsonAdaptedLesson> lessons) {
         if (persons != null) {
             this.persons.addAll(persons);
         }
@@ -50,19 +53,28 @@ class JsonSerializableAddressBook {
         if (links != null) {
             this.links.addAll(links);
         }
+        if (lessons != null) {
+            this.lessons.addAll(lessons);
+        }
     }
 
     /**
      * Constructs serializable address-book data without guardians for compatibility with older callers.
      */
     public JsonSerializableAddressBook(List<JsonAdaptedPerson> persons, List<JsonAdaptedStudent> students) {
-        this(persons, students, null, null);
+        this(persons, students, null, null, null);
     }
 
     /** Constructs serializable data without links for compatibility with older callers. */
     public JsonSerializableAddressBook(List<JsonAdaptedPerson> persons, List<JsonAdaptedStudent> students,
             List<JsonAdaptedGuardian> guardians) {
-        this(persons, students, guardians, null);
+        this(persons, students, guardians, null, null);
+    }
+
+    /** Constructs serializable data without lessons for compatibility with older callers. */
+    public JsonSerializableAddressBook(List<JsonAdaptedPerson> persons, List<JsonAdaptedStudent> students,
+            List<JsonAdaptedGuardian> guardians, List<JsonAdaptedStudentGuardianLink> links) {
+        this(persons, students, guardians, links, null);
     }
 
     /**
@@ -76,6 +88,8 @@ class JsonSerializableAddressBook {
         guardians.addAll(source.getGuardianList().stream().map(JsonAdaptedGuardian::new).collect(Collectors.toList()));
         links.addAll(source.getStudentGuardianLinkList().stream()
                 .map(JsonAdaptedStudentGuardianLink::new).collect(Collectors.toList()));
+        lessons.addAll(source.getLessonList().stream()
+                .map(JsonAdaptedLesson::new).collect(Collectors.toList()));
     }
 
     /**
@@ -117,6 +131,15 @@ class JsonSerializableAddressBook {
                 throw new IllegalValueException(MESSAGE_INVALID_LINK);
             }
             addressBook.addStudentGuardianLink(jsonLink.toModelType(matchingStudent, matchingGuardian));
+        }
+        for (JsonAdaptedLesson jsonLesson : lessons) {
+            Student matchingStudent = addressBook.getStudentList().stream()
+                    .filter(jsonLesson::matchesStudent)
+                    .findFirst().orElse(null);
+            if (matchingStudent == null) {
+                throw new IllegalValueException(MESSAGE_INVALID_LESSON);
+            }
+            addressBook.addLesson(jsonLesson.toModelType(matchingStudent));
         }
         return addressBook;
     }

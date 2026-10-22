@@ -4,6 +4,7 @@ import java.util.List;
 
 import javafx.collections.ObservableList;
 import seedu.address.model.guardian.Guardian;
+import seedu.address.model.lesson.Lesson;
 import seedu.address.model.link.StudentGuardianLink;
 import seedu.address.model.person.Person;
 import seedu.address.model.student.Student;
@@ -38,6 +39,11 @@ public interface ReadOnlyAddressBook {
     /** Returns the student-guardian links in link creation order. */
     default List<StudentGuardianLink> getStudentGuardianLinkList() {
         return List.of();
+    }
+
+    /** Returns an unmodifiable view of the scheduled lessons. */
+    default ObservableList<Lesson> getLessonList() {
+        return javafx.collections.FXCollections.emptyObservableList();
     }
 
 }

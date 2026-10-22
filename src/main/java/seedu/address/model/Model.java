@@ -6,6 +6,7 @@ import java.util.function.Predicate;
 import javafx.collections.ObservableList;
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.model.guardian.Guardian;
+import seedu.address.model.lesson.Lesson;
 import seedu.address.model.link.StudentGuardianLink;
 import seedu.address.model.person.Person;
 import seedu.address.model.student.Student;
@@ -112,6 +113,15 @@ public interface Model {
      * @throws NullPointerException if {@code predicate} is null.
      */
     void updateFilteredStudentList(Predicate<Student> predicate);
+
+    /** Adds the given lesson. */
+    void addLesson(Lesson lesson);
+
+    /** Deletes the given lesson. */
+    void deleteLesson(Lesson lesson);
+
+    /** Returns the scheduled lessons. */
+    ObservableList<Lesson> getLessonList();
 
     /**
      * Sorts the displayed student list by student name in ascending order.
