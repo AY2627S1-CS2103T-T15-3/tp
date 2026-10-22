@@ -21,7 +21,11 @@ public class UnlinkGuardianCommandParser implements Parser<UnlinkGuardianCommand
         String studentIndexValue = values.remove("").getFirst();
         List<String> guardianIndexValues = values.remove(GUARDIAN_PREFIX);
 
-        if (guardianIndexValues == null || guardianIndexValues.size() != 1 || !values.isEmpty()) {
+        if (guardianIndexValues == null || guardianIndexValues.isEmpty() || guardianIndexValues.size() != 1
+                || !values.isEmpty()) {
+            if (guardianIndexValues != null && guardianIndexValues.size() > 1) {
+                throw new ParseException("The g/ parameter must not be specified more than once.");
+            }
             throw invalidFormat();
         }
 

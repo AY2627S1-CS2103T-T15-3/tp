@@ -5,6 +5,7 @@ import static java.util.Objects.requireNonNull;
 import java.util.List;
 
 import seedu.address.commons.core.index.Index;
+import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.guardian.Guardian;
@@ -16,9 +17,7 @@ public class UnlinkGuardianCommand extends Command {
     public static final String COMMAND_WORD = "unlink-g";
     public static final String MESSAGE_USAGE = "Usage: unlink-g STUDENT_INDEX g/GUARDIAN_INDEX";
     public static final String MESSAGE_SUCCESS = "Unlinked %1$s (student) from %2$s (guardian).";
-    public static final String MESSAGE_LINK_NOT_FOUND = "The student is not linked to the guardian.";
-    public static final String MESSAGE_INVALID_STUDENT_INDEX = "The student index provided is invalid.";
-    public static final String MESSAGE_INVALID_GUARDIAN_INDEX = "The guardian index provided is invalid.";
+    public static final String MESSAGE_LINK_NOT_FOUND = "%1$s is not linked to %2$s.";
 
     private final Index studentIndex;
     private final Index guardianIndex;
@@ -34,17 +33,17 @@ public class UnlinkGuardianCommand extends Command {
         requireNonNull(model);
         List<Student> students = model.getFilteredStudentList();
         if (studentIndex.getZeroBased() >= students.size()) {
-            throw new CommandException(MESSAGE_INVALID_STUDENT_INDEX);
+            throw new CommandException(Messages.MESSAGE_INVALID_STUDENT_DISPLAYED_INDEX);
         }
         List<Guardian> guardians = model.getFilteredGuardianList();
         if (guardianIndex.getZeroBased() >= guardians.size()) {
-            throw new CommandException(MESSAGE_INVALID_GUARDIAN_INDEX);
+            throw new CommandException(Messages.MESSAGE_INVALID_GUARDIAN_DISPLAYED_INDEX);
         }
         Student student = students.get(studentIndex.getZeroBased());
         Guardian guardian = guardians.get(guardianIndex.getZeroBased());
         StudentGuardianLink link = new StudentGuardianLink(student, guardian);
         if (!model.hasStudentGuardianLink(link)) {
-            throw new CommandException(MESSAGE_LINK_NOT_FOUND);
+            throw new CommandException(String.format(MESSAGE_LINK_NOT_FOUND, student.getName(), guardian.getName()));
         }
         model.removeStudentGuardianLink(link);
         return new CommandResult(String.format(MESSAGE_SUCCESS, student.getName(), guardian.getName()), student);

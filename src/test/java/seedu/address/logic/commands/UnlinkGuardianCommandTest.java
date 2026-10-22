@@ -9,6 +9,7 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.commons.core.index.Index;
+import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.ModelManager;
 import seedu.address.model.guardian.Guardian;
@@ -46,7 +47,8 @@ public class UnlinkGuardianCommandTest {
         model.addStudent(STUDENT);
         model.addGuardian(GUARDIAN);
 
-        assertThrows(CommandException.class, UnlinkGuardianCommand.MESSAGE_LINK_NOT_FOUND, () ->
+        assertThrows(CommandException.class, String.format(UnlinkGuardianCommand.MESSAGE_LINK_NOT_FOUND,
+                STUDENT.getName(), GUARDIAN.getName()), () ->
                 new UnlinkGuardianCommand(Index.fromOneBased(1), Index.fromOneBased(1)).execute(model));
     }
 
@@ -54,9 +56,9 @@ public class UnlinkGuardianCommandTest {
     public void execute_invalidIndexes_throwsCommandException() throws Exception {
         ModelManager model = modelWithLink();
 
-        assertThrows(CommandException.class, UnlinkGuardianCommand.MESSAGE_INVALID_STUDENT_INDEX, () ->
+        assertThrows(CommandException.class, Messages.MESSAGE_INVALID_STUDENT_DISPLAYED_INDEX, () ->
                 new UnlinkGuardianCommand(Index.fromOneBased(2), Index.fromOneBased(1)).execute(model));
-        assertThrows(CommandException.class, UnlinkGuardianCommand.MESSAGE_INVALID_GUARDIAN_INDEX, () ->
+        assertThrows(CommandException.class, Messages.MESSAGE_INVALID_GUARDIAN_DISPLAYED_INDEX, () ->
                 new UnlinkGuardianCommand(Index.fromOneBased(1), Index.fromOneBased(2)).execute(model));
     }
 

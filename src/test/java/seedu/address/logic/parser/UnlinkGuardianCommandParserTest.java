@@ -27,7 +27,8 @@ public class UnlinkGuardianCommandParserTest {
         assertParseFailure(parser, "2 g/0", message);
         assertParseFailure(parser, "2 g/1.5", message);
         assertParseFailure(parser, "2 g/", message);
-        assertParseFailure(parser, "2 g/1 g/2", message);
+        assertParseFailure(parser, "2 g/1 g/2",
+                "The g/ parameter must not be specified more than once.");
         assertParseFailure(parser, "2 x/1", "Unknown parameter: x/");
     }
 }
