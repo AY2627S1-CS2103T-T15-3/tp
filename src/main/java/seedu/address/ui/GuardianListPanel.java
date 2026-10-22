@@ -1,5 +1,7 @@
 package seedu.address.ui;
 
+import java.util.List;
+
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -14,6 +16,7 @@ public class GuardianListPanel extends UiPart<Region> {
 
     @FXML
     private ListView<Guardian> guardianListView;
+    private List<String> highlightKeywords = List.of();
 
     /**
      * Creates a panel displaying the given list of guardians.
@@ -32,6 +35,11 @@ public class GuardianListPanel extends UiPart<Region> {
                 }
             }
         });
+    }
+
+    public void setHighlightKeywords(List<String> keywords) {
+        highlightKeywords = List.copyOf(keywords);
+        guardianListView.refresh();
     }
 
     /** Clears the current guardian selection. */
@@ -57,7 +65,7 @@ public class GuardianListPanel extends UiPart<Region> {
                 setGraphic(null);
                 setText(null);
             } else {
-                setGraphic(new GuardianCard(guardian, getIndex() + 1).getRoot());
+                setGraphic(new GuardianCard(guardian, getIndex() + 1, highlightKeywords).getRoot());
             }
         }
     }

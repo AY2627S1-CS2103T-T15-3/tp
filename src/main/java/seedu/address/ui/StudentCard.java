@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Region;
+import javafx.scene.text.TextFlow;
 import seedu.address.model.guardian.Guardian;
 import seedu.address.model.student.Student;
 
@@ -18,7 +19,7 @@ public class StudentCard extends UiPart<Region> {
     public final Student student;
 
     @FXML
-    private Label name;
+    private TextFlow name;
     @FXML
     private Label id;
     @FXML
@@ -41,10 +42,22 @@ public class StudentCard extends UiPart<Region> {
      * @param displayedIndex the student's displayed index
      */
     public StudentCard(Student student, int displayedIndex, Function<Student, List<Guardian>> guardianProvider) {
+        this(student, displayedIndex, guardianProvider, List.of());
+    }
+
+    /**
+     * Creates a card displaying the details of a student with highlighted text.
+     *
+     * @param student the student to display
+     * @param displayedIndex the student's displayed index
+     * @param highlightKeywords the text to highlight after a find-s command
+     */
+    public StudentCard(Student student, int displayedIndex, Function<Student, List<Guardian>> guardianProvider,
+                       List<String> highlightKeywords) {
         super(FXML);
         this.student = student;
         id.setText(displayedIndex + ". ");
-        name.setText(student.getName().fullName);
+        name.getChildren().setAll(HighlightText.create(student.getName().fullName, highlightKeywords).getChildren());
         phone.setText("Phone: " + student.getPhone().value);
         email.setText("Email: " + student.getEmail().value);
         address.setText("Address: " + student.getAddress().value);

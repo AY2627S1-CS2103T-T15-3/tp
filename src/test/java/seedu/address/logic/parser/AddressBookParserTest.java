@@ -37,6 +37,7 @@ import seedu.address.logic.commands.ListStudentCommand;
 import seedu.address.logic.commands.RemoveGuardianCommand;
 import seedu.address.logic.commands.RemoveStudentCommand;
 import seedu.address.logic.commands.UnlinkGuardianCommand;
+import seedu.address.logic.commands.SortStudentCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.guardian.GuardianNameContainsKeywordsPredicate;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
@@ -198,6 +199,14 @@ public class AddressBookParserTest {
         assertThrows(ParseException.class,
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, ListStudentCommand.MESSAGE_USAGE), ()
                 -> parser.parseCommand(ListStudentCommand.COMMAND_WORD + " 3"));
+    }
+
+    @Test
+    public void parseCommand_sortStudent() throws Exception {
+        assertEquals(new SortStudentCommand(), parser.parseCommand(SortStudentCommand.COMMAND_WORD));
+        assertThrows(ParseException.class,
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, SortStudentCommand.MESSAGE_USAGE), ()
+                -> parser.parseCommand(SortStudentCommand.COMMAND_WORD + " reverse"));
     }
 
     @Test
