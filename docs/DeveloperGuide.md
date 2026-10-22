@@ -121,8 +121,14 @@ The student and guardian MVP commands follow the same parser-command flow:
 * `EditStudentCommandParser` parses `edit-s` indexes and optional student fields before creating an `EditStudentCommand`.
 * `EditGuardianCommandParser` parses `edit-g` indexes and optional guardian fields before creating an `EditGuardianCommand`.
 * `LinkGuardianCommandParser` parses a student index and a `g/` guardian index before creating a `LinkGuardianCommand`.
+* `ListStudentCommandParser` parses `list-s` and creates a `ListStudentCommand` that shows all students.
+* `ListGuardianCommandParser` parses `list-g` and creates a `ListGuardianCommand` that shows all guardians.
+* `FindStudentCommandParser` parses name keywords for `find-s` before creating a `FindStudentCommand`.
+* `FindGuardianCommandParser` parses name keywords for `find-g` before creating a `FindGuardianCommand`.
 * The edit commands update only supplied fields and preserve the remaining values.
 * `LinkGuardianCommand` creates a `StudentGuardianLink` in the model and treats a repeated pair as an existing link.
+* The list commands reset their respective filtered lists to show all students or guardians.
+* The find commands filter their respective lists by name, matching any full-word keyword case-insensitively.
 
 ### Model component
 **API** : [`Model.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/model/Model.java)
