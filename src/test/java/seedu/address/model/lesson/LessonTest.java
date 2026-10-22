@@ -58,6 +58,20 @@ public class LessonTest {
     }
 
     @Test
+    public void hasLongDurationWarning_durationAtOrBelowFourHours_returnsFalse() {
+        assertFalse(new Lesson(STUDENT, DATE, START_TIME, Duration.ofHours(4))
+                .hasLongDurationWarning());
+        assertFalse(new Lesson(STUDENT, DATE, START_TIME, Duration.ofHours(3))
+                .hasLongDurationWarning());
+    }
+
+    @Test
+    public void hasLongDurationWarning_durationAboveFourHours_returnsTrue() {
+        assertTrue(new Lesson(STUDENT, DATE, START_TIME, Duration.ofMinutes(241))
+                .hasLongDurationWarning());
+    }
+
+    @Test
     public void getters_returnConstructorValues() {
         Lesson lesson = new Lesson(STUDENT, DATE, START_TIME, DURATION);
 

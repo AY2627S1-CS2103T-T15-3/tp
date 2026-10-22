@@ -18,8 +18,14 @@ import seedu.address.model.student.Student;
  */
 public class Lesson {
 
-    public static final String MESSAGE_DURATION_CONSTRAINTS =
-            "Lesson duration must be positive.";
+    public static final long MAX_RECOMMENDED_DURATION_HOURS = 4;
+
+    public static final String MESSAGE_DURATION_CONSTRAINTS = "Lesson duration must be positive.";
+    public static final String MESSAGE_LONG_DURATION_WARNING = String.format(
+            "Warning: lesson duration exceeds %d hours. Please confirm this is intentional.",
+            MAX_RECOMMENDED_DURATION_HOURS);
+    public static final Duration MAX_RECOMMENDED_DURATION =
+            Duration.ofHours(MAX_RECOMMENDED_DURATION_HOURS);
 
     private final Student student;
     private final LocalDate date;
@@ -39,7 +45,7 @@ public class Lesson {
         requireNonNull(date);
         requireNonNull(startTime);
         requireNonNull(duration);
-        checkArgument(!duration.isNegative() && !duration.isZero(), MESSAGE_DURATION_CONSTRAINTS);
+        checkArgument(duration.isPositive(), MESSAGE_DURATION_CONSTRAINTS);
         this.student = student;
         this.date = date;
         this.startTime = startTime;
@@ -60,6 +66,14 @@ public class Lesson {
 
     public Duration getDuration() {
         return duration;
+    }
+
+    /**
+     * Returns true when the lesson duration exceeds the recommended four-hour duration.
+     * This is a warning only; long lessons remain valid.
+     */
+    public boolean hasLongDurationWarning() {
+        return duration.compareTo(MAX_RECOMMENDED_DURATION) > 0;
     }
 
     public LocalDateTime getStartDateTime() {
