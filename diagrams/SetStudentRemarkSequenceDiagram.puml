@@ -1,0 +1,51 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+participant "command:SetStudentRemarkCommand" as Command LOGIC_COLOR
+participant "model:Model" as Model MODEL_COLOR
+participant "original:Student" as Original MODEL_COLOR
+
+[-> Command : execute(model)
+activate Command
+
+Command -> Model : getFilteredStudentList()
+activate Model
+Model --> Command : students
+deactivate Model
+
+Command -> Original : withRemark(remark)
+activate Original
+create participant "updated:Student" as Updated MODEL_COLOR
+Original -> Updated : new Student(...)
+activate Updated
+Updated --> Original
+deactivate Updated
+note over Original, Updated
+  A new Student preserves all other details.
+  The original Student is unchanged.
+end note
+Original --> Command : updated
+deactivate Original
+
+Command -> Original : equals(updated)
+activate Original
+Original --> Command : sameDetails
+deactivate Original
+
+opt !sameDetails
+    Command -> Model : setStudent(original, updated)
+    activate Model
+    note right of Model
+      The updated Student replaces
+      the original, while
+      existing lessons and
+      guardian links are preserved.
+    end note
+    Model --> Command
+    deactivate Model
+end
+
+[<-- Command : CommandResult(..., updated)
+deactivate Command
+@enduml
