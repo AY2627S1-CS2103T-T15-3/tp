@@ -138,25 +138,15 @@ The student and guardian MVP commands follow the same parser-command flow:
 <puml src="diagrams/ModelClassDiagram.puml" width="450" />
 
 
-The `Model` component,
+The `Model` component is the in-memory domain model for TutorTrack. The diagram focuses on the classes needed to manage students, guardians, and their relationships; legacy generic-person classes and utility classes are omitted for readability.
 
-* stores the address book data i.e., all `Person` objects (which are contained in a `UniquePersonList` object).
-* stores the `Person` objects selected by the current filter, such as search results, in a separate _filtered_ list. It exposes this list as an unmodifiable `ObservableList<Person>` that the UI can observe and bind to, so the UI updates when the list changes.
-* stores a `UserPrefs` object that represents the user’s preferences (currently, just the GUI settings). This is exposed to the outside as a `ReadOnlyUserPrefs` object.
-* does not depend on any of the other three components (as the `Model` represents data entities of the domain, they should make sense on their own without depending on other components)
-* exposes student and guardian lists separately so edit commands can resolve indexes from the currently displayed list.
-* stores student–guardian relationships as `StudentGuardianLink` objects and prevents duplicate pairs.
-* updates stored links when a linked student or guardian is edited, including a remark or payment change, so linked cards always show current details. Student replacements also update associated lessons.
-* stores each student's payment history as a sorted set of `PaymentMonth` objects inside the `Student` (see [Payment tracking feature](#payment-tracking-feature)).
-
-
-
-<box type="info" seamless>
-
-**Note:** The alternative, arguably more object-oriented, design below keeps a unique list of tags in `AddressBook`, and each `Person` references tags from that list. This lets `AddressBook` maintain one `Tag` object per unique tag instead of each `Person` holding its own `Tag` objects.<br>
-
-<puml src="diagrams/BetterModelClassDiagram.puml" width="450" />
-</box>
+* `ModelManager` implements the `Model` API and owns an `AddressBook` and `UserPrefs`. `AddressBook` and `UserPrefs` expose read-only interfaces to other components.
+* `AddressBook` owns a unique student list, a unique guardian list, and the collection of `StudentGuardianLink` objects.
+* `Student` contains shared contact details together with an academic level and one or more subjects. `Guardian` contains the shared contact details. These domain classes are composed from value objects such as `Name`, `Phone`, `Email`, and `Address`.
+* `StudentGuardianLink` represents a relationship between one student and one guardian. Duplicate links are rejected, and links are updated or removed when their linked student or guardian changes.
+* `ModelManager` maintains filtered student and guardian views for the UI. The displayed student view can also be sorted by name without changing the underlying storage order.
+* `UserPrefs` stores user preferences, currently the GUI settings, and is exposed through `ReadOnlyUserPrefs`.
+* The Model component is independent of the UI, Logic, and Storage components; it represents domain data and exposes operations through its API.
 
 
 ### Storage component
@@ -200,6 +190,18 @@ when their name contains any of the supplied keywords.
 
 The same process is followed for `find-g`, using the corresponding guardian command parser,
 command, predicate, and filtered guardian list.
+
+### Student remarks feature
+
+#### Implementation
+
+Student remarks are represented by the immutable `Remark` value object, which validates and normalizes remark text. Each `Student` holds a non-null remark; `Remark.EMPTY` represents no remark.
+
+The following partial sequence diagram shows `SetStudentRemarkCommand#execute(Model)` after parsing, assuming a valid index in the currently displayed student list. Parsing, invalid-input paths, persistence and UI handling are omitted.
+
+<puml src="diagrams/SetStudentRemarkSequenceDiagram.puml" alt="Setting a student remark through immutable Student replacement" width="800" />
+
+`Student#withRemark` creates a new `Student` object with the updated remark while preserving all other details. The command replaces the original Student only if the updated Student differs from it. Existing lessons and guardian links are preserved during replacement.
 
 ### Payment tracking feature
 
