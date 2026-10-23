@@ -177,6 +177,20 @@ Classes used by multiple components are in the `seedu.address.commons` package.
 
 This section describes some noteworthy details on how certain features are implemented.
 
+### Find feature
+
+#### Implementation
+
+The `find-s` command accepts one or more name keywords. `FindStudentCommandParser` creates a
+`StudentNameContainsKeywordsPredicate`, which `FindStudentCommand` passes to the model to
+update the filtered student list. Matching is case-insensitive, and a student is included
+when their name contains any of the supplied keywords.
+
+<puml src="diagrams/FindSequenceDiagram.puml" alt="Interactions Inside the Logic Component for the `find-s alice` Command"></puml>
+
+The same process is followed for `find-g`, using the corresponding guardian command parser,
+command, predicate, and filtered guardian list.
+
 ### Student remarks feature
 
 #### Implementation
