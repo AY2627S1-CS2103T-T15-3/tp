@@ -39,6 +39,8 @@ AddressBook Level 3 (AB3) is a **desktop application for managing contacts, opti
 
    * `link-g 1 g/1` : Links the first student to the first guardian.
 
+   * `unlink-g 1 g/1` : Unlinks the first student from the first guardian.
+
    * `delete 3` : Deletes the 3rd contact shown in the current list.
 
    * `clear` : Deletes all contacts.
@@ -233,11 +235,26 @@ Format: `link-g STUDENT_INDEX g/GUARDIAN_INDEX`
 * A student can be linked to multiple guardians, and a guardian can be linked to multiple students.
 * Links are saved with the address book and restored when the application is restarted.
 * If a linked student or guardian is edited, the updated details are shown everywhere that contact is linked.
-* Unlinking an individual relationship is not supported yet.
 
 Examples:
 * `link-g 2 g/1`
 * `link-g 3 g/1`
+
+### Unlinking a guardian from a student: `unlink-g`
+
+Unlinks an existing guardian from an existing student without deleting either
+contact.
+
+Format: `unlink-g STUDENT_INDEX g/GUARDIAN_INDEX`
+
+* Both indexes are required and must be positive integers within their respective displayed lists.
+* The student and guardian must already exist and currently be linked.
+* Removing a link does not remove either contact or any of their other links.
+* If the relationship does not exist, TutorTrack reports the selected student and guardian names.
+
+Examples:
+* `unlink-g 2 g/1`
+* `unlink-g 3 g/1`
 
 ### Locating persons by name: `find`
 
@@ -374,5 +391,6 @@ Action     | Format, Examples
 **Edit guardian** | `edit-g INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS]`<br> e.g., `edit-g 1 a/25 Happy Road`
 **Find**   | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
 **Link guardian** | `link-g STUDENT_INDEX g/GUARDIAN_INDEX`<br> e.g., `link-g 2 g/1`
+**Unlink guardian** | `unlink-g STUDENT_INDEX g/GUARDIAN_INDEX`<br> e.g., `unlink-g 2 g/1`
 **List**   | `list`
 **Help**   | `help`
