@@ -94,6 +94,11 @@ The sequence diagram below illustrates the interactions within the `Logic` compo
 
 <puml src="diagrams/DeleteSequenceDiagram.puml" alt="Interactions Inside the Logic Component for the `delete 1` Command" />
 
+The following sequence diagram shows how `unlink-g` removes an existing student-guardian link.
+
+<puml src="diagrams/UnlinkGuardianSequenceDiagram.puml"
+      alt="Interactions for the unlink-g command" />
+
 <box type="info" seamless>
 
 **Note:** The lifeline for `DeleteCommandParser` should end at the destroy marker (X), but due to a limitation of PlantUML, the lifeline continues till the end of diagram.
@@ -121,6 +126,7 @@ The student and guardian MVP commands follow the same parser-command flow:
 * `EditStudentCommandParser` parses `edit-s` indexes and optional student fields before creating an `EditStudentCommand`.
 * `EditGuardianCommandParser` parses `edit-g` indexes and optional guardian fields before creating an `EditGuardianCommand`.
 * `LinkGuardianCommandParser` parses a student index and a `g/` guardian index before creating a `LinkGuardianCommand`.
+* `UnlinkGuardianCommandParser` parses a student index and a `g/` guardian index before creating an `UnlinkGuardianCommand`.
 * `SetStudentRemarkCommandParser` parses `set-remark-s` and creates a `SetStudentRemarkCommand` that newly sets or replaces a student's remark.
 * `ClearStudentRemarkCommandParser` parses `clear-remark-s` and creates a `ClearStudentRemarkCommand` that clears a student's remark.
 * `ListStudentCommandParser` parses `list-s` and creates a `ListStudentCommand` that shows all students.
@@ -128,7 +134,8 @@ The student and guardian MVP commands follow the same parser-command flow:
 * `FindStudentCommandParser` parses name keywords for `find-s` before creating a `FindStudentCommand`.
 * `FindGuardianCommandParser` parses name keywords for `find-g` before creating a `FindGuardianCommand`.
 * The edit commands update only supplied fields and preserve the remaining values, including student remarks and payment history.
-* `LinkGuardianCommand` creates a `StudentGuardianLink` in the model and treats a repeated pair as an existing link.
+* `LinkGuardianCommand` creates a `StudentGuardianLink` in the model and treats repeated pair as an existing link.
+* `UnlinkGuardianCommand` checks that the selected link exists before asking the model to remove it.
 * The list commands reset their respective filtered lists to show all students or guardians.
 * The find commands filter their respective lists by name, matching any full-word keyword case-insensitively.
 
@@ -142,6 +149,7 @@ The `Model` component is the in-memory domain model for TutorTrack. The diagram 
 
 * `ModelManager` implements the `Model` API and owns an `AddressBook` and `UserPrefs`. `AddressBook` and `UserPrefs` expose read-only interfaces to other components.
 * `AddressBook` owns a unique student list, a unique guardian list, and the collection of `StudentGuardianLink` objects.
+* `AddressBook` can remove an individual `StudentGuardianLink` without deleting either the student or the guardian.
 * `Student` contains shared contact details together with an academic level and one or more subjects. `Guardian` contains the shared contact details. These domain classes are composed from value objects such as `Name`, `Phone`, `Email`, and `Address`.
 * `StudentGuardianLink` represents a relationship between one student and one guardian. Duplicate links are rejected, and links are updated or removed when their linked student or guardian changes.
 * `ModelManager` maintains filtered student and guardian views for the UI. The displayed student view can also be sorted by name without changing the underlying storage order.
@@ -156,6 +164,7 @@ The `Model` component is the in-memory domain model for TutorTrack. The diagram 
 <puml src="diagrams/StorageClassDiagram.puml" width="550" />
 
 The `Storage` component,
+
 * can save both address book data and user preference data in JSON format, and read them back into corresponding objects.
 * is implemented by `StorageManager`, which delegates the actual JSON file access to `JsonAddressBookStorage` and `JsonUserPrefsStorage` (one class per data file).
 * depends on some classes in the `Model` component (because the `Storage` component's job is to save/retrieve objects that belong to the `Model`)

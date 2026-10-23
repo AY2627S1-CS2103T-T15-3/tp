@@ -8,7 +8,7 @@
 * This is a **desktop application for private tutors** to manage their students and guardians in one place.
 
   * It allows tutors to store and manage contact details and academic information.
-  * It supports relationships between students and their guardians.
+  * It supports linking and unlinking relationships between students and their guardians.
   * It provides search and filtering features to help tutors quickly find relevant contacts.
   
 * TutorTrack is **written in an object-oriented programming (OOP) style** and is designed as an ongoing software project.
@@ -40,7 +40,7 @@ Tutors can store guardian contact details including:
 * Email
 * Address
 
-Guardians can be added, edited, removed, and searched independently from students.
+Guardians can be added, edited, removed, and searched independently from students. Tutors can also link a guardian to a student or unlink an existing relationship without deleting either contact.
 
 ## Acknowledgements
 
