@@ -21,12 +21,13 @@ import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Phone;
 import seedu.address.model.student.Level;
+import seedu.address.model.student.Remark;
 import seedu.address.model.student.Student;
 import seedu.address.model.student.Subject;
 
 public class EditStudentCommandTest {
     private static final Student ORIGINAL = student("Lucy Lim", "91234567", "lucy@example.com",
-            "21 Happy Road", "JC 1", "Mathematics", "Physics");
+            "21 Happy Road", "JC 1", "Mathematics", "Physics").withRemark(new Remark("Practice fractions"));
 
     @Test
     public void execute_validEdit_updatesStudentAndReturnsSuccess() throws Exception {
@@ -39,6 +40,7 @@ public class EditStudentCommandTest {
 
         Student edited = model.getFilteredStudentList().get(0);
         assertEquals(new Phone("98765432"), edited.getPhone());
+        assertEquals(ORIGINAL.getRemark(), edited.getRemark());
         assertEquals(String.format(EditStudentCommand.MESSAGE_SUCCESS, Messages.format(edited)),
                 result.getFeedbackToUser());
         assertEquals(edited, result.getStudentToHighlight());

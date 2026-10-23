@@ -66,6 +66,8 @@ public class FindStudentCommandTest {
         CommandResult result = new FindStudentCommand(predicate).execute(model);
 
         assertEquals(String.format(MESSAGE_STUDENTS_LISTED_OVERVIEW, 2), result.getFeedbackToUser());
+        assertEquals(List.of("tan", "ng"), result.getHighlightKeywords());
+        assertEquals(CommandResult.HighlightTarget.STUDENTS, result.getHighlightTarget());
         assertEquals(List.of(alice, carol), model.getFilteredStudentList());
     }
 
@@ -78,6 +80,8 @@ public class FindStudentCommandTest {
         CommandResult result = new FindStudentCommand(predicate).execute(model);
 
         assertEquals(MESSAGE_NO_STUDENTS_MATCH_SEARCH, result.getFeedbackToUser());
+        assertEquals(List.of(), result.getHighlightKeywords());
+        assertEquals(CommandResult.HighlightTarget.STUDENTS, result.getHighlightTarget());
         assertTrue(model.getFilteredStudentList().isEmpty());
     }
 

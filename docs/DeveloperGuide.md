@@ -127,9 +127,17 @@ The student and guardian MVP commands follow the same parser-command flow:
 * `EditGuardianCommandParser` parses `edit-g` indexes and optional guardian fields before creating an `EditGuardianCommand`.
 * `LinkGuardianCommandParser` parses a student index and a `g/` guardian index before creating a `LinkGuardianCommand`.
 * `UnlinkGuardianCommandParser` parses a student index and a `g/` guardian index before creating an `UnlinkGuardianCommand`.
-* The edit commands update only supplied fields and preserve the remaining values.
-* `LinkGuardianCommand` creates a `StudentGuardianLink` in the model and treats a repeated pair as an existing link.
+* `SetStudentRemarkCommandParser` parses `set-remark-s` and creates a `SetStudentRemarkCommand` that newly sets or replaces a student's remark.
+* `ClearStudentRemarkCommandParser` parses `clear-remark-s` and creates a `ClearStudentRemarkCommand` that clears a student's remark.
+* `ListStudentCommandParser` parses `list-s` and creates a `ListStudentCommand` that shows all students.
+* `ListGuardianCommandParser` parses `list-g` and creates a `ListGuardianCommand` that shows all guardians.
+* `FindStudentCommandParser` parses name keywords for `find-s` before creating a `FindStudentCommand`.
+* `FindGuardianCommandParser` parses name keywords for `find-g` before creating a `FindGuardianCommand`.
+* The edit commands update only supplied fields and preserve the remaining values, including student remarks and payment history.
+* `LinkGuardianCommand` creates a `StudentGuardianLink` in the model and treats repeated pair as an existing link.
 * `UnlinkGuardianCommand` checks that the selected link exists before asking the model to remove it.
+* The list commands reset their respective filtered lists to show all students or guardians.
+* The find commands filter their respective lists by name, matching any full-word keyword case-insensitively.
 
 ### Model component
 **API** : [`Model.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/model/Model.java)
@@ -137,24 +145,16 @@ The student and guardian MVP commands follow the same parser-command flow:
 <puml src="diagrams/ModelClassDiagram.puml" width="450" />
 
 
-The `Model` component,
+The `Model` component is the in-memory domain model for TutorTrack. The diagram focuses on the classes needed to manage students, guardians, and their relationships; legacy generic-person classes and utility classes are omitted for readability.
 
-* stores the address book data i.e., all `Person` objects (which are contained in a `UniquePersonList` object).
-* stores the `Person` objects selected by the current filter, such as search results, in a separate _filtered_ list. It exposes this list as an unmodifiable `ObservableList<Person>` that the UI can observe and bind to, so the UI updates when the list changes.
-* stores a `UserPrefs` object that represents the user’s preferences (currently, just the GUI settings). This is exposed to the outside as a `ReadOnlyUserPrefs` object.
-* does not depend on any of the other three components (as the `Model` represents data entities of the domain, they should make sense on their own without depending on other components)
-* exposes student and guardian lists separately so edit commands can resolve indexes from the currently displayed list.
-* stores student–guardian relationships as `StudentGuardianLink` objects and prevents duplicate pairs.
-* removes an individual student–guardian relationship without deleting either contact.
-* updates stored links when a linked student or guardian is edited, so linked cards always show current details.
-
-
-<box type="info" seamless>
-
-**Note:** The alternative, arguably more object-oriented, design below keeps a unique list of tags in `AddressBook`, and each `Person` references tags from that list. This lets `AddressBook` maintain one `Tag` object per unique tag instead of each `Person` holding its own `Tag` objects.<br>
-
-<puml src="diagrams/BetterModelClassDiagram.puml" width="450" />
-</box>
+* `ModelManager` implements the `Model` API and owns an `AddressBook` and `UserPrefs`. `AddressBook` and `UserPrefs` expose read-only interfaces to other components.
+* `AddressBook` owns a unique student list, a unique guardian list, and the collection of `StudentGuardianLink` objects.
+* `AddressBook` can remove an individual `StudentGuardianLink` without deleting either the student or the guardian.
+* `Student` contains shared contact details together with an academic level and one or more subjects. `Guardian` contains the shared contact details. These domain classes are composed from value objects such as `Name`, `Phone`, `Email`, and `Address`.
+* `StudentGuardianLink` represents a relationship between one student and one guardian. Duplicate links are rejected, and links are updated or removed when their linked student or guardian changes.
+* `ModelManager` maintains filtered student and guardian views for the UI. The displayed student view can also be sorted by name without changing the underlying storage order.
+* `UserPrefs` stores user preferences, currently the GUI settings, and is exposed through `ReadOnlyUserPrefs`.
+* The Model component is independent of the UI, Logic, and Storage components; it represents domain data and exposes operations through its API.
 
 
 ### Storage component
@@ -164,11 +164,17 @@ The `Model` component,
 <puml src="diagrams/StorageClassDiagram.puml" width="550" />
 
 The `Storage` component,
+
 * can save both address book data and user preference data in JSON format, and read them back into corresponding objects.
 * is implemented by `StorageManager`, which delegates the actual JSON file access to `JsonAddressBookStorage` and `JsonUserPrefsStorage` (one class per data file).
 * depends on some classes in the `Model` component (because the `Storage` component's job is to save/retrieve objects that belong to the `Model`)
 
 Student–guardian links are persisted in the address-book JSON under a `links` array. Each entry stores the student and guardian name and phone, which identify the corresponding existing records without duplicating their full details. Links are resolved after students and guardians are loaded, preserving link creation order. A missing `links` field is treated as an empty list for compatibility with existing address-book files. A link referring to a student or guardian that is not present in the file is rejected as invalid data.
+
+Student remarks are persisted as a `remark` string on each student. A missing `remark` field is treated as an empty remark for compatibility with existing address-book files.
+
+Each student's paid months are persisted in a `paidMonths` array of `YYYY-MM` strings. A missing `paidMonths` field is treated as an empty list for compatibility with existing address-book files.
+
 
 ### Common classes
 
@@ -179,6 +185,109 @@ Classes used by multiple components are in the `seedu.address.commons` package.
 ## **Implementation**
 
 This section describes some noteworthy details on how certain features are implemented.
+
+### Find feature
+
+#### Implementation
+
+The `find-s` command accepts one or more name keywords. `FindStudentCommandParser` creates a
+`StudentNameContainsKeywordsPredicate`, which `FindStudentCommand` passes to the model to
+update the filtered student list. Matching is case-insensitive, and a student is included
+when their name contains any of the supplied keywords.
+
+<puml src="diagrams/FindSequenceDiagram.puml" alt="Interactions Inside the Logic Component for the `find-s alice` Command"></puml>
+
+The same process is followed for `find-g`, using the corresponding guardian command parser,
+command, predicate, and filtered guardian list.
+
+### Student remarks feature
+
+#### Implementation
+
+Student remarks are represented by the immutable `Remark` value object, which validates and normalizes remark text. Each `Student` holds a non-null remark; `Remark.EMPTY` represents no remark.
+
+The following partial sequence diagram shows `SetStudentRemarkCommand#execute(Model)` after parsing, assuming a valid index in the currently displayed student list. Parsing, invalid-input paths, persistence and UI handling are omitted.
+
+<puml src="diagrams/SetStudentRemarkSequenceDiagram.puml" alt="Setting a student remark through immutable Student replacement" width="800" />
+
+`Student#withRemark` creates a new `Student` object with the updated remark while preserving all other details. The command replaces the original Student only if the updated Student differs from it. Existing lessons and guardian links are preserved during replacement.
+
+### Payment tracking feature
+
+#### Implementation
+
+Payment tracking lets a tutor record that a student has paid for a given month of a year, using the command `mark-paid INDEX m/YYYY-MM`. It is built from the following classes:
+
+* `PaymentMonth` (in `model.student`) -- An immutable value class wrapping a `java.time.YearMonth`. It validates input in the strict `YYYY-MM` format (`PaymentMonth#isValidPaymentMonth(String)`), implements `Comparable<PaymentMonth>` for chronological ordering, and provides `PaymentMonth#toDisplayString()` (e.g. `Oct 2026`) for the UI and result messages.
+* `Student` -- Holds an unmodifiable `SortedSet<PaymentMonth>` of the months the student has paid for, exposed through `Student#getPaidMonths()`. Two methods support the feature:
+  * `Student#hasPaidFor(PaymentMonth)` -- Returns true if a payment is recorded for that month.
+  * `Student#withPaymentFor(PaymentMonth)` -- Returns a **new** `Student` with the month added. `Student` remains immutable.
+* `MarkPaidCommandParser` -- Tokenizes the arguments with the `m/` prefix (`CliSyntax#PREFIX_MONTH`), parses the index with `ParserUtil#parseIndex` and the month with `ParserUtil#parsePaymentMonth`, and rejects duplicate `m/` prefixes.
+* `MarkPaidCommand` -- Looks up the student in the displayed student list and replaces it in the model with the updated copy.
+
+<puml src="diagrams/PaymentClassDiagram.puml" width="450" />
+
+Given below is an example usage scenario and how the payment tracking mechanism behaves at each step.
+
+Step 1. The user executes `mark-paid 1 m/2026-10`. `AddressBookParser` creates a `MarkPaidCommandParser`, which parses the input into a `MarkPaidCommand` holding index `1` and the `PaymentMonth` `2026-10`.
+
+Step 2. `MarkPaidCommand#execute(Model)` retrieves the first student, `s`, from `Model#getFilteredStudentList()`. If the index is out of range, a `CommandException` is thrown.
+
+Step 3. The command calls `s.hasPaidFor(2026-10)`. If a payment is already recorded for that month, a `CommandException` is thrown and the model is left unchanged.
+
+Step 4. Otherwise, the command calls `s.withPaymentFor(2026-10)` to create the updated student, then calls `Model#setStudent(s, paidStudent)`. `AddressBook#setStudent` also updates any `StudentGuardianLink` that refers to `s`, so the student's guardian links are preserved.
+
+Step 5. The student list in the UI updates, and the `StudentCard` shows the new month in its `Paid:` line, e.g. `Paid: Sep 2026, Oct 2026`.
+
+The following sequence diagram shows how the `mark-paid` command goes through the `Logic` and `Model` components:
+
+<puml src="diagrams/MarkPaidSequenceDiagram.puml" alt="MarkPaidSequenceDiagram" />
+
+<box type="info" seamless>
+
+**Note:** The lifeline for `MarkPaidCommandParser` should end at the destroy marker (X), but due to a limitation of PlantUML, it continues to the end of the diagram.
+</box>
+
+**Interaction with other features:**
+
+* **Remarks** -- `withPaymentFor` preserves the student's remark, and `withRemark` preserves all paid months. Setting, replacing or clearing a remark does not change payment history. Student identity remains based on normalized name and phone, while full equality and hashing include both remarks and payments.
+
+* `edit-s` -- `EditStudentDescriptor#createEditedStudent` copies the original student's paid months into the edited student, so editing a student's details does not erase their payment history.
+* `remove-s` -- Payment history is stored on the `Student`, so it is removed together with the student.
+* `filter` -- `StudentMatchesFilterPredicate` takes an optional paid month and an optional unpaid month, parsed from the `paid/` and `unpaid/` prefixes. It uses `Student#hasPaidFor(PaymentMonth)` to keep only students who have paid for the paid month and have not paid for the unpaid month. These conditions are combined (AND) with the level and subject criteria.
+* **Storage** -- `JsonAdaptedStudent` stores paid months as a `paidMonths` array of `YYYY-MM` strings. A missing `paidMonths` field is treated as an empty list, so data files created before this feature still load. An invalid entry (e.g. `2026-13`) is rejected as invalid data.
+
+#### Design considerations:
+
+**Aspect: How payments are stored:**
+
+* **Alternative 1 (current choice):** Each `Student` holds a set of the months they have paid for.
+  * Pros: Simple to implement. Payment history moves, edits and is deleted together with its student, with no extra bookkeeping in `AddressBook`.
+  * Cons: Records only *whether* a month is paid, not the amount, payment date or method.
+
+* **Alternative 2:** A separate `Payment` entity (student, month, amount, date) stored in its own list in `AddressBook`, similar to `StudentGuardianLink`.
+  * Pros: Can hold richer payment details and supports payment-centric queries.
+  * Cons: Every student edit and removal must keep the payment list consistent, as is already done for links, which adds complexity that the current requirements do not need.
+
+**Aspect: How the month is specified:**
+
+* **Alternative 1 (current choice):** The month is required and written as `YYYY-MM`.
+  * Pros: Unambiguous, sorts naturally, and matches `YearMonth#parse`, so no custom date parsing is needed.
+  * Cons: Slightly more typing than a month name.
+
+* **Alternative 2:** Accept month names (e.g. `Oct 2026`) or default to the current month when `m/` is omitted.
+  * Pros: Faster for the common case of recording this month's payment.
+  * Cons: More input formats to validate. An implicit current month also makes it easy to record the wrong month by accident, and makes the command's behaviour depend on the system clock.
+
+**Aspect: Marking a month that is already paid:**
+
+* **Alternative 1 (current choice):** Show an error and leave the student unchanged.
+  * Pros: Alerts the tutor to a possible mistake, such as entering the wrong student index.
+  * Cons: Not idempotent, so repeating a command produces an error.
+
+* **Alternative 2:** Silently succeed.
+  * Pros: Idempotent.
+  * Cons: The tutor gets no feedback that the command had no effect.
 
 ### \[Proposed\] Undo/redo feature
 
@@ -321,8 +430,10 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 | `* * `   | tutor rescheduling a lesson      | check whether a proposed timing clashes with my existing schedule | easily and confidently reschedule lessons                                    |
 | `* *`    | first-time user                  | see sample student and guardian data                              | understand TutorTrack's capabilities before entering my own data             |
 | `*`      | tutor ready to adopt TutorTrack  | remove all sample data                                            | start managing my actual students without leftover dummy data                |
+| `*`      | tutor                            | set, replace and clear student remarks                            | keep my notes about each student up to date                                  |
 | `*`      | tutor preparing for a lesson     | view my notes about a student                                     | remind myself of important information before teaching them                  |
 | `*`      | tutor with past students         | archive student data                                              | keep my student list uncluttered while not completely deleting past students |
+| `* *`    | tutor managing monthly payments  | mark a student as paid for a month                                | keep an accurate record of which months each student has paid for            |
 | `*`      | tutor managing monthly payments  | view students payment status                                      | quickly identify whose payments need to be collected                         |
 
 ### Use cases
@@ -539,8 +650,8 @@ separate use case.
 
 **MSS**
 
-1. User requests to filter contacts by criteria (contact type, year of study).
-2. TutorTrack shows the contacts that match all the criteria.
+1. User requests to filter students by one or more criteria (academic level, subjects, a month paid for, a month not paid for).
+2. TutorTrack shows the students that match all the criteria.
 
     Use case ends.
 
@@ -617,6 +728,88 @@ separate use case.
 
       Use case resumes at step 2.
 
+**Use case: U13 - Mark a student's payment as paid**
+
+**MSS**
+
+1. User <u>requests to list students (U3)</u>.
+2. User requests to mark a specific student in the list as paid for a given month of a year.
+3. TutorTrack records the payment and shows the student's updated paid months.
+
+   Use case ends.
+
+**Extensions**
+
+* 1a. The list is empty.
+
+  Use case ends.
+
+* 2a. The given index is invalid.
+
+    * 2a1. TutorTrack shows an error message.
+
+      Use case resumes at step 2.
+
+* 2b. The month is missing or not in the format `YYYY-MM`.
+
+    * 2b1. TutorTrack shows an error message describing the expected format.
+
+      Use case resumes at step 2.
+
+* 2c. The student is already marked as paid for the given month.
+
+    * 2c1. TutorTrack shows an error message, and the student's record is unchanged.
+
+      Use case ends.
+
+**Use case: U14 - Set student remark**
+
+**MSS**
+
+1. User views the currently displayed student list.
+2. User requests to set a remark for a specific student in the list, providing the remark text.
+3. TutorTrack adds or updates the student's remark.
+
+   Use case ends.
+
+**Extensions**
+
+* 2a. The given index is invalid.
+
+  * 2a1. TutorTrack shows an error message.
+
+    Use case ends.
+
+* 2b. The remark text is invalid or missing.
+
+  * 2b1. TutorTrack shows an error message.
+
+    Use case ends.
+
+**Use case: U15 - Clear student remark**
+
+**MSS**
+
+1. User views the currently displayed student list.
+2. User requests to clear the remark of a specific student in the list.
+3. TutorTrack clears the student's remark.
+
+   Use case ends.
+
+**Extensions**
+
+* 2a. The given index is invalid.
+
+  * 2a1. TutorTrack shows an error message.
+
+    Use case ends.
+
+* 2b. The student has no existing remark.
+
+  * 2b1. TutorTrack informs the user that there is no remark to clear.
+
+    Use case ends.
+
 ### Non-Functional Requirements
 
 1.  Should work on any _mainstream OS_ as long as it has Java `25` or above installed.
@@ -634,6 +827,7 @@ separate use case.
 * **Lesson**: A scheduled tutoring session for a student, specified by its day, start time, and duration.
 * **Archived student**: A past student whose data is retained in TutorTrack but is no longer included in the active student list.
 * **Mainstream OS**: Windows, Linux, Unix, or macOS.
+* **Payment month**: A month of a specific year, written as `YYYY-MM` (e.g. `2026-10`), for which a student's payment is recorded.
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -681,6 +875,56 @@ testers are expected to do more *exploratory* testing.
       Expected: Similar to previous.
 
 1. _{ more test cases … }_
+
+### Marking a student's payment
+
+1. Marking a student as paid while all students are being shown
+
+   1. Prerequisites: At least two students in the student list, neither marked as paid for October 2026.
+
+   1. Test case: `mark-paid 1 m/2026-10`<br>
+      Expected: The first student's card shows `Oct 2026` in its `Paid:` line. The status message confirms that the student is marked as paid for Oct 2026.
+
+   1. Test case: `mark-paid 1 m/2026-10` (repeated)<br>
+      Expected: No change. The status message says the student is already marked as paid for Oct 2026.
+
+   1. Test case: `mark-paid 1 m/2026-09`<br>
+      Expected: The first student's `Paid:` line shows `Sep 2026, Oct 2026`, in chronological order.
+
+   1. Test case: `mark-paid 0 m/2026-10`<br>
+      Expected: No student is updated. The status message shows an invalid command format error.
+
+   1. Test case: `mark-paid 1 m/2026-13`, `mark-paid 1 m/10-2026`, `mark-paid 1`<br>
+      Expected: No student is updated. The status message shows an error describing the expected `YYYY-MM` format, or an invalid command format error.
+
+   1. Test case: `mark-paid x m/2026-10` (where x is larger than the list size)<br>
+      Expected: No student is updated. The status message says the student index is invalid.
+
+1. Payment history is kept after editing and restarting
+
+   1. Prerequisites: The first student is marked as paid for October 2026.
+
+   1. Test case: `edit-s 1 p/98765432`<br>
+      Expected: The phone number is updated, and `Oct 2026` remains in the `Paid:` line.
+
+   1. Close and relaunch the app.<br>
+      Expected: The student's paid months are unchanged.
+
+1. Filtering students by payment status
+
+   1. Prerequisites: The first student is marked as paid for October 2026, and the other students are not.
+
+   1. Test case: `filter unpaid/2026-10`<br>
+      Expected: Every student except the one marked as paid is listed. The status message shows the number of students listed.
+
+   1. Test case: `filter paid/2026-10`<br>
+      Expected: Only the student marked as paid is listed.
+
+   1. Test case: `filter paid/2026-10 unpaid/2026-10`<br>
+      Expected: No students are listed. The status message says that no students match the filter.
+
+   1. Test case: `filter unpaid/2026-13`, `filter paid/2026-10 paid/2026-11`<br>
+      Expected: The list is not changed. The status message shows the month format error, or a duplicate-field error.
 
 ### Saving data
 

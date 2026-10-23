@@ -66,8 +66,10 @@ AddressBook Level 3 (AB3) is a **desktop application for managing contacts, opti
 * Items followed by `...` can appear zero or more times.<br>
   For example, `[t/TAG]... ` may be omitted, or written as `t/friend` or `t/friend t/family`.
 
-* Parameters can be in any order.<br>
+* Prefixed parameters can be in any order.<br>
   For example, if the command specifies `n/NAME p/PHONE_NUMBER`, `p/PHONE_NUMBER n/NAME` is also acceptable.
+
+* For `set-remark-s` and `clear-remark-s`, the index must come first. In `set-remark-s`, everything after the index is remark text; no prefix is needed.
 
 * Extraneous parameters for commands that take no parameters, such as `help`, `list`, `exit`, and `clear`, are ignored.<br>
   For example, `help 123` is interpreted as `help`.
@@ -177,6 +179,18 @@ Shows a list of all persons in the address book.
 
 Format: `list`
 
+### Listing all students: `list-s`
+
+Shows a list of all students in TutorTrack.
+
+Format: `list-s`
+
+### Listing all guardians: `list-g`
+
+Shows a list of all guardians in TutorTrack.
+
+Format: `list-g`
+
 ### Editing a person: `edit`
 
 Edits an existing person in the address book.
@@ -208,6 +222,35 @@ Format: `edit-s INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [l/LEVEL] [s/SUBJ
 Examples:
 * `edit-s 2 p/98765432 l/JC 2`
 * `edit-s 1 s/Mathematics s/Physics`
+
+### Setting a student remark: `set-remark-s`
+
+Adds or updates a remark for a specified student.
+
+Format: `set-remark-s INDEX REMARK`
+
+* `INDEX` must be a positive integer within the currently displayed student list.
+* `REMARK` must be nonblank and cannot exceed 300 Unicode code points.
+* Each student has one remark; setting a new remark replaces the previous remark, if any.
+
+Examples:
+
+Assuming Henry Tan, phone `91234567`, is student 1 in the displayed list:
+* `set-remark-s 1 Practise fractions before the next lesson` displays the corresponding remark on Henry's information card.
+* `set-remark-s 1 Bring the algebra worksheet on Friday` replaces Henry's previous remark with the new remark.
+
+
+### Clearing a student remark: `clear-remark-s`
+
+Removes a student's remark.
+
+Format: `clear-remark-s INDEX`
+
+* `INDEX` must be a positive integer within the currently displayed student list.
+* Clearing a remark hides the remark field on the student's information card.
+
+Example:
+* `clear-remark-s 1` clears the remark of the first displayed student, as well as hides the remark field on their information card
 
 ### Editing a guardian: `edit-g`
 
@@ -256,6 +299,24 @@ Examples:
 * `unlink-g 2 g/1`
 * `unlink-g 3 g/1`
 
+### Marking a student's payment as paid: `mark-paid`
+
+Records that a student has paid for a given month of a year.
+
+Format: `mark-paid INDEX m/YYYY-MM`
+
+* Marks the student at the specified `INDEX` as paid for the month `YYYY-MM`. The index refers to the
+index number shown in the currently displayed student list.
+* The index **must be a positive integer** 1, 2, 3, ..., and must not exceed the number
+of students in the displayed list.
+* The month must be in the format `YYYY-MM`, with a two-digit month from `01` to `12`, e.g. `2026-10`.
+* A student who is already marked as paid for that month is left unchanged, and an error is shown.
+* Each student's card shows the months they have paid for, e.g. `Paid: Sep 2026, Oct 2026`.
+
+Examples:
+* `mark-paid 1 m/2026-10` marks the 1st student in the displayed student list as paid for October 2026.
+* `mark-paid 2 m/2026-11` marks the 2nd student in the displayed student list as paid for November 2026.
+
 ### Locating persons by name: `find`
 
 Finds persons whose names contain any of the given keywords.
@@ -272,6 +333,54 @@ Examples:
 * `find John` returns `john` and `John Doe`
 * `find alex david` returns `Alex Yeoh`, `David Li`<br>
   ![result for 'find alex david'](images/findAlexDavidResult.png)
+
+### Locating students by name: `find-s`
+
+Finds students whose names contain any of the given keywords.
+
+Format: `find-s KEYWORD [MORE_KEYWORDS]`
+
+* The search is case-insensitive.
+* Keyword order does not matter.
+* The search considers only student names.
+* Matches by prefix of each part of the name.
+* Students matching at least one keyword are returned (an `OR` search).
+
+Example:
+* `find-s alex david` returns matching students named Alex or David.
+
+### Locating guardians by name: `find-g`
+
+Finds guardians whose names contain any of the given keywords.
+
+Format: `find-g KEYWORD [MORE_KEYWORDS]`
+
+* The search is case-insensitive.
+* Keyword order does not matter.
+* The search considers only guardian names.
+* Matches by prefix of each part of the name.
+* Guardians matching at least one keyword are returned (an `OR` search).
+
+Example:
+* `find-g alex david` returns matching guardians named Alex or David.
+### Filtering students: `filter`
+
+Shows only the students who match all of the given criteria. The guardian list is not changed.
+
+Format: `filter [l/LEVEL] [s/SUBJECT]... [paid/YYYY-MM] [unpaid/YYYY-MM]`
+
+* At least one criterion must be provided.
+* `l/LEVEL` shows students at that academic level. The match ignores case and extra spaces, e.g. `jc 1` matches `JC 1`.
+* `s/SUBJECT` shows students who take that subject. If several subjects are given, a student must take **all** of them.
+* `paid/YYYY-MM` shows students who have been marked as paid for that month using `mark-paid`.
+* `unpaid/YYYY-MM` shows students who have **not** been marked as paid for that month.
+* `l/`, `paid/` and `unpaid/` can each be given at most once.
+* Student indexes in later commands, such as `mark-paid` or `edit-s`, refer to the filtered list.
+
+Examples:
+* `filter l/JC 1 s/Mathematics` shows JC 1 students who take Mathematics.
+* `filter unpaid/2026-10` shows students who have not paid for October 2026.
+* `filter l/Secondary 3 paid/2026-09 unpaid/2026-10` shows Secondary 3 students who paid for September 2026 but not for October 2026.
 
 ### Deleting a person: `delete`
 
@@ -384,13 +493,21 @@ Action     | Format, Examples
 **Add**    | `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]... ` <br> e.g., `add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665 t/friend t/colleague`
 **Add student** | `add-s n/NAME p/PHONE e/EMAIL a/ADDRESS l/LEVEL s/SUBJECT [s/SUBJECT]...` <br> e.g., `add-s n/Henry Tan p/91234567 e/henry@example.com a/12 ABCD Ave 3 l/Secondary 3 s/Mathematics s/Physics`
 **Add guardian** | `add-g n/NAME p/PHONE e/EMAIL a/ADDRESS` <br> e.g., `add-g n/Ben Tan p/92345678 e/ben.tan@gmail.com a/12 ABCD Ave 3`
+**Set student remark** | `set-remark-s INDEX REMARK`<br> e.g., `set-remark-s 1 Practise fractions before the next lesson`
+**Clear student remark** | `clear-remark-s INDEX`<br> e.g., `clear-remark-s 1`
 **Clear**  | `clear`
 **Delete** | `delete INDEX`<br> e.g., `delete 3`
 **Edit**   | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]... `<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
 **Edit student** | `edit-s INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [l/LEVEL] [s/SUBJECT]...`<br> e.g., `edit-s 2 p/98765432 l/JC 2`
 **Edit guardian** | `edit-g INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS]`<br> e.g., `edit-g 1 a/25 Happy Road`
+**Filter** | `filter [l/LEVEL] [s/SUBJECT]... [paid/YYYY-MM] [unpaid/YYYY-MM]`<br> e.g., `filter l/JC 1 unpaid/2026-10`
 **Find**   | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
+**Find student** | `find-s KEYWORD [MORE_KEYWORDS]`<br> e.g., `find-s James Jake`
+**Find guardian** | `find-g KEYWORD [MORE_KEYWORDS]`<br> e.g., `find-g James Jake`
 **Link guardian** | `link-g STUDENT_INDEX g/GUARDIAN_INDEX`<br> e.g., `link-g 2 g/1`
 **Unlink guardian** | `unlink-g STUDENT_INDEX g/GUARDIAN_INDEX`<br> e.g., `unlink-g 2 g/1`
 **List**   | `list`
+**List students** | `list-s`
+**List guardians** | `list-g`
+**Mark paid** | `mark-paid INDEX m/YYYY-MM`<br> e.g., `mark-paid 1 m/2026-10`
 **Help**   | `help`

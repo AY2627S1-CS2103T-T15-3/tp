@@ -8,13 +8,14 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.TextFlow?>
 
 <HBox id="cardPane" fx:id="cardPane" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
-  <GridPane HBox.hgrow="ALWAYS">
+  <GridPane minWidth="0" HBox.hgrow="ALWAYS">
     <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10" prefWidth="300" />
     </columnConstraints>
-    <VBox alignment="CENTER_LEFT" minHeight="130" GridPane.columnIndex="0">
+    <VBox alignment="CENTER_LEFT" minWidth="0" minHeight="130" GridPane.columnIndex="0">
       <padding>
         <Insets top="5" right="5" bottom="5" left="15" />
       </padding>
@@ -24,18 +25,21 @@
             <Region fx:constant="USE_PREF_SIZE" />
           </minWidth>
         </Label>
-        <Label fx:id="name" styleClass="cell_big_label" />
+        <TextFlow fx:id="name" styleClass="cell_big_label" />
       </HBox>
       <Label fx:id="phone" styleClass="cell_small_label" />
       <Label fx:id="email" styleClass="cell_small_label" />
       <Label fx:id="address" styleClass="cell_small_label" />
       <Label fx:id="level" styleClass="cell_small_label" />
+      <Label fx:id="payments" styleClass="cell_small_label" />
       <FlowPane fx:id="subjects" hgap="5">
         <Label text="Subjects:" styleClass="cell_small_label" />
       </FlowPane>
       <FlowPane fx:id="guardians" hgap="5">
         <Label text="Guardians:" styleClass="cell_small_label" />
       </FlowPane>
+      <Label fx:id="remark" styleClass="cell_small_label" wrapText="true"
+             minWidth="0" minHeight="-Infinity" maxWidth="Infinity" />
     </VBox>
   </GridPane>
 </HBox>

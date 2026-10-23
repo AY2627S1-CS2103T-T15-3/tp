@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
+import seedu.address.logic.commands.CommandResult.HighlightTarget;
 import seedu.address.model.Model;
 import seedu.address.model.student.StudentNameContainsKeywordsPredicate;
 
@@ -31,9 +32,11 @@ public class FindStudentCommand extends Command {
         int resultCount = model.getFilteredStudentList().size();
         if (resultCount > 0) {
             return new CommandResult(
-                    String.format(Messages.MESSAGE_STUDENTS_LISTED_OVERVIEW, resultCount));
+                    String.format(Messages.MESSAGE_STUDENTS_LISTED_OVERVIEW, resultCount),
+                    predicate.getKeywords(), HighlightTarget.STUDENTS);
         } else {
-            return new CommandResult(Messages.MESSAGE_NO_STUDENTS_MATCH_SEARCH);
+            return new CommandResult(Messages.MESSAGE_NO_STUDENTS_MATCH_SEARCH,
+                    predicate.getKeywords(), HighlightTarget.STUDENTS);
         }
     }
 

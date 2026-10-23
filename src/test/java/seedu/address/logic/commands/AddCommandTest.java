@@ -22,6 +22,7 @@ import seedu.address.model.Model;
 import seedu.address.model.ReadOnlyAddressBook;
 import seedu.address.model.ReadOnlyUserPrefs;
 import seedu.address.model.guardian.Guardian;
+import seedu.address.model.lesson.Lesson;
 import seedu.address.model.person.Person;
 import seedu.address.model.student.Student;
 import seedu.address.testutil.PersonBuilder;
@@ -180,6 +181,21 @@ public class AddCommandTest {
         }
 
         @Override
+        public void addLesson(Lesson lesson) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void deleteLesson(Lesson lesson) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public ObservableList<Lesson> getLessonList() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
         public boolean hasGuardian(Guardian guardian) {
             throw new AssertionError("This method should not be called.");
         }
@@ -221,6 +237,11 @@ public class AddCommandTest {
 
         @Override
         public void addStudentGuardianLink(seedu.address.model.link.StudentGuardianLink link) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void removeStudentGuardianLink(seedu.address.model.link.StudentGuardianLink link) {
             throw new AssertionError("This method should not be called.");
         }
     }
