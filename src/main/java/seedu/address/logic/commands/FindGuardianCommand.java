@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
+import seedu.address.logic.commands.CommandResult.HighlightTarget;
 import seedu.address.model.Model;
 import seedu.address.model.guardian.GuardianNameContainsKeywordsPredicate;
 
@@ -30,9 +31,11 @@ public class FindGuardianCommand extends Command {
         int resultCount = model.getFilteredGuardianList().size();
         if (resultCount > 0) {
             return new CommandResult(
-                    String.format(Messages.MESSAGE_GUARDIANS_LISTED_OVERVIEW, resultCount));
+                    String.format(Messages.MESSAGE_GUARDIANS_LISTED_OVERVIEW, resultCount),
+                    predicate.getKeywords(), HighlightTarget.GUARDIANS);
         } else {
-            return new CommandResult(Messages.MESSAGE_NO_GUARDIANS_MATCH_SEARCH);
+            return new CommandResult(Messages.MESSAGE_NO_GUARDIANS_MATCH_SEARCH,
+                    predicate.getKeywords(), HighlightTarget.GUARDIANS);
         }
     }
 

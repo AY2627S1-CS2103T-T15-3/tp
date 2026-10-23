@@ -123,7 +123,16 @@
 .cell_big_label {
     -fx-font-family: "Segoe UI Semibold";
     -fx-font-size: 16px;
-    -fx-text-fill: #010504;
+    -fx-text-fill: white;
+    -fx-fill: white;
+}
+
+.search-match {
+    -fx-background-color: #b8860b;
+    -fx-text-fill: white;
+    -fx-font-family: "Segoe UI Semibold";
+    -fx-font-size: 16px;
+    -fx-padding: 0 1 0 1;
 }
 
 .cell_small_label {
