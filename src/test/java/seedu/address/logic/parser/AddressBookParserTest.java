@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.commands.AddCommand;
 import seedu.address.logic.commands.AddGuardianCommand;
+import seedu.address.logic.commands.AddLessonCommand;
 import seedu.address.logic.commands.AddStudentCommand;
 import seedu.address.logic.commands.ClearCommand;
 import seedu.address.logic.commands.ClearStudentRemarkCommand;
@@ -58,6 +59,14 @@ import seedu.address.testutil.PersonUtil;
 public class AddressBookParserTest {
 
     private final AddressBookParser parser = new AddressBookParser();
+
+    @Test
+    public void parseCommand_lesson_returnsAddLessonCommand() throws Exception {
+        Command command = new AddressBookParser().parseCommand(
+                "lesson 1 d/2026-11-01 t/14:00 l/60 w/4");
+
+        assertTrue(command instanceof AddLessonCommand);
+    }
 
     @Test
     public void parseCommand_studentRemarks_routesBothCommands() throws Exception {

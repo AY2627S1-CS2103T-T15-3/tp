@@ -62,6 +62,17 @@ public class UniqueLessonListTest {
     }
 
     @Test
+    public void add_overlappingLesson_throwsDuplicateLessonException() {
+        uniqueLessonList.add(LESSON);
+        Lesson overlapping = new Lesson(STUDENT, DATE, LocalTime.of(14, 30), Duration.ofMinutes(60));
+
+        DuplicateLessonException exception = assertThrows(DuplicateLessonException.class, () ->
+                uniqueLessonList.add(overlapping));
+
+        assertEquals("Lesson overlaps an existing lesson", exception.getMessage());
+    }
+
+    @Test
     public void remove_lesson_removesSuccessfully() {
         uniqueLessonList.add(LESSON);
 
