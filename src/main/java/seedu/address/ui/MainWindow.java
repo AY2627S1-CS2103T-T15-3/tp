@@ -1,6 +1,7 @@
 package seedu.address.ui;
 
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -38,6 +39,7 @@ public class MainWindow extends UiPart<Stage> {
     private PersonListPanel personListPanel;
     private StudentListPanel studentListPanel;
     private GuardianListPanel guardianListPanel;
+    private LessonListPanel lessonListPanel;
     private ResultDisplay resultDisplay;
     private HelpWindow helpWindow;
 
@@ -52,6 +54,9 @@ public class MainWindow extends UiPart<Stage> {
 
     @FXML
     private StackPane guardianListPanelPlaceholder;
+
+    @FXML
+    private StackPane lessonListPanelPlaceholder;
 
     @FXML
     private StackPane resultDisplayPlaceholder;
@@ -124,8 +129,10 @@ public class MainWindow extends UiPart<Stage> {
         personListPanel = new PersonListPanel(logic.getFilteredPersonList());
         studentListPanel = new StudentListPanel(logic.getFilteredStudentList(), logic::getGuardiansForStudent);
         guardianListPanel = new GuardianListPanel(logic.getFilteredGuardianList());
+        lessonListPanel = new LessonListPanel(logic.getLessonList());
         personListPanelPlaceholder.getChildren().add(studentListPanel.getRoot());
         guardianListPanelPlaceholder.getChildren().add(guardianListPanel.getRoot());
+        lessonListPanelPlaceholder.getChildren().add(lessonListPanel.getRoot());
 
         resultDisplay = new ResultDisplay();
         resultDisplayPlaceholder.getChildren().add(resultDisplay.getRoot());
@@ -189,6 +196,11 @@ public class MainWindow extends UiPart<Stage> {
         return guardianListPanel;
     }
 
+    /** Updates the date shown by the lesson list for future date-view commands. */
+    public void setLessonListDate(LocalDate date) {
+        lessonListPanel.setDisplayedDate(date);
+    }
+
     /**
      * Executes the command and returns the result.
      *
@@ -205,6 +217,7 @@ public class MainWindow extends UiPart<Stage> {
             if (commandResult.shouldRefreshStudentList()) {
                 studentListPanel.refresh();
             }
+            lessonListPanel.refresh();
 
             if (commandResult.getStudentToHighlight() != null) {
                 studentListPanel.refresh();
