@@ -71,7 +71,7 @@ public class LessonListPanel extends UiPart<Region> {
 
     class LessonListViewCell extends ListCell<Lesson> {
         @Override
-        protected void updateItem(Lesson lesson, boolean empty) {
+        public void updateItem(Lesson lesson, boolean empty) {
             super.updateItem(lesson, empty);
             if (empty || lesson == null) {
                 setGraphic(null);

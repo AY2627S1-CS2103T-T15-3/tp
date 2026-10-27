@@ -79,6 +79,34 @@ public class LessonListPanelTest {
                 + LocalDate.now() + ".", ((Label) listView.getPlaceholder()).getText());
     }
 
+    @Test
+    public void refresh_updatesDisplayedItems() {
+        ObservableList<Lesson> lessons = FXCollections.observableArrayList();
+        LessonListPanel panel = new LessonListPanel(lessons);
+        ListView<?> listView = (ListView<?>) panel.getRoot().lookup(".list-view");
+
+        lessons.add(lesson(LocalDate.now(), LocalTime.NOON));
+        panel.refresh();
+
+        assertEquals(1, listView.getItems().size());
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void lessonListViewCell_updatesForEmptyAndPopulatedItems() {
+        Lesson lesson = lesson(LocalDate.now(), LocalTime.NOON);
+        LessonListPanel panel = new LessonListPanel(FXCollections.observableArrayList(lesson));
+        ListView<Lesson> listView = (ListView<Lesson>) panel.getRoot().lookup(".list-view");
+        LessonListPanel.LessonListViewCell cell =
+                (LessonListPanel.LessonListViewCell) listView.getCellFactory().call(listView);
+
+        cell.updateItem(lesson, false);
+        assertTrue(cell.getGraphic() instanceof javafx.scene.layout.Region);
+        cell.updateItem(null, true);
+        assertEquals(null, cell.getGraphic());
+        assertEquals(null, cell.getText());
+    }
+
     private static Lesson lesson(LocalDate date, LocalTime time) {
         return new Lesson(STUDENT, date, time, Duration.ofMinutes(60));
     }

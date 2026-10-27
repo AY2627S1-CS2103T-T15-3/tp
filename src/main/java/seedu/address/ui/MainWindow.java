@@ -196,6 +196,11 @@ public class MainWindow extends UiPart<Stage> {
         return guardianListPanel;
     }
 
+    /** Returns the lesson list panel. */
+    public LessonListPanel getLessonListPanel() {
+        return lessonListPanel;
+    }
+
     /** Updates the date shown by the lesson list for future date-view commands. */
     public void setLessonListDate(LocalDate date) {
         lessonListPanel.setDisplayedDate(date);

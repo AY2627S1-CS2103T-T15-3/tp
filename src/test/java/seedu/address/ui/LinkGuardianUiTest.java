@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.FutureTask;
@@ -106,6 +107,22 @@ public class LinkGuardianUiTest {
             executeCommand.invoke(window, "guardian");
             window.show();
             return window;
+        });
+    }
+
+    @Test
+    public void mainWindow_setLessonListDate_updatesLessonPanel() throws Exception {
+        runOnFxThread(() -> {
+            MainWindow window = new MainWindow(new javafx.stage.Stage(),
+                    new StubLogic(student("Lucy Lim"), guardian("Ben Tan")), Path.of("data.json"));
+            window.fillInnerParts();
+            LocalDate date = LocalDate.of(2026, 11, 1);
+
+            window.setLessonListDate(date);
+
+            assertEquals(date, window.getLessonListPanel().getDisplayedDate());
+            window.getPrimaryStage().hide();
+            return null;
         });
     }
 
