@@ -704,7 +704,9 @@ separate use case.
 
 * 2a. The student list is empty.
 
-  TutorTrack displays the empty student list. Use case ends.
+  * 2a1. TutorTrack displays the empty student list.
+
+    Use case ends.
 
 **Use case: U13 - Schedule a lesson**
 
