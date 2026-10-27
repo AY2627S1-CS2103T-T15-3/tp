@@ -19,6 +19,7 @@ public class Messages {
     public static final String MESSAGE_INVALID_PERSON_DISPLAYED_INDEX = "The person index provided is invalid.";
     public static final String MESSAGE_INVALID_GUARDIAN_DISPLAYED_INDEX = "The guardian index provided is invalid.";
     public static final String MESSAGE_INVALID_STUDENT_DISPLAYED_INDEX = "The student index provided is invalid.";
+    public static final String MESSAGE_INVALID_LESSON_DISPLAYED_INDEX = "The lesson index provided is invalid.";
     public static final String MESSAGE_STUDENT_INDEX_OUT_OF_RANGE = "Student index is out of range, "
             + "choose a valid index from the currently displayed student list";
     public static final String MESSAGE_NO_STUDENTS_DISPLAYED = "No students are currently displayed.";
