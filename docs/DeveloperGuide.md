@@ -690,6 +690,8 @@ separate use case.
 
 **Use case: U12 - Schedule a lesson**
 
+**Command:** `lesson INDEX d/YYYY-MM-DD t/HH:MM l/LENGTH(MINUTES) w/WEEKS`
+
 **MSS**
 
 1. User <u>requests to list students (U3)</u>.
