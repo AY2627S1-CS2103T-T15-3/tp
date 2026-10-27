@@ -445,17 +445,15 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 **MSS**
 
 1. User requests to add a student.
-2. User provides the student's name, phone number, email address, postal
-   address, academic level, and at least one subject.
-3. TutorTrack adds the student to the student records.
+2. User provides the required student details.
+3. TutorTrack validates and adds the student record.
 4. TutorTrack confirms that the student was added.
 
    Use case ends.
 
 **Extensions**
 
-* 2a. The provided details are invalid, incomplete, or contain an unsupported
-  or repeated parameter.
+* 2a. The provided details are invalid or incomplete.
 
   * 2a1. TutorTrack informs the user of the error.
   * 2a2. User provides corrected details.
@@ -463,7 +461,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
     Steps 2a1-2a2 are repeated until the details are valid and complete. Use
     case resumes from step 3.
 
-* 2b. A student with the same normalized name and phone number already exists.
+* 2b. A student with the same identifying details already exists.
 
   * 2b1. TutorTrack informs the user that the student already exists.
 
@@ -474,17 +472,15 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 **MSS**
 
 1. User requests to add a guardian.
-2. User provides the guardian's name, phone number, email address, and postal
-   address.
-3. TutorTrack adds the guardian's contact details to the guardian records.
+2. User provides the required guardian details.
+3. TutorTrack validates and adds the guardian record.
 4. TutorTrack confirms that the guardian was added.
 
    Use case ends.
 
 **Extensions**
 
-* 2a. The provided details are invalid, incomplete, or contain an unsupported
-  or repeated parameter.
+* 2a. The provided details are invalid or incomplete.
 
   * 2a1. TutorTrack informs the user of the error.
   * 2a2. User provides corrected details.
@@ -492,7 +488,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
     Steps 2a1-2a2 are repeated until the details are valid and complete. Use
     case resumes from step 3.
 
-* 2b. A guardian with the same normalized name and phone number already exists.
+* 2b. A guardian with the same identifying details already exists.
 
   * 2b1. TutorTrack informs the user that the guardian already exists.
 
@@ -688,7 +684,29 @@ separate use case.
 
   Use case ends.
 
-**Use case: U12 - Schedule a lesson**
+**Use case: U12 - Sort students**
+
+**MSS**
+
+1. User requests to sort the displayed students by name.
+2. TutorTrack sorts the displayed student list in ascending order by name.
+3. TutorTrack displays the sorted student list.
+
+   Use case ends.
+
+**Extensions**
+
+* 1a. User provides arguments with the sorting request.
+
+  * 1a1. TutorTrack shows an error message.
+
+    Use case ends.
+
+* 2a. The student list is empty.
+
+  TutorTrack displays the empty student list. Use case ends.
+
+**Use case: U13 - Schedule a lesson**
 
 **MSS**
 
@@ -728,7 +746,7 @@ separate use case.
 
       Use case resumes at step 2.
 
-**Use case: U13 - Mark a student's payment as paid**
+**Use case: U14 - Mark a student's payment as paid**
 
 **MSS**
 
@@ -762,7 +780,7 @@ separate use case.
 
       Use case ends.
 
-**Use case: U14 - Set student remark**
+**Use case: U15 - Set student remark**
 
 **MSS**
 
@@ -786,7 +804,7 @@ separate use case.
 
     Use case ends.
 
-**Use case: U15 - Clear student remark**
+**Use case: U16 - Clear student remark**
 
 **MSS**
 
