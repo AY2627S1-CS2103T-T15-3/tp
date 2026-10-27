@@ -22,7 +22,7 @@ public class Lesson {
 
     public static final String MESSAGE_DURATION_CONSTRAINTS = "Lesson duration must be positive.";
     public static final String MESSAGE_LONG_DURATION_WARNING = String.format(
-            "Warning: lesson duration exceeds %d hours. Please confirm this is intentional.",
+            "Warning: lesson duration exceeds %d hours.",
             MAX_RECOMMENDED_DURATION_HOURS);
     public static final Duration MAX_RECOMMENDED_DURATION =
             Duration.ofHours(MAX_RECOMMENDED_DURATION_HOURS);

@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -55,6 +56,17 @@ public class AddLessonCommandTest {
                 .execute(model);
 
         assertEquals(1, model.getLessonList().size());
+    }
+
+    @Test
+    public void execute_longLesson_includesWarning() throws Exception {
+        ModelManager model = new ModelManager();
+        model.addStudent(STUDENT);
+
+        CommandResult result = new AddLessonCommand(Index.fromOneBased(1), LocalDate.of(2026, 11, 1),
+                LocalTime.NOON, Duration.ofHours(5), 1).execute(model);
+
+        assertTrue(result.getFeedbackToUser().contains(Lesson.MESSAGE_LONG_DURATION_WARNING));
     }
 
     @Test

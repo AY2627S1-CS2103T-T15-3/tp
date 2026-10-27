@@ -94,7 +94,11 @@ public class AddLessonCommand extends Command {
         } catch (DuplicateLessonException exception) {
             throw new CommandException(exception.getMessage(), exception);
         }
-        return new CommandResult(String.format(MESSAGE_SUCCESS, numberOfWeeks, student.getName()), student);
+        String feedback = String.format(MESSAGE_SUCCESS, numberOfWeeks, student.getName());
+        if (duration.compareTo(Lesson.MAX_RECOMMENDED_DURATION) > 0) {
+            feedback += " " + Lesson.MESSAGE_LONG_DURATION_WARNING;
+        }
+        return new CommandResult(feedback, student);
     }
 
     private String formatLesson(Lesson lesson) {
