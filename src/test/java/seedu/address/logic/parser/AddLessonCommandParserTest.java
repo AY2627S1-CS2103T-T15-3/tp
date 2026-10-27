@@ -25,6 +25,10 @@ public class AddLessonCommandParserTest {
     public void parse_missingArguments_failure() {
         String message = String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT, AddLessonCommand.MESSAGE_USAGE);
         assertParseFailure(parser, "1 d/2026-11-01 t/14:00", message);
+        assertParseFailure(parser, "1 t/14:00 l/60 w/2", message);
+        assertParseFailure(parser, "1 d/2026-11-01 l/60 w/2", message);
+        assertParseFailure(parser, "1 d/2026-11-01 t/14:00 w/2", message);
+        assertParseFailure(parser, "1 d/2026-11-01 t/14:00 l/60", message);
         assertParseFailure(parser, "1 2026-11-01 t/14:00 l/60 w/2", message);
     }
 
@@ -53,6 +57,16 @@ public class AddLessonCommandParserTest {
     }
 
     @Test
+    public void parse_duplicateTimeLengthAndWeeksPrefix_failure() {
+        assertParseFailure(parser, "1 d/2026-11-01 t/14:00 t/15:00 l/60 w/2",
+                "The t/ parameter must not be specified more than once.");
+        assertParseFailure(parser, "1 d/2026-11-01 t/14:00 l/60 l/90 w/2",
+                "The l/ parameter must not be specified more than once.");
+        assertParseFailure(parser, "1 d/2026-11-01 t/14:00 l/60 w/2 w/3",
+                "The w/ parameter must not be specified more than once.");
+    }
+
+    @Test
     public void parse_unknownPrefix_failure() {
         assertParseFailure(parser, "1 d/2026-11-01 t/14:00 l/60 w/2 x/value",
                 "Unknown parameter: x/");
@@ -62,7 +76,11 @@ public class AddLessonCommandParserTest {
     public void parse_invalidLessonLength_failure() {
         assertParseFailure(parser, "1 d/2026-11-01 t/14:00 l/0 w/2",
                 "Lesson length must be a positive integer of minutes.");
+        assertParseFailure(parser, "1 d/2026-11-01 t/14:00 l/-1 w/2",
+                "Lesson length must be a positive integer of minutes.");
         assertParseFailure(parser, "1 d/2026-11-01 t/14:00 l/sixty w/2",
+                "Lesson length must be a positive integer of minutes.");
+        assertParseFailure(parser, "1 d/2026-11-01 t/14:00 l/2147483648 w/2",
                 "Lesson length must be a positive integer of minutes.");
     }
 

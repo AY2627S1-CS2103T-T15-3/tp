@@ -119,6 +119,6 @@ public class AddLessonCommand extends Command {
 
     @Override
     public int hashCode() {
-        return Objects.hash(targetIndex, startDate, startTime, duration, numberOfWeeks);
+        return Objects.hash(targetIndex.getZeroBased(), startDate, startTime, duration, numberOfWeeks);
     }
 }
