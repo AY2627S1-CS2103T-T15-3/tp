@@ -179,7 +179,7 @@ Adds a weekly series of lessons for the student at the specified displayed
 index. Each lesson has the same start time and duration, and the dates are one
 week apart.
 
-Format: `lesson INDEX d/YYYY-MM-DD t/HH:MM l/LENGTH(MINUTES) w/WEEKS`
+Format: `add-l INDEX d/YYYY-MM-DD t/HH:MM l/LENGTH(MINUTES) w/WEEKS`
 
 The `d/`, `t/`, `l/`, and `w/` prefixes are required and may each be specified
 only once. `l/LENGTH(MINUTES)` and `w/WEEKS` must be positive integers. Dates and times
@@ -187,7 +187,7 @@ must be valid, and a lesson cannot overlap an existing lesson.
 
 Example:
 
-`lesson 1 d/2026-11-01 t/14:00 l/60 w/4`
+`add-l 1 d/2026-11-01 t/14:00 l/60 w/4`
 
 This schedules four one-hour lessons for the first displayed student, starting
 at 2:00 PM on 1 November 2026. If a conflict is found, no lessons from the
@@ -513,7 +513,7 @@ Action     | Format, Examples
 **Add**    | `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]... ` <br> e.g., `add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665 t/friend t/colleague`
 **Add student** | `add-s n/NAME p/PHONE e/EMAIL a/ADDRESS l/LEVEL s/SUBJECT [s/SUBJECT]...` <br> e.g., `add-s n/Henry Tan p/91234567 e/henry@example.com a/12 ABCD Ave 3 l/Secondary 3 s/Mathematics s/Physics`
 **Add guardian** | `add-g n/NAME p/PHONE e/EMAIL a/ADDRESS` <br> e.g., `add-g n/Ben Tan p/92345678 e/ben.tan@gmail.com a/12 ABCD Ave 3`
-**Schedule lessons** | `lesson INDEX d/YYYY-MM-DD t/HH:MM l/LENGTH(MINUTES) w/WEEKS` <br> e.g., `lesson 1 d/2026-11-01 t/14:00 l/60 w/4`
+**Schedule lessons** | `add-l INDEX d/YYYY-MM-DD t/HH:MM l/LENGTH(MINUTES) w/WEEKS` <br> e.g., `add-l 1 d/2026-11-01 t/14:00 l/60 w/4`
 **Set student remark** | `set-remark-s INDEX REMARK`<br> e.g., `set-remark-s 1 Practise fractions before the next lesson`
 **Clear student remark** | `clear-remark-s INDEX`<br> e.g., `clear-remark-s 1`
 **Clear**  | `clear`

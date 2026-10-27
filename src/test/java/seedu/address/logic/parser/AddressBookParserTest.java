@@ -63,7 +63,7 @@ public class AddressBookParserTest {
     @Test
     public void parseCommand_lesson_returnsAddLessonCommand() throws Exception {
         Command command = new AddressBookParser().parseCommand(
-                "lesson 1 d/2026-11-01 t/14:00 l/60 w/4");
+                "add-l 1 d/2026-11-01 t/14:00 l/60 w/4");
 
         assertTrue(command instanceof AddLessonCommand);
     }

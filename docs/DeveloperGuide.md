@@ -690,7 +690,7 @@ separate use case.
 
 **Use case: U12 - Schedule a lesson**
 
-**Command:** `lesson INDEX d/YYYY-MM-DD t/HH:MM l/LENGTH(MINUTES) w/WEEKS`
+**Command:** `add-l INDEX d/YYYY-MM-DD t/HH:MM l/LENGTH(MINUTES) w/WEEKS`
 
 **MSS**
 

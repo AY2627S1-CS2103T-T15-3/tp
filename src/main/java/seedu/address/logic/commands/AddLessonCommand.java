@@ -19,7 +19,7 @@ import seedu.address.model.student.Student;
 
 /** Adds a weekly series of lessons for a displayed student. */
 public class AddLessonCommand extends Command {
-    public static final String COMMAND_WORD = "lesson";
+    public static final String COMMAND_WORD = "add-l";
     public static final String MESSAGE_USAGE = "Usage: " + COMMAND_WORD
             + " INDEX d/YYYY-MM-DD t/HH:MM l/LENGTH(MINUTES) w/WEEKS";
     public static final String MESSAGE_INVALID_WEEKS = "Number of weeks must be a positive integer.";
