@@ -97,7 +97,7 @@ The sequence diagram below illustrates the interactions within the `Logic` compo
 The following sequence diagram shows how `unlink-g` removes an existing student-guardian link.
 
 <puml src="diagrams/UnlinkGuardianSequenceDiagram.puml"
-      alt="Interactions for the unlink-g command" />
+      alt="Interactions for the unlink-g command"></puml>
 
 <box type="info" seamless>
 
