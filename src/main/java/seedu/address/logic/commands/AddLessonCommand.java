@@ -21,7 +21,7 @@ import seedu.address.model.student.Student;
 public class AddLessonCommand extends Command {
     public static final String COMMAND_WORD = "lesson";
     public static final String MESSAGE_USAGE = "Usage: " + COMMAND_WORD
-            + " INDEX d/YYYY-MM-DD t/HH:MM l/MINUTES w/WEEKS";
+            + " INDEX d/YYYY-MM-DD t/HH:MM l/LENGTH(MINUTES) w/WEEKS";
     public static final String MESSAGE_INVALID_WEEKS = "Number of weeks must be a positive integer.";
     public static final String MESSAGE_SUCCESS = "Added %1$d lesson(s) for %2$s.";
 
