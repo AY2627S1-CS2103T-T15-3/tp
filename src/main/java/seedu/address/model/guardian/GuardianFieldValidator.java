@@ -6,7 +6,7 @@ import seedu.address.model.student.StudentFieldValidator;
 public final class GuardianFieldValidator {
     public static final String NAME_MESSAGE =
             "Guardian names must be 1-100 characters long and may contain only alphanumeric characters, "
-                    + "spaces, hyphens and apostrophes.";
+                    + "spaces, hyphens, apostrophes and slashes.";
     public static final String PHONE_MESSAGE = StudentFieldValidator.PHONE_MESSAGE;
     public static final String EMAIL_MESSAGE = StudentFieldValidator.EMAIL_MESSAGE;
     public static final String ADDRESS_MESSAGE = StudentFieldValidator.ADDRESS_MESSAGE;

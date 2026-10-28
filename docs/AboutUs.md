@@ -17,7 +17,7 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 
 [[github](https://github.com/pratixksha)]
 
-* Role: Testing
+* Role: Team Lead & Testing
 * Responsibilities: Ensures the testing of the project is done properly and on time.
 
 
@@ -27,7 +27,7 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 
 [[github](http://github.com/tchgf)]
 
-* Role: Team Lead & Deliverables and deadlines
+* Role: Deliverables and deadlines
 * Responsibilities: Ensures project deliverables are done on time and in the right format.
 
 

@@ -34,6 +34,14 @@ public class AddGuardianCommandParserTest {
     }
 
     @Test
+    public void parse_nameWithRelationshipMarker_success() {
+        Guardian expected = guardian("John s/o Raj", "92345678", "john@example.com", "25 Happy Road");
+        assertParseSuccess(parser,
+                "n/John s/o Raj p/92345678 e/john@example.com a/25 Happy Road",
+                new AddGuardianCommand(expected));
+    }
+
+    @Test
     public void parse_missingMandatoryPrefix_failure() {
         assertParseFailure(parser, "n/Ben Tan p/92345678 e/ben@example.com",
                 "Invalid command format.\n" + AddGuardianCommand.MESSAGE_USAGE);
@@ -70,6 +78,12 @@ public class AddGuardianCommandParserTest {
                 GuardianFieldValidator.PHONE_MESSAGE);
         assertParseFailure(parser,
                 "n/Ben Tan p/92345678 e/ben@example a/12 ABCD Ave 3",
+                GuardianFieldValidator.EMAIL_MESSAGE);
+        assertParseFailure(parser,
+                "n/Ben Tan p/92345678 e/.alice@example.com a/12 ABCD Ave 3",
+                GuardianFieldValidator.EMAIL_MESSAGE);
+        assertParseFailure(parser,
+                "n/Ben Tan p/92345678 e/alice.@example.com a/12 ABCD Ave 3",
                 GuardianFieldValidator.EMAIL_MESSAGE);
         assertParseFailure(parser,
                 "n/Ben Tan p/92345678 e/ben@example.com a/12 ABCD Ave @",

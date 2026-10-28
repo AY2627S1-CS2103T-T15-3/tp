@@ -39,6 +39,15 @@ public class EditGuardianCommandParserTest {
     }
 
     @Test
+    public void parse_nameWithRelationshipMarker_success() {
+        EditGuardianDescriptor descriptor = new EditGuardianDescriptor();
+        descriptor.setName(new Name("John s/o Raj"));
+
+        assertParseSuccess(parser, "1 n/John s/o Raj",
+                new EditGuardianCommand(Index.fromOneBased(1), descriptor));
+    }
+
+    @Test
     public void parse_missingField_failure() {
         assertParseFailure(parser, "2", EditGuardianCommand.MESSAGE_NOT_EDITED);
         assertParseFailure(parser, "", "Invalid command format.\n" + EditGuardianCommand.MESSAGE_USAGE);

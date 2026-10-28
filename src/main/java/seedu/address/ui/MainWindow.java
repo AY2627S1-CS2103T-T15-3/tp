@@ -36,7 +36,6 @@ public class MainWindow extends UiPart<Stage> {
     private Path dataFilePath;
 
     // Independent Ui parts residing in this Ui container
-    private PersonListPanel personListPanel;
     private StudentListPanel studentListPanel;
     private GuardianListPanel guardianListPanel;
     private LessonListPanel lessonListPanel;
@@ -126,7 +125,6 @@ public class MainWindow extends UiPart<Stage> {
      * Fills up all the placeholders of this window.
      */
     void fillInnerParts() {
-        personListPanel = new PersonListPanel(logic.getFilteredPersonList());
         studentListPanel = new StudentListPanel(logic.getFilteredStudentList(), logic::getGuardiansForStudent);
         guardianListPanel = new GuardianListPanel(logic.getFilteredGuardianList());
         lessonListPanel = new LessonListPanel(logic.getLessonList());
@@ -182,10 +180,6 @@ public class MainWindow extends UiPart<Stage> {
         logic.setGuiSettings(guiSettings);
         helpWindow.hide();
         primaryStage.hide();
-    }
-
-    public PersonListPanel getPersonListPanel() {
-        return personListPanel;
     }
 
     public StudentListPanel getStudentListPanel() {

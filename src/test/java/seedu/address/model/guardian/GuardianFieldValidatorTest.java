@@ -12,6 +12,7 @@ public class GuardianFieldValidatorTest {
     public void normalizeName_delegatesStudentRules() {
         assertEquals("Ben Tan", GuardianFieldValidator.normalizeName("  Ben   Tan "));
         assertTrue(GuardianFieldValidator.isValidName("Billie O'Connor"));
+        assertTrue(GuardianFieldValidator.isValidName("John s/o Raj"));
         assertFalse(GuardianFieldValidator.isValidName("Ben&Tan"));
     }
 

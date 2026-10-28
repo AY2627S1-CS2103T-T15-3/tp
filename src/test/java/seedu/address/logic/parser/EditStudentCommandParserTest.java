@@ -67,6 +67,15 @@ public class EditStudentCommandParserTest {
     }
 
     @Test
+    public void parse_nameWithRelationshipMarker_success() throws Exception {
+        EditStudentCommand command = parser.parse("1 n/John s/o Raj");
+
+        EditStudentDescriptor expected = new EditStudentDescriptor();
+        expected.setName(ParserUtil.parseStudentName("John s/o Raj"));
+        assertEquals(new EditStudentCommand(Index.fromOneBased(1), expected), command);
+    }
+
+    @Test
     public void parse_unknownPrefix_failure() {
         ParseException exception = assertThrows(ParseException.class, () -> parser.parse("1 x/Test"));
 

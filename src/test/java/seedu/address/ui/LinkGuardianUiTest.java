@@ -39,7 +39,6 @@ import seedu.address.model.link.StudentGuardianLink;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
-import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
 import seedu.address.model.student.Level;
 import seedu.address.model.student.Remark;
@@ -332,11 +331,6 @@ public class LinkGuardianUiTest {
         public CommandResult execute(String commandText) throws CommandException, ParseException {
             return commandText.equals("student")
                     ? new CommandResult("student", student) : new CommandResult("guardian", guardian);
-        }
-
-        @Override
-        public javafx.collections.ObservableList<Person> getFilteredPersonList() {
-            return FXCollections.observableArrayList();
         }
 
         @Override
