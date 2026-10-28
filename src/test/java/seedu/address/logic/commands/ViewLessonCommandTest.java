@@ -72,6 +72,17 @@ public class ViewLessonCommandTest {
         assertEquals(Messages.MESSAGE_INVALID_STUDENT_DISPLAYED_INDEX, exception.getMessage());
     }
 
+    @Test
+    public void execute_filterThenRemove_usesDisplayedLessonIndex() throws Exception {
+        ModelManager model = populatedModel();
+
+        new ViewLessonCommand(Index.fromOneBased(1)).execute(model);
+        new RemoveLessonCommand(Index.fromOneBased(1)).execute(model);
+
+        assertEquals(java.util.List.of(ALICE_LESSON, HENRY_OTHER_LESSON), model.getLessonList());
+        assertEquals(java.util.List.of(HENRY_OTHER_LESSON), model.getFilteredLessonList());
+    }
+
     private static ModelManager populatedModel() {
         ModelManager model = new ModelManager();
         model.addStudent(HENRY);

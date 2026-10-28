@@ -9,6 +9,9 @@ import static seedu.address.testutil.Assert.assertThrows;
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 import java.nio.file.Path;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,6 +26,7 @@ import seedu.address.model.ModelManager;
 import seedu.address.model.ReadOnlyAddressBook;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.guardian.Guardian;
+import seedu.address.model.lesson.Lesson;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
@@ -111,6 +115,38 @@ public class LogicManagerTest {
     @Test
     public void getFilteredGuardianList_returnsModelGuardianList() {
         assertEquals(model.getFilteredGuardianList(), logic.getFilteredGuardianList());
+    }
+
+    @Test
+    public void getFilteredLessonList_returnsModelLessonList() {
+        assertEquals(model.getFilteredLessonList(), logic.getFilteredLessonList());
+    }
+
+    @Test
+    public void execute_viewLessonCommand_updatesDisplayedLessons() throws Exception {
+        Student henry = new Student(new Name("Henry Tan"), new Phone("91234567"),
+                new Email("henry@example.com"), new Address("12 Main Street"), new Level("JC 1"),
+                java.util.Set.of(new Subject("Mathematics")));
+        Student ivy = new Student(new Name("Ivy Lim"), new Phone("92345678"),
+                new Email("ivy@example.com"), new Address("34 Main Street"), new Level("JC 1"),
+                java.util.Set.of(new Subject("Mathematics")));
+        model.addStudent(henry);
+        model.addStudent(ivy);
+        Lesson henryLesson = new Lesson(henry, LocalDate.of(2026, 11, 1), LocalTime.NOON,
+                Duration.ofMinutes(60));
+        Lesson ivyLesson = new Lesson(ivy, LocalDate.of(2026, 11, 8), LocalTime.NOON,
+                Duration.ofMinutes(60));
+        model.addLesson(henryLesson);
+        model.addLesson(ivyLesson);
+
+        logic.execute("view-l d/2026-11-01");
+        assertEquals(java.util.List.of(henryLesson), logic.getFilteredLessonList());
+
+        logic.execute("view-l s/2");
+        assertEquals(java.util.List.of(ivyLesson), logic.getFilteredLessonList());
+
+        logic.execute("view-l");
+        assertEquals(java.util.List.of(henryLesson, ivyLesson), logic.getFilteredLessonList());
     }
 
     @Test
