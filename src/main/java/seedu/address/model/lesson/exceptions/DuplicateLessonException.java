@@ -5,4 +5,8 @@ public class DuplicateLessonException extends RuntimeException {
     public DuplicateLessonException() {
         super("Operation would result in duplicate lessons");
     }
+
+    public DuplicateLessonException(String message) {
+        super(message);
+    }
 }

@@ -124,6 +124,26 @@ Examples:
 * `add-g n/Ben Tan p/92345678 e/ben.tan@gmail.com a/12 ABCD Ave 3`
 * `add-g n/Billie O'Connor p/+6598765432 e/billie@example.com a/25 Happy Road`
 
+### Scheduling lessons: `add-l`
+
+Adds a weekly series of lessons for the student at the specified displayed
+index. Each lesson has the same start time and duration, and the dates are one
+week apart.
+
+Format: `add-l INDEX d/YYYY-MM-DD t/HH:MM len/LENGTH(MINUTES) w/WEEKS`
+
+The `d/`, `t/`, `len/`, and `w/` prefixes are required and may each be specified
+only once. The `len/` prefix can be shortened to `l/`. `len/LENGTH(MINUTES)` (or
+`l/LENGTH(MINUTES)`) and `w/WEEKS` must be positive integers. Dates and times
+must be valid, and a lesson cannot overlap an existing lesson.
+
+Example:
+
+`add-l 1 d/2026-11-01 t/14:00 len/60 w/4`
+
+This schedules four one-hour lessons for the first displayed student, starting
+at 2:00 PM on 1 November 2026. If a conflict is found, no lessons from the
+series are added and the conflicting lesson is shown in the error message.
 
 ### Listing all students: `list-s`
 
@@ -386,6 +406,7 @@ Action     | Format, Examples
 -----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 **Add student** | `add-s n/NAME p/PHONE e/EMAIL a/ADDRESS l/LEVEL s/SUBJECT [s/SUBJECT]...` <br> e.g., `add-s n/Henry Tan p/91234567 e/henry@example.com a/12 ABCD Ave 3 l/Secondary 3 s/Mathematics s/Physics`
 **Add guardian** | `add-g n/NAME p/PHONE e/EMAIL a/ADDRESS` <br> e.g., `add-g n/Ben Tan p/92345678 e/ben.tan@gmail.com a/12 ABCD Ave 3`
+**Schedule lessons** | `add-l INDEX d/YYYY-MM-DD t/HH:MM len/LENGTH(MINUTES) w/WEEKS` <br> e.g., `add-l 1 d/2026-11-01 t/14:00 len/60 w/4`
 **Set student remark** | `set-remark-s INDEX REMARK`<br> e.g., `set-remark-s 1 Practise fractions before the next lesson`
 **Clear student remark** | `clear-remark-s INDEX`<br> e.g., `clear-remark-s 1`
 **Clear**  | `clear`

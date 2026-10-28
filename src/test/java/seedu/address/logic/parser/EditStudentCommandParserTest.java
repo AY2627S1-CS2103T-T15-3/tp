@@ -76,6 +76,15 @@ public class EditStudentCommandParserTest {
     }
 
     @Test
+    public void parse_addressContainingSlash_success() throws Exception {
+        EditStudentCommand command = parser.parse("1 a/Block A/B");
+
+        EditStudentDescriptor expected = new EditStudentDescriptor();
+        expected.setAddress(ParserUtil.parseStudentAddress("Block A/B"));
+        assertEquals(new EditStudentCommand(Index.fromOneBased(1), expected), command);
+    }
+
+    @Test
     public void parse_unknownPrefix_failure() {
         ParseException exception = assertThrows(ParseException.class, () -> parser.parse("1 x/Test"));
 

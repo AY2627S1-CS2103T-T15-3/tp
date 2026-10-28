@@ -42,6 +42,14 @@ public class AddGuardianCommandParserTest {
     }
 
     @Test
+    public void parse_addressContainingSlash_success() {
+        Guardian expected = guardian("Ben Tan", "92345678", "ben@example.com", "Block A/B");
+        assertParseSuccess(parser,
+                "n/Ben Tan p/92345678 e/ben@example.com a/Block A/B",
+                new AddGuardianCommand(expected));
+    }
+
+    @Test
     public void parse_missingMandatoryPrefix_failure() {
         assertParseFailure(parser, "n/Ben Tan p/92345678 e/ben@example.com",
                 "Invalid command format.\n" + AddGuardianCommand.MESSAGE_USAGE);
