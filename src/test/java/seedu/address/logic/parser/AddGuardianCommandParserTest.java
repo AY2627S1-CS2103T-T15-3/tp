@@ -80,6 +80,12 @@ public class AddGuardianCommandParserTest {
                 "n/Ben Tan p/92345678 e/ben@example a/12 ABCD Ave 3",
                 GuardianFieldValidator.EMAIL_MESSAGE);
         assertParseFailure(parser,
+                "n/Ben Tan p/92345678 e/.alice@example.com a/12 ABCD Ave 3",
+                GuardianFieldValidator.EMAIL_MESSAGE);
+        assertParseFailure(parser,
+                "n/Ben Tan p/92345678 e/alice.@example.com a/12 ABCD Ave 3",
+                GuardianFieldValidator.EMAIL_MESSAGE);
+        assertParseFailure(parser,
                 "n/Ben Tan p/92345678 e/ben@example.com a/12 ABCD Ave @",
                 GuardianFieldValidator.ADDRESS_MESSAGE);
     }

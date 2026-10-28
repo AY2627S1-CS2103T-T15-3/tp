@@ -21,7 +21,8 @@ public final class StudentFieldValidator {
 
     private static final Pattern NAME_PATTERN = Pattern.compile("[\\p{Alnum} '/-]+");
     private static final Pattern PHONE_PATTERN = Pattern.compile("\\+?\\d{3,15}");
-    private static final Pattern EMAIL_LOCAL_PATTERN = Pattern.compile("[A-Za-z0-9+_.-]+");
+    private static final Pattern EMAIL_LOCAL_PATTERN =
+            Pattern.compile("[A-Za-z0-9+_-]+(?:\\.[A-Za-z0-9+_-]+)*");
     private static final Pattern EMAIL_DOMAIN_PART_PATTERN =
             Pattern.compile("[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?");
     private static final Pattern ADDRESS_PATTERN = Pattern.compile("[\\p{Alnum} ,.#/()'-]+");
