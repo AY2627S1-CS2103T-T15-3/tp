@@ -16,6 +16,8 @@ public class LinkGuardianCommand extends Command {
     public static final String COMMAND_WORD = "link-g";
     public static final String MESSAGE_USAGE = "Usage: link-g STUDENT_INDEX g/GUARDIAN_INDEX";
     public static final String MESSAGE_SUCCESS = "Linked %1$s (student) to %2$s (guardian).";
+    public static final String MESSAGE_ALREADY_LINKED =
+            "Student %1$s is already linked to guardian %2$s.";
     public static final String MESSAGE_INVALID_STUDENT_INDEX = "The student index provided is invalid.";
     public static final String MESSAGE_INVALID_GUARDIAN_INDEX = "The guardian index provided is invalid.";
 
@@ -42,9 +44,11 @@ public class LinkGuardianCommand extends Command {
         Student student = students.get(studentIndex.getZeroBased());
         Guardian guardian = guardians.get(guardianIndex.getZeroBased());
         StudentGuardianLink link = new StudentGuardianLink(student, guardian);
-        if (!model.hasStudentGuardianLink(link)) {
-            model.addStudentGuardianLink(link);
+        if (model.hasStudentGuardianLink(link)) {
+            throw new CommandException(String.format(MESSAGE_ALREADY_LINKED,
+                    student.getName(), guardian.getName()));
         }
+        model.addStudentGuardianLink(link);
         return new CommandResult(String.format(MESSAGE_SUCCESS, student.getName(), guardian.getName()), student);
     }
 
