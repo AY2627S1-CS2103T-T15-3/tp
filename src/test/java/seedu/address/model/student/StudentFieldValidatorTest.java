@@ -26,6 +26,9 @@ public class StudentFieldValidatorTest {
         assertTrue(StudentFieldValidator.isValidEmail("mary.jane+school@example.com"));
         assertFalse(StudentFieldValidator.isValidEmail("@example.com"));
         assertFalse(StudentFieldValidator.isValidEmail("mary@@example.com"));
+        assertFalse(StudentFieldValidator.isValidEmail(".alice@example.com"));
+        assertFalse(StudentFieldValidator.isValidEmail("alice.@example.com"));
+        assertFalse(StudentFieldValidator.isValidEmail("alice..test@example.com"));
         assertFalse(StudentFieldValidator.isValidEmail("mary?@example.com"));
         assertFalse(StudentFieldValidator.isValidEmail("mary@example..com"));
         assertFalse(StudentFieldValidator.isValidEmail("mary@-example.com"));
