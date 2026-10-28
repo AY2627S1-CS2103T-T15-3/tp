@@ -2,6 +2,7 @@ package seedu.address.ui;
 
 import java.time.LocalDate;
 import java.util.Comparator;
+import java.util.function.Consumer;
 
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -21,12 +22,22 @@ public class LessonListPanel extends UiPart<Region> {
     @FXML
     private ListView<Lesson> lessonListView;
     private final FilteredList<Lesson> filteredLessons;
+    private final Consumer<LocalDate> displayedDateUpdater;
     private LocalDate displayedDate;
 
     /** Creates a panel displaying lessons filtered to the current day. */
     public LessonListPanel(ObservableList<Lesson> lessonList) {
+        this(lessonList, null);
+    }
+
+    /** Creates a panel that also updates the model's displayed lesson predicate. */
+    public LessonListPanel(ObservableList<Lesson> lessonList, Consumer<LocalDate> displayedDateUpdater) {
         super(FXML);
+        this.displayedDateUpdater = displayedDateUpdater;
         displayedDate = LocalDate.now();
+        if (displayedDateUpdater != null) {
+            displayedDateUpdater.accept(displayedDate);
+        }
         filteredLessons = new FilteredList<>(lessonList,
                 lesson -> lesson.getDate().equals(displayedDate));
         SortedList<Lesson> sortedLessons = new SortedList<>(filteredLessons,
@@ -52,6 +63,9 @@ public class LessonListPanel extends UiPart<Region> {
     /** Changes the date whose lessons are displayed. */
     public void setDisplayedDate(LocalDate date) {
         displayedDate = date;
+        if (displayedDateUpdater != null) {
+            displayedDateUpdater.accept(date);
+        }
         filteredLessons.setPredicate(lesson -> lesson.getDate().equals(displayedDate));
         updatePlaceholder();
     }

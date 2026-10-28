@@ -127,7 +127,8 @@ public class MainWindow extends UiPart<Stage> {
     void fillInnerParts() {
         studentListPanel = new StudentListPanel(logic.getFilteredStudentList(), logic::getGuardiansForStudent);
         guardianListPanel = new GuardianListPanel(logic.getFilteredGuardianList());
-        lessonListPanel = new LessonListPanel(logic.getLessonList());
+        lessonListPanel = new LessonListPanel(logic.getFilteredLessonList(),
+                date -> logic.updateFilteredLessonList(lesson -> lesson.getDate().equals(date)));
         personListPanelPlaceholder.getChildren().add(studentListPanel.getRoot());
         guardianListPanelPlaceholder.getChildren().add(guardianListPanel.getRoot());
         lessonListPanelPlaceholder.getChildren().add(lessonListPanel.getRoot());

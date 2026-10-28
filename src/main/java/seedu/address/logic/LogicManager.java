@@ -79,6 +79,16 @@ public class LogicManager implements Logic {
     }
 
     @Override
+    public ObservableList<Lesson> getFilteredLessonList() {
+        return model.getFilteredLessonList();
+    }
+
+    @Override
+    public void updateFilteredLessonList(java.util.function.Predicate<Lesson> predicate) {
+        model.updateFilteredLessonList(predicate);
+    }
+
+    @Override
     public List<Guardian> getGuardiansForStudent(Student student) {
         return model.getGuardiansForStudent(student);
     }

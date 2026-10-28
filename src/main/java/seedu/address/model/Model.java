@@ -89,6 +89,9 @@ public interface Model {
     /** Returns the displayed lesson list, sorted by date and start time. */
     ObservableList<Lesson> getFilteredLessonList();
 
+    /** Updates the predicate used by the displayed lesson list. */
+    void updateFilteredLessonList(Predicate<Lesson> predicate);
+
     /**
      * Sorts the displayed student list by student name in ascending order.
      * The underlying student list and its storage order are not changed.
