@@ -5,6 +5,7 @@ import static java.util.Objects.requireNonNull;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -19,6 +20,8 @@ import seedu.address.model.student.Student;
 
 /** Adds a weekly series of lessons for a displayed student. */
 public class AddLessonCommand extends Command {
+    public static final DateTimeFormatter LESSON_DATE_TIME_FORMATTER =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
     public static final String COMMAND_WORD = "add-l";
     public static final int MAX_WEEKS = 52;
     public static final String MESSAGE_USAGE = "Usage: " + COMMAND_WORD
@@ -133,7 +136,8 @@ public class AddLessonCommand extends Command {
 
     private String formatLesson(Lesson lesson) {
         return lesson.getStudent().getName() + "'s lesson on " + lesson.getDate()
-                + " from " + lesson.getStartDateTime() + " to " + lesson.getEndDateTime();
+                + " from " + lesson.getStartDateTime().format(LESSON_DATE_TIME_FORMATTER)
+                + " to " + lesson.getEndDateTime().format(LESSON_DATE_TIME_FORMATTER);
     }
 
     @Override

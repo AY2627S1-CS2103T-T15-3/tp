@@ -41,7 +41,12 @@ public class RemoveLessonCommandTest {
 
         CommandResult result = new RemoveLessonCommand(Index.fromOneBased(1)).execute(model);
 
-        assertEquals(String.format(RemoveLessonCommand.MESSAGE_REMOVE_LESSON_SUCCESS, earlier),
+        String expectedMessage = String.format(RemoveLessonCommand.MESSAGE_REMOVE_LESSON_SUCCESS,
+                "Lucy Lim; Start: " + earlier.getStartDateTime().format(
+                        java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) + "; End: "
+                        + earlier.getEndDateTime().format(
+                                java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+        assertEquals(expectedMessage,
                 result.getFeedbackToUser());
         assertEquals(2, model.getLessonList().size());
         assertEquals(later, model.getLessonList().get(0));

@@ -1,5 +1,6 @@
 package seedu.address.logic.parser;
 
+import seedu.address.logic.Messages;
 import seedu.address.logic.commands.RemoveLessonCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 
@@ -12,7 +13,7 @@ public class RemoveLessonCommandParser implements Parser<RemoveLessonCommand> {
         } catch (ParseException exception) {
             try {
                 if (Integer.parseInt(args.trim()) <= 0) {
-                    throw new ParseException(RemoveLessonCommand.MESSAGE_INVALID_INDEX, exception);
+                    throw new ParseException(Messages.MESSAGE_INVALID_LESSON_DISPLAYED_INDEX, exception);
                 }
             } catch (NumberFormatException ignored) {
                 // Non-numeric arguments use the command-format error below.

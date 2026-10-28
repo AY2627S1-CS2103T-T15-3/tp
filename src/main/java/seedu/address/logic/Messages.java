@@ -1,17 +1,21 @@
 package seedu.address.logic;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import seedu.address.logic.parser.Prefix;
 import seedu.address.model.guardian.Guardian;
+import seedu.address.model.lesson.Lesson;
 import seedu.address.model.student.Student;
 
 /**
  * Container for user visible messages.
  */
 public class Messages {
+    public static final DateTimeFormatter LESSON_DATE_TIME_FORMATTER =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     public static final String MESSAGE_UNKNOWN_COMMAND = "Unknown command.";
     public static final String MESSAGE_INVALID_COMMAND_FORMAT = "Invalid command format!\n%1$s";
@@ -60,6 +64,13 @@ public class Messages {
     public static String format(Guardian guardian) {
         return guardian.getName() + "; Phone: " + guardian.getPhone()
                 + "; Email: " + guardian.getEmail() + "; Address: " + guardian.getAddress();
+    }
+
+    /** Formats a lesson for display to the user. */
+    public static String format(Lesson lesson) {
+        return lesson.getStudent().getName() + "; Start: "
+                + lesson.getStartDateTime().format(LESSON_DATE_TIME_FORMATTER) + "; End: "
+                + lesson.getEndDateTime().format(LESSON_DATE_TIME_FORMATTER);
     }
 
 }

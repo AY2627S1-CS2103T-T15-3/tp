@@ -18,8 +18,8 @@ public class RemoveLessonCommandParserTest {
 
     @Test
     public void parse_nonPositiveIndex_returnsInvalidIndexMessage() {
-        assertParseFailure(parser, "0", RemoveLessonCommand.MESSAGE_INVALID_INDEX);
-        assertParseFailure(parser, "-1", RemoveLessonCommand.MESSAGE_INVALID_INDEX);
+        assertParseFailure(parser, "0", seedu.address.logic.Messages.MESSAGE_INVALID_LESSON_DISPLAYED_INDEX);
+        assertParseFailure(parser, "-1", seedu.address.logic.Messages.MESSAGE_INVALID_LESSON_DISPLAYED_INDEX);
     }
 
     @Test
