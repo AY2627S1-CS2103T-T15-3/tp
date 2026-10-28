@@ -102,7 +102,7 @@ Format: `add-s n/NAME p/PHONE e/EMAIL a/ADDRESS l/LEVEL s/SUBJECT [s/SUBJECT]...
 * Additional `s/SUBJECT` parameters may be provided.
 * The parameters can be entered in any order.
 * A student with the same normalized name and phone number cannot be added again.
-* Names may contain alphanumeric characters, spaces, hyphens, apostrophes and slashes, such as `John s/o Raj`.
+* Names may contain alphanumeric characters, spaces, hyphens, apostrophes, periods and slashes, such as `John s/o Raj`.
 
 Examples:
 * `add-s n/Henry Tan p/91234567 e/henry@example.com a/12 ABCD Ave 3 l/Secondary 3 s/Mathematics s/Physics`
@@ -118,7 +118,7 @@ Format: `add-g n/NAME p/PHONE e/EMAIL a/ADDRESS`
 * The parameters can be entered in any order.
 * Adding a guardian does not link them to a student; use `link-g` separately.
 * A guardian with the same normalized name and phone number cannot be added again.
-* Names may contain alphanumeric characters, spaces, hyphens, apostrophes and slashes, such as `John s/o Raj`.
+* Names may contain alphanumeric characters, spaces, hyphens, apostrophes, periods and slashes, such as `John s/o Raj`.
 
 Examples:
 * `add-g n/Ben Tan p/92345678 e/ben.tan@gmail.com a/12 ABCD Ave 3`

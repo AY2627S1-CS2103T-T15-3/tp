@@ -36,7 +36,7 @@ public class AddStudentCommandParserTest {
         Student expected = student("Mary-Jane O'Connor", "+6591234567", "mary@example.com",
                 "12 ABCD Ave 3, #04-15", "JC 1", "A-Level (H2)");
         assertParseSuccess(parser,
-                "n/  Mary-Jane  O'Connor  p/+6591234567 e/mary@example.com a/12 ABCD Ave 3, #04-15 "
+                "n/  Mary-Jane  O'Connor  p/+65 9123 4567 e/mary@example.com a/12 ABCD Ave 3, #04-15 "
                         + "l/JC 1 s/A-Level (H2)", new AddStudentCommand(expected));
     }
 
@@ -91,7 +91,7 @@ public class AddStudentCommandParserTest {
                 "n/Henry&Tan p/91234567 e/henry@example.com a/12 ABCD Ave 3 l/Secondary 3 s/Mathematics",
                 StudentFieldValidator.NAME_MESSAGE);
         assertParseFailure(parser,
-                "n/Henry Tan p/12 345 e/henry@example.com a/12 ABCD Ave 3 l/Secondary 3 s/Mathematics",
+                "n/Henry Tan p/12-345 e/henry@example.com a/12 ABCD Ave 3 l/Secondary 3 s/Mathematics",
                 StudentFieldValidator.PHONE_MESSAGE);
         assertParseFailure(parser,
                 "n/Henry Tan p/91234567 e/henry@example a/12 ABCD Ave 3 l/Secondary 3 s/Mathematics",

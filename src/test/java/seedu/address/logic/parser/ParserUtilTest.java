@@ -276,10 +276,17 @@ public class ParserUtilTest {
         assertThrows(ParseException.class, GuardianFieldValidator.NAME_MESSAGE, () ->
                 ParserUtil.parseGuardianName("Ben&Tan"));
         assertThrows(ParseException.class, GuardianFieldValidator.PHONE_MESSAGE, () ->
-                ParserUtil.parseGuardianPhone("12 345"));
+                ParserUtil.parseGuardianPhone("12-345"));
         assertThrows(ParseException.class, GuardianFieldValidator.EMAIL_MESSAGE, () ->
                 ParserUtil.parseGuardianEmail("ben@example"));
         assertThrows(ParseException.class, GuardianFieldValidator.ADDRESS_MESSAGE, () ->
                 ParserUtil.parseGuardianAddress("25 Happy Road @"));
     }
+    @Test
+    public void parsePhoneWithSpaces_returnsCanonicalStudentAndGuardianPhones() throws Exception {
+        Phone expected = Phone.fromStudentValue("+6591234567");
+        assertEquals(expected, ParserUtil.parseStudentPhone(" +65 9123 4567 "));
+        assertEquals(expected, ParserUtil.parseGuardianPhone(" +65 9123 4567 "));
+    }
+
 }

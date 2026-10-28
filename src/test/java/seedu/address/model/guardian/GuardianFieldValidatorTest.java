@@ -14,6 +14,9 @@ public class GuardianFieldValidatorTest {
         assertTrue(GuardianFieldValidator.isValidName("Billie O'Connor"));
         assertTrue(GuardianFieldValidator.isValidName("John s/o Raj"));
         assertFalse(GuardianFieldValidator.isValidName("Ben&Tan"));
+        assertTrue(GuardianFieldValidator.isValidName("..."));
+        assertTrue(GuardianFieldValidator.isValidName("- . / '"));
+        assertTrue(GuardianFieldValidator.isValidName("Mrs. Lim"));
     }
 
     @Test
@@ -24,7 +27,7 @@ public class GuardianFieldValidatorTest {
         assertTrue(GuardianFieldValidator.isValidPhone("92345678"));
         assertTrue(GuardianFieldValidator.isValidEmail("ben@example.com"));
         assertTrue(GuardianFieldValidator.isValidAddress("25 Happy Road"));
-        assertFalse(GuardianFieldValidator.isValidPhone("12 345"));
+        assertFalse(GuardianFieldValidator.isValidPhone("12-345"));
         assertFalse(GuardianFieldValidator.isValidEmail("ben@example"));
         assertFalse(GuardianFieldValidator.isValidAddress("25 Happy Road @"));
     }

@@ -102,7 +102,7 @@ public class JsonAdaptedStudentTest {
                 adapted("Henry&Tan", "91234567", "henry@example.com", "12 ABCD Ave 3", "JC 1",
                         List.of("Math")).toModelType());
         assertThrows(IllegalValueException.class, StudentFieldValidator.PHONE_MESSAGE, () ->
-                adapted("Henry Tan", "12 345", "henry@example.com", "12 ABCD Ave 3", "JC 1",
+                adapted("Henry Tan", "12-345", "henry@example.com", "12 ABCD Ave 3", "JC 1",
                         List.of("Math")).toModelType());
         assertThrows(IllegalValueException.class, StudentFieldValidator.EMAIL_MESSAGE, () ->
                 adapted("Henry Tan", "91234567", "henry@example", "12 ABCD Ave 3", "JC 1",

@@ -41,7 +41,7 @@ public class JsonAdaptedGuardianTest {
         assertThrows(IllegalValueException.class, GuardianFieldValidator.NAME_MESSAGE, () ->
                 adapted("Ben&Tan", "92345678", "ben@example.com", "12 ABCD Ave 3").toModelType());
         assertThrows(IllegalValueException.class, GuardianFieldValidator.PHONE_MESSAGE, () ->
-                adapted("Ben Tan", "12 345", "ben@example.com", "12 ABCD Ave 3").toModelType());
+                adapted("Ben Tan", "12-345", "ben@example.com", "12 ABCD Ave 3").toModelType());
         assertThrows(IllegalValueException.class, GuardianFieldValidator.EMAIL_MESSAGE, () ->
                 adapted("Ben Tan", "92345678", "ben@example", "12 ABCD Ave 3").toModelType());
         assertThrows(IllegalValueException.class, GuardianFieldValidator.ADDRESS_MESSAGE, () ->
