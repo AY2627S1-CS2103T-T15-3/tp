@@ -17,7 +17,7 @@ import seedu.address.model.lesson.Lesson;
 public class RemoveLessonCommand extends Command {
     public static final String COMMAND_WORD = "remove-l";
     public static final String MESSAGE_USAGE = "Usage: " + COMMAND_WORD + " INDEX";
-    public static final String MESSAGE_INVALID_INDEX = "The student index provided is invalid.";
+    public static final String MESSAGE_INVALID_INDEX = "The lesson index provided is invalid.";
     public static final String MESSAGE_REMOVE_LESSON_SUCCESS = "Removed lesson: %1$s";
 
     private final Index targetIndex;
