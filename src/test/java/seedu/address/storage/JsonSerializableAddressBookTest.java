@@ -126,7 +126,7 @@ public class JsonSerializableAddressBookTest {
         JsonAdaptedLesson duplicate = new JsonAdaptedLesson(
                 "Lucy Lim", "91234567", "2026-10-25", "14:00", 60);
         JsonSerializableAddressBook data = new JsonSerializableAddressBook(
-                List.of(), List.of(student), List.of(), List.of(), List.of(first, duplicate));
+                List.of(student), List.of(), List.of(), List.of(first, duplicate));
 
         assertThrows(IllegalValueException.class, JsonSerializableAddressBook.MESSAGE_DUPLICATE_LESSON,
                 data::toModelType);
