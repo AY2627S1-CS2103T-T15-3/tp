@@ -1,10 +1,11 @@
 package seedu.address.ui;
 
-import java.time.Duration;
+import java.util.List;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Region;
+import javafx.scene.text.TextFlow;
 import seedu.address.model.lesson.Lesson;
 
 /** UI component that displays a lesson. */
@@ -12,21 +13,20 @@ public class LessonCard extends UiPart<Region> {
     private static final String FXML = "LessonListCard.fxml";
 
     @FXML
-    private Label student;
+    private TextFlow name;
+    @FXML
+    private Label id;
     @FXML
     private Label date;
     @FXML
     private Label time;
-    @FXML
-    private Label duration;
 
     /** Creates a card displaying the given lesson and its displayed index. */
     public LessonCard(Lesson lesson, int displayedIndex) {
         super(FXML);
-        student.setText(displayedIndex + ". " + lesson.getStudent().getName());
+        id.setText(displayedIndex + ". ");
+        name.getChildren().setAll(HighlightText.create(lesson.getStudent().getName().fullName, List.of()).getChildren());
         date.setText("Date: " + lesson.getDate());
         time.setText("Time: " + lesson.getStartTime() + " - " + lesson.getEndDateTime().toLocalTime());
-        Duration lessonDuration = lesson.getDuration();
-        duration.setText("Length: " + lessonDuration.toMinutes() + " minutes");
     }
 }
