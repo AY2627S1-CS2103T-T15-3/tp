@@ -41,6 +41,15 @@ public class AddStudentCommandParserTest {
     }
 
     @Test
+    public void parse_nameWithRelationshipMarker_success() {
+        Student expected = student("John s/o Raj", "91234567", "john@example.com", "12 ABCD Ave 3", "JC 1",
+                "Mathematics");
+        assertParseSuccess(parser,
+                "n/John s/o Raj p/91234567 e/john@example.com a/12 ABCD Ave 3 l/JC 1 s/Mathematics",
+                new AddStudentCommand(expected));
+    }
+
+    @Test
     public void parse_duplicateSubjects_deduplicates() {
         Student expected = student("Henry Tan", "91234567", "henry@example.com", "12 ABCD Ave 3", "Secondary 3",
                 "Mathematics");

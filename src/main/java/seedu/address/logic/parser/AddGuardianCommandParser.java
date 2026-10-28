@@ -19,7 +19,9 @@ import seedu.address.model.person.Phone;
 /** Parses the {@code add-g} command. */
 public class AddGuardianCommandParser implements Parser<AddGuardianCommand> {
     private static final String MESSAGE_INVALID_FORMAT = "Invalid command format.\n";
-    private static final Pattern PREFIX_PATTERN = Pattern.compile("(?<!\\S)([A-Za-z][A-Za-z0-9-]*)/");
+    /* Treat the relationship marker "s/o" as name content, not as an unknown prefix. */
+    private static final Pattern PREFIX_PATTERN =
+            Pattern.compile("(?<!\\S)(?!s/o(?:\\s|$))([A-Za-z][A-Za-z0-9-]*)/");
     private static final Set<String> SUPPORTED_PREFIXES = Set.of("n/", "p/", "e/", "a/");
 
     @Override
