@@ -59,6 +59,15 @@ public class AddStudentCommandParserTest {
     }
 
     @Test
+    public void parse_addressContainingSlash_success() {
+        Student expected = student("Henry Tan", "91234567", "henry@example.com", "Block A/B", "Secondary 3",
+                "Mathematics");
+        assertParseSuccess(parser,
+                "n/Henry Tan p/91234567 e/henry@example.com a/Block A/B l/Secondary 3 s/Mathematics",
+                new AddStudentCommand(expected));
+    }
+
+    @Test
     public void parse_missingMandatoryPrefix_failure() {
         String args = "n/Henry Tan p/91234567 e/henry@example.com a/12 ABCD Ave 3 l/Secondary 3";
         assertParseFailure(parser, args, "Invalid command format.\n" + AddStudentCommand.MESSAGE_USAGE);
