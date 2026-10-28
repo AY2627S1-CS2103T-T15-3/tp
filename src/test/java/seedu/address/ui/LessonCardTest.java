@@ -12,6 +12,8 @@ import org.junit.jupiter.api.Test;
 
 import javafx.application.Platform;
 import javafx.scene.control.Label;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import seedu.address.model.lesson.Lesson;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
@@ -40,9 +42,10 @@ public class LessonCardTest {
                 Duration.ofMinutes(90));
         LessonCard card = new LessonCard(lesson, 2);
 
-        assertEquals("2. Lucy Lim", ((Label) card.getRoot().lookup("#student")).getText());
+        assertEquals("2. ", ((Label) card.getRoot().lookup("#id")).getText());
+        assertEquals("Lucy Lim", ((Text) ((TextFlow) card.getRoot().lookup("#name")).getChildren().get(0)).getText());
         assertEquals("Date: 2026-10-27", ((Label) card.getRoot().lookup("#date")).getText());
-        assertEquals("Time: 14:00 - 15:30", ((Label) card.getRoot().lookup("#time")).getText());
-        assertEquals("Length: 90 minutes", ((Label) card.getRoot().lookup("#duration")).getText());
+        assertEquals("Time: 2026-10-27 14:00 - 2026-10-27 15:30",
+                ((Label) card.getRoot().lookup("#time")).getText());
     }
 }
