@@ -27,6 +27,10 @@ public class LessonListPanel extends UiPart<Region> {
     }
 
     class LessonListViewCell extends ListCell<Lesson> {
+        LessonListViewCell() {
+            getStyleClass().add("lesson-list-cell");
+        }
+
         @Override
         protected void updateItem(Lesson lesson, boolean empty) {
             super.updateItem(lesson, empty);
