@@ -1,6 +1,7 @@
 package seedu.address.logic.commands;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -13,7 +14,6 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.commons.core.index.Index;
-import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.ModelManager;
 import seedu.address.model.lesson.Lesson;
 import seedu.address.model.person.Address;
@@ -30,7 +30,7 @@ public class RemoveLessonCommandTest {
             Set.of(new Subject("Mathematics")));
 
     @Test
-    public void execute_removesTodayLessonInDisplayedOrder() throws Exception {
+    public void execute_removesLessonInDateAndTimeOrder() throws Exception {
         ModelManager model = new ModelManager();
         Lesson later = lesson(LocalTime.of(16, 0));
         Lesson earlier = lesson(LocalTime.of(10, 0));
@@ -48,15 +48,28 @@ public class RemoveLessonCommandTest {
     }
 
     @Test
-    public void execute_noLessonsToday_throwsCommandException() {
+    public void execute_removesFutureLesson() throws Exception {
         ModelManager model = new ModelManager();
-        model.addLesson(new Lesson(STUDENT, LocalDate.now().plusDays(1), LocalTime.NOON,
-                Duration.ofMinutes(60)));
+        Lesson futureLesson = new Lesson(STUDENT, LocalDate.now().plusDays(1), LocalTime.NOON,
+                Duration.ofMinutes(60));
+        model.addLesson(futureLesson);
 
-        CommandException exception = assertThrows(CommandException.class, () ->
-                new RemoveLessonCommand(Index.fromOneBased(1)).execute(model));
+        new RemoveLessonCommand(Index.fromOneBased(1)).execute(model);
 
-        assertEquals(RemoveLessonCommand.MESSAGE_INVALID_INDEX, exception.getMessage());
+        assertTrue(model.getLessonList().isEmpty());
+    }
+
+    @Test
+    public void execute_removesLessonAcrossMidnight() throws Exception {
+        ModelManager model = new ModelManager();
+        Lesson overnightLesson = new Lesson(STUDENT, LocalDate.now(), LocalTime.of(23, 30),
+                Duration.ofMinutes(120));
+        model.addLesson(overnightLesson);
+
+        new RemoveLessonCommand(Index.fromOneBased(1)).execute(model);
+
+        assertFalse(model.getLessonList().contains(overnightLesson));
+        assertTrue(model.getLessonList().isEmpty());
     }
 
     @Test
