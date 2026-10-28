@@ -59,41 +59,71 @@ public class AddLessonCommand extends Command {
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
+        Student student = getTargetStudent(model);
+        List<Lesson> lessonsToAdd = createLessons(student);
+        try {
+            validateNoOverlaps(model, lessonsToAdd);
+            addLessons(model, lessonsToAdd);
+        } catch (DuplicateLessonException exception) {
+            throw new CommandException(exception.getMessage(), exception);
+        }
+        return createSuccessResult(student);
+    }
+
+    private Student getTargetStudent(Model model) throws CommandException {
         List<Student> students = model.getFilteredStudentList();
         if (targetIndex.getZeroBased() >= students.size()) {
             throw new CommandException(Messages.MESSAGE_INVALID_STUDENT_DISPLAYED_INDEX);
         }
-        Student student = students.get(targetIndex.getZeroBased());
+        return students.get(targetIndex.getZeroBased());
+    }
+
+    private List<Lesson> createLessons(Student student) {
         List<Lesson> lessonsToAdd = new ArrayList<>();
         for (int week = 0; week < numberOfWeeks; week++) {
             lessonsToAdd.add(new Lesson(student, startDate.plusWeeks(week), startTime, duration));
         }
-        try {
-            for (Lesson lessonToAdd : lessonsToAdd) {
-                Lesson existingOverlap = model.getLessonList().stream()
-                        .filter(lessonToAdd::overlaps)
-                        .findFirst()
-                        .orElse(null);
-                if (existingOverlap != null) {
-                    throw new DuplicateLessonException(
-                            "Cannot add lesson because it overlaps with " + formatLesson(existingOverlap) + ".");
-                }
-                Lesson seriesOverlap = lessonsToAdd.stream()
-                        .filter(other -> other != lessonToAdd && lessonToAdd.overlaps(other))
-                        .findFirst()
-                        .orElse(null);
-                if (seriesOverlap != null) {
-                    throw new DuplicateLessonException(
-                            "Cannot add lesson because it overlaps with another lesson in the series: "
-                                    + formatLesson(seriesOverlap) + ".");
-                }
-            }
-            for (Lesson lessonToAdd : lessonsToAdd) {
-                model.addLesson(lessonToAdd);
-            }
-        } catch (DuplicateLessonException exception) {
-            throw new CommandException(exception.getMessage(), exception);
+        return lessonsToAdd;
+    }
+
+    private void validateNoOverlaps(Model model, List<Lesson> lessonsToAdd) throws DuplicateLessonException {
+        for (Lesson lessonToAdd : lessonsToAdd) {
+            validateExistingLessonOverlaps(model, lessonToAdd);
+            validateSeriesOverlaps(lessonsToAdd, lessonToAdd);
         }
+    }
+
+    private void validateExistingLessonOverlaps(Model model, Lesson lessonToAdd) throws DuplicateLessonException {
+        Lesson existingOverlap = model.getLessonList().stream()
+                .filter(lessonToAdd::overlaps)
+                .findFirst()
+                .orElse(null);
+        if (existingOverlap != null) {
+            throw new DuplicateLessonException(
+                    "Cannot add lesson because it overlaps with " + formatLesson(existingOverlap) + ".");
+        }
+    }
+
+    private void validateSeriesOverlaps(List<Lesson> lessonsToAdd, Lesson lessonToAdd)
+            throws DuplicateLessonException {
+        Lesson seriesOverlap = lessonsToAdd.stream()
+                .filter(other -> other != lessonToAdd && lessonToAdd.overlaps(other))
+                .findFirst()
+                .orElse(null);
+        if (seriesOverlap != null) {
+            throw new DuplicateLessonException(
+                    "Cannot add lesson because it overlaps with another lesson in the series: "
+                            + formatLesson(seriesOverlap) + ".");
+        }
+    }
+
+    private void addLessons(Model model, List<Lesson> lessonsToAdd) {
+        for (Lesson lessonToAdd : lessonsToAdd) {
+            model.addLesson(lessonToAdd);
+        }
+    }
+
+    private CommandResult createSuccessResult(Student student) {
         String feedback = String.format(MESSAGE_SUCCESS, numberOfWeeks, student.getName());
         if (duration.compareTo(Lesson.MAX_RECOMMENDED_DURATION) > 0) {
             feedback += " " + Lesson.MESSAGE_LONG_DURATION_WARNING;
