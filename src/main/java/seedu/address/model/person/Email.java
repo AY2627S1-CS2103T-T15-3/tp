@@ -3,33 +3,26 @@ package seedu.address.model.person;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
 
+import java.util.regex.Pattern;
+
 /**
  * Represents a Person's email in the address book.
  * Guarantees: immutable; is valid as declared in {@link #isValidEmail(String)}
  */
 public class Email {
 
-    private static final String SPECIAL_CHARACTERS = "+_.-";
-    public static final String MESSAGE_CONSTRAINTS = "Emails should be of the format local-part@domain "
-            + "and adhere to the following constraints:\n"
-            + "1. The local-part should only contain alphanumeric characters and these special characters, excluding "
-            + "the parentheses, (" + SPECIAL_CHARACTERS + "). The local-part may not start or end with any special "
-            + "characters.\n"
-            + "2. The local-part is followed by an '@' and then a domain name. The domain name is made up of domain "
-            + "labels separated by periods.\n"
-            + "The domain name must:\n"
-            + "    - end with a domain label at least 2 characters long\n"
-            + "    - have each domain label start and end with alphanumeric characters\n"
-            + "    - have each domain label consist of alphanumeric characters, separated only by hyphens, if any.";
-    // alphanumeric and special characters
-    private static final String ALPHANUMERIC_NO_UNDERSCORE = "[^\\W_]+"; // alphanumeric characters except underscore
-    private static final String LOCAL_PART_REGEX = "^" + ALPHANUMERIC_NO_UNDERSCORE + "([" + SPECIAL_CHARACTERS + "]"
-            + ALPHANUMERIC_NO_UNDERSCORE + ")*";
-    private static final String DOMAIN_PART_REGEX = ALPHANUMERIC_NO_UNDERSCORE
-            + "(-" + ALPHANUMERIC_NO_UNDERSCORE + ")*";
-    private static final String DOMAIN_LAST_PART_REGEX = "(" + DOMAIN_PART_REGEX + "){2,}$"; // At least two chars
-    private static final String DOMAIN_REGEX = "(" + DOMAIN_PART_REGEX + "\\.)*" + DOMAIN_LAST_PART_REGEX;
-    public static final String VALIDATION_REGEX = LOCAL_PART_REGEX + "@" + DOMAIN_REGEX;
+    public static final String MESSAGE_CONSTRAINTS =
+            "Emails should be of the format local-part@domain, must not contain spaces, "
+            + "and must have a domain such as example.com.";
+
+    // Allows alphanumeric local-part segments separated by single periods and containing +, _, or -.
+    private static final Pattern LOCAL_PART_PATTERN =
+            Pattern.compile("[A-Za-z0-9+_-]+(?:\\.[A-Za-z0-9+_-]+)*");
+    // Requires each domain label to start and end with an alphanumeric character.
+    private static final Pattern DOMAIN_PART_PATTERN =
+            Pattern.compile("[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?");
+    // Limits the complete email address to 1-254 characters.
+    private static final Pattern LENGTH_PATTERN = Pattern.compile("(?=.{1,254}\\z).*");
 
     public final String value;
 
@@ -61,7 +54,33 @@ public class Email {
      * Returns true if a given string is a valid email.
      */
     public static boolean isValidEmail(String test) {
-        return test.matches(VALIDATION_REGEX);
+        requireNonNull(test);
+        if (!LENGTH_PATTERN.matcher(test).matches()) {
+            return false;
+        }
+        int atIndex = test.indexOf('@');
+        if (atIndex <= 0 || atIndex != test.lastIndexOf('@')) {
+            return false;
+        }
+        if (!LOCAL_PART_PATTERN.matcher(test.substring(0, atIndex)).matches()) {
+            return false;
+        }
+        String[] domainParts = test.substring(atIndex + 1).split("\\.", -1);
+        if (domainParts.length < 2) {
+            return false;
+        }
+        for (String domainPart : domainParts) {
+            if (!DOMAIN_PART_PATTERN.matcher(domainPart).matches()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /** Normalizes an email address by removing surrounding whitespace. */
+    public static String normalize(String test) {
+        requireNonNull(test);
+        return test.trim();
     }
 
     @Override
