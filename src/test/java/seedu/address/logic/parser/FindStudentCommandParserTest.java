@@ -36,4 +36,15 @@ public class FindStudentCommandParserTest {
     public void parse_invalidName_throwsParseException() {
         assertParseFailure(parser, "!@aa", Name.MESSAGE_CONSTRAINTS);
     }
+
+    @Test
+    public void parse_keywordsValidatedIndividually() {
+        String firstKeyword = "a".repeat(100);
+        String secondKeyword = "b".repeat(100);
+        FindStudentCommand expected = new FindStudentCommand(
+                new StudentNameContainsKeywordsPredicate(List.of(firstKeyword, secondKeyword)));
+
+        assertParseSuccess(parser, firstKeyword + " " + secondKeyword, expected);
+        assertParseFailure(parser, "a".repeat(101), Name.MESSAGE_CONSTRAINTS);
+    }
 }

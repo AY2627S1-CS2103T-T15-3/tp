@@ -28,11 +28,14 @@ public class FindGuardianCommandParser implements Parser<FindGuardianCommand> {
         }
 
         String normalizedArgs = trimmedArgs.replaceAll("\\s+", " ");
-        if (!Name.isValidName(normalizedArgs)) {
-            throw new ParseException(Name.MESSAGE_CONSTRAINTS);
+        String[] keywords = normalizedArgs.split(" ");
+        for (String keyword : keywords) {
+            if (!Name.isValidName(keyword)) {
+                throw new ParseException(Name.MESSAGE_CONSTRAINTS);
+            }
         }
 
         return new FindGuardianCommand(
-                new GuardianNameContainsKeywordsPredicate(List.of(normalizedArgs.split(" "))));
+                new GuardianNameContainsKeywordsPredicate(List.of(keywords)));
     }
 }
