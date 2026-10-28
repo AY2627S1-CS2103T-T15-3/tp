@@ -737,8 +737,8 @@ The lesson-length prefix `len/` may be shortened to `l/`.
 **MSS**
 
 1. User <u>requests to list students (U3)</u>.
-2. User requests to schedule a lesson for a specific student in the list, giving the day, start time and duration.
-3. TutorTrack saves the lesson and shows the updated lesson slot.
+2. User requests a weekly series of lessons for a specific student in the list, giving the first day, start time, duration and number of weeks.
+3. TutorTrack saves all lessons in the series and shows the updated lesson slots.
 
     Use case ends.
 
@@ -760,19 +760,43 @@ The lesson-length prefix `len/` may be shortened to `l/`.
 
       Use case resumes at step 2.
 
-* 2c. The lesson overlaps another student's lesson.
+* 2c. A lesson in the series overlaps an existing lesson or another lesson in the series.
 
-    * 2c1. TutorTrack shows a clash error message.
-
-      Use case resumes at step 2.
-
-* 2d. The lesson is less than 30 minutes from another lesson.
-
-    * 2d1. TutorTrack shows a travel-time warning.
+    * 2c1. TutorTrack shows a clash error message and adds none of the lessons in the series.
 
       Use case resumes at step 2.
 
-**Use case: U14 - Mark a student's payment as paid**
+* 2d. The number of weeks is not between 1 and 52.
+
+    * 2d1. TutorTrack shows an error message.
+
+      Use case resumes at step 2.
+
+**Use case: U14 - Remove a lesson**
+
+**Command:** `remove-l INDEX`
+
+**MSS**
+
+1. User views the currently displayed lesson list.
+2. User requests to remove a lesson by its displayed index.
+3. TutorTrack removes the selected lesson and displays the updated lesson list.
+
+    Use case ends.
+
+**Extensions**
+
+* 1a. The lesson list is empty.
+
+  Use case ends.
+
+* 2a. The given index is invalid or outside the displayed lesson list.
+
+    * 2a1. TutorTrack shows an error message and leaves the lesson list unchanged.
+
+      Use case resumes at step 2.
+
+**Use case: U15 - Mark a student's payment as paid**
 
 **MSS**
 
@@ -806,7 +830,7 @@ The lesson-length prefix `len/` may be shortened to `l/`.
 
       Use case ends.
 
-**Use case: U15 - Set student remark**
+**Use case: U16 - Set student remark**
 
 **MSS**
 
@@ -830,7 +854,7 @@ The lesson-length prefix `len/` may be shortened to `l/`.
 
     Use case ends.
 
-**Use case: U16 - Clear student remark**
+**Use case: U17 - Clear student remark**
 
 **MSS**
 
