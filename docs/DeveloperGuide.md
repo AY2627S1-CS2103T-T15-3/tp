@@ -730,6 +730,10 @@ separate use case.
 
 **Use case: U13 - Schedule a lesson**
 
+**Command:** `add-l INDEX d/YYYY-MM-DD t/HH:MM len/LENGTH(MINUTES) w/WEEKS`
+
+The lesson-length prefix `len/` may be shortened to `l/`.
+
 **MSS**
 
 1. User <u>requests to list students (U3)</u>.

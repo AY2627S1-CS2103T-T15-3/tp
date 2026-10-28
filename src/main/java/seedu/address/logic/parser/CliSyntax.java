@@ -15,5 +15,9 @@ public class CliSyntax {
     public static final Prefix PREFIX_MONTH = new Prefix("m/");
     public static final Prefix PREFIX_PAID = new Prefix("paid/");
     public static final Prefix PREFIX_UNPAID = new Prefix("unpaid/");
+    public static final Prefix PREFIX_DATE = new Prefix("d/");
+    public static final Prefix PREFIX_TIME = new Prefix("t/");
+    public static final Prefix PREFIX_WEEKS = new Prefix("w/");
+    public static final Prefix PREFIX_LENGTH = new Prefix("len/");
 
 }

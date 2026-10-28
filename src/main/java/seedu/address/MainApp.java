@@ -79,7 +79,13 @@ public class MainApp extends Application {
             initialData = addressBookOptional.orElseGet(SampleDataUtil::getSampleAddressBook);
         } catch (DataLoadingException e) {
             logger.warning("Data file at " + storage.getAddressBookFilePath() + " could not be loaded."
-                    + " Will be starting with an empty AddressBook.");
+                    + " Deleting the invalid data file and starting with an empty AddressBook.");
+            try {
+                java.nio.file.Files.deleteIfExists(storage.getAddressBookFilePath());
+            } catch (IOException deleteException) {
+                logger.warning("Could not delete invalid data file at "
+                        + storage.getAddressBookFilePath() + ": " + StringUtil.getDetails(deleteException));
+            }
             initialData = new AddressBook();
         }
 
