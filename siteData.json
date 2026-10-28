@@ -54,6 +54,7 @@
         "find-feature": "Find feature",
         "student-remarks-feature": "Student remarks feature",
         "payment-tracking-feature": "Payment tracking feature",
+        "link-guardian-feature": "Link guardian feature",
         "proposed-undo-redo-feature": "[Proposed] Undo/redo feature",
         "proposed-data-archiving": "[Proposed] Data archiving",
         "documentation-logging-testing-dev-ops": "Documentation, logging, testing, dev-ops",
