@@ -1,0 +1,93 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":LinkGuardianCommandParser" as LinkGuardianCommandParser LOGIC_COLOR
+participant "c:LinkGuardianCommand" as LinkGuardianCommand LOGIC_COLOR
+participant "r:CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant "m:Model" as Model MODEL_COLOR
+participant "l:StudentGuardianLink" as StudentGuardianLink MODEL_COLOR
+end box
+
+[-> LogicManager : execute("link-g 1 g/2")
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand("link-g 1 g/2")
+activate AddressBookParser
+
+create LinkGuardianCommandParser
+AddressBookParser -> LinkGuardianCommandParser
+activate LinkGuardianCommandParser
+
+LinkGuardianCommandParser --> AddressBookParser
+deactivate LinkGuardianCommandParser
+
+AddressBookParser -> LinkGuardianCommandParser : parse("1 g/2")
+activate LinkGuardianCommandParser
+
+create LinkGuardianCommand
+LinkGuardianCommandParser -> LinkGuardianCommand
+activate LinkGuardianCommand
+
+LinkGuardianCommand --> LinkGuardianCommandParser
+deactivate LinkGuardianCommand
+
+LinkGuardianCommandParser --> AddressBookParser : c
+deactivate LinkGuardianCommandParser
+'Hidden arrow to position the destroy marker below the end of the activation bar.
+LinkGuardianCommandParser -[hidden]-> AddressBookParser
+destroy LinkGuardianCommandParser
+
+AddressBookParser --> LogicManager : c
+deactivate AddressBookParser
+
+LogicManager -> LinkGuardianCommand : execute(m)
+activate LinkGuardianCommand
+
+LinkGuardianCommand -> Model : getFilteredStudentList()
+activate Model
+Model --> LinkGuardianCommand : students
+deactivate Model
+
+LinkGuardianCommand -> Model : getFilteredGuardianList()
+activate Model
+Model --> LinkGuardianCommand : guardians
+deactivate Model
+
+create StudentGuardianLink
+LinkGuardianCommand -> StudentGuardianLink : StudentGuardianLink(student, guardian)
+activate StudentGuardianLink
+StudentGuardianLink --> LinkGuardianCommand : l
+deactivate StudentGuardianLink
+
+LinkGuardianCommand -> Model : hasStudentGuardianLink(l)
+activate Model
+Model --> LinkGuardianCommand : exists
+deactivate Model
+
+opt link does not already exist
+    LinkGuardianCommand -> Model : addStudentGuardianLink(l)
+    activate Model
+    Model --> LinkGuardianCommand
+    deactivate Model
+end
+
+create CommandResult
+LinkGuardianCommand -> CommandResult
+activate CommandResult
+
+CommandResult --> LinkGuardianCommand
+deactivate CommandResult
+
+LinkGuardianCommand --> LogicManager : r
+deactivate LinkGuardianCommand
+
+[<--LogicManager
+deactivate LogicManager
+@enduml
