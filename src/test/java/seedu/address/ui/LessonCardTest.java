@@ -45,7 +45,6 @@ public class LessonCardTest {
         assertEquals("2. ", ((Label) card.getRoot().lookup("#id")).getText());
         assertEquals("Lucy Lim", ((Text) ((TextFlow) card.getRoot().lookup("#name")).getChildren().get(0)).getText());
         assertEquals("Date: 2026-10-27", ((Label) card.getRoot().lookup("#date")).getText());
-        assertEquals("Time: 2026-10-27 14:00 - 2026-10-27 15:30",
-                ((Label) card.getRoot().lookup("#time")).getText());
+        assertEquals("Time: 2026-10-27 14:00 - 2026-10-27 15:30", ((Label) card.getRoot().lookup("#time")).getText());
     }
 }
