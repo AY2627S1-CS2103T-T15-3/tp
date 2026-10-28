@@ -19,6 +19,7 @@ public class AddLessonCommandParserTest {
         assertParseFailure(parser, "1 d/2026-11-01 t/14:00 l/60 w/0", AddLessonCommand.MESSAGE_INVALID_WEEKS);
         assertParseFailure(parser, "1 d/2026-11-01 t/14:00 l/60 w/-2", AddLessonCommand.MESSAGE_INVALID_WEEKS);
         assertParseFailure(parser, "1 d/2026-11-01 t/14:00 l/60 w/two", AddLessonCommand.MESSAGE_INVALID_WEEKS);
+        assertParseFailure(parser, "1 d/2026-11-01 t/14:00 l/60 w/53", AddLessonCommand.MESSAGE_INVALID_WEEKS);
     }
 
     @Test

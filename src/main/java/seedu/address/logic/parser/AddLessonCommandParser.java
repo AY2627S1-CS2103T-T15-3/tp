@@ -76,7 +76,7 @@ public class AddLessonCommandParser implements Parser<AddLessonCommand> {
     private int parseWeeks(String value) throws ParseException {
         try {
             int weeks = Integer.parseInt(value);
-            if (weeks <= 0) {
+            if (weeks <= 0 || weeks > AddLessonCommand.MAX_WEEKS) {
                 throw new ParseException(AddLessonCommand.MESSAGE_INVALID_WEEKS);
             }
             return weeks;

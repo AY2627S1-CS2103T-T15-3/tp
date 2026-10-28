@@ -81,10 +81,16 @@ public class AddLessonCommandTest {
 
     @Test
     public void constructor_nonPositiveWeeks_failure() {
-        seedu.address.testutil.Assert.assertThrows(IllegalArgumentException.class,
-                AddLessonCommand.MESSAGE_INVALID_WEEKS, () ->
+        assertThrows(AssertionError.class, () ->
                 new AddLessonCommand(Index.fromOneBased(1), LocalDate.now(),
                         LocalTime.NOON, Duration.ofMinutes(60), 0));
+    }
+
+    @Test
+    public void constructor_weeksAboveMaximum_failure() {
+        assertThrows(AssertionError.class, () ->
+                new AddLessonCommand(Index.fromOneBased(1), LocalDate.now(),
+                        LocalTime.NOON, Duration.ofMinutes(60), AddLessonCommand.MAX_WEEKS + 1));
     }
 
     @Test

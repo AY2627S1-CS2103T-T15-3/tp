@@ -20,9 +20,11 @@ import seedu.address.model.student.Student;
 /** Adds a weekly series of lessons for a displayed student. */
 public class AddLessonCommand extends Command {
     public static final String COMMAND_WORD = "add-l";
+    public static final int MAX_WEEKS = 52;
     public static final String MESSAGE_USAGE = "Usage: " + COMMAND_WORD
             + " INDEX d/YYYY-MM-DD t/HH:MM l/LENGTH(MINUTES) w/WEEKS";
-    public static final String MESSAGE_INVALID_WEEKS = "Number of weeks must be a positive integer.";
+    public static final String MESSAGE_INVALID_WEEKS =
+            "Number of weeks must be between 1 and " + MAX_WEEKS + ".";
     public static final String MESSAGE_SUCCESS = "Added %1$d lesson(s) for %2$s.";
 
     private final Index targetIndex;
@@ -49,9 +51,7 @@ public class AddLessonCommand extends Command {
         if (!duration.isPositive()) {
             throw new IllegalArgumentException(Lesson.MESSAGE_DURATION_CONSTRAINTS);
         }
-        if (numberOfWeeks <= 0) {
-            throw new IllegalArgumentException(MESSAGE_INVALID_WEEKS);
-        }
+        assert(numberOfWeeks > 0 && numberOfWeeks <= MAX_WEEKS);
         this.numberOfWeeks = numberOfWeeks;
     }
 
