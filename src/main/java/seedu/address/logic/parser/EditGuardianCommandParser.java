@@ -14,7 +14,9 @@ import seedu.address.logic.commands.EditGuardianDescriptor;
 import seedu.address.logic.parser.exceptions.ParseException;
 /** Parses the {@code edit-g} command. */
 public class EditGuardianCommandParser implements Parser<EditGuardianCommand> {
-    private static final Pattern PREFIX_PATTERN = Pattern.compile("(?<!\\S)([A-Za-z][A-Za-z0-9-]*)/");
+    /* Treat the relationship marker "s/o" as name content, not as an unknown prefix. */
+    private static final Pattern PREFIX_PATTERN =
+            Pattern.compile("(?<!\\S)(?!s/o(?:\\s|$))([A-Za-z][A-Za-z0-9-]*)/");
     private static final Set<String> SUPPORTED_PREFIXES = Set.of("n/", "p/", "e/", "a/");
 
     @Override

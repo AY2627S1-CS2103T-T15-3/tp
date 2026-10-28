@@ -6,7 +6,6 @@ import java.util.stream.Stream;
 
 import seedu.address.logic.parser.Prefix;
 import seedu.address.model.guardian.Guardian;
-import seedu.address.model.person.Person;
 import seedu.address.model.student.Student;
 
 /**
@@ -16,14 +15,12 @@ public class Messages {
 
     public static final String MESSAGE_UNKNOWN_COMMAND = "Unknown command.";
     public static final String MESSAGE_INVALID_COMMAND_FORMAT = "Invalid command format!\n%1$s";
-    public static final String MESSAGE_INVALID_PERSON_DISPLAYED_INDEX = "The person index provided is invalid.";
     public static final String MESSAGE_INVALID_GUARDIAN_DISPLAYED_INDEX = "The guardian index provided is invalid.";
     public static final String MESSAGE_INVALID_STUDENT_DISPLAYED_INDEX = "The student index provided is invalid.";
     public static final String MESSAGE_INVALID_LESSON_DISPLAYED_INDEX = "The lesson index provided is invalid.";
     public static final String MESSAGE_STUDENT_INDEX_OUT_OF_RANGE = "Student index is out of range, "
             + "choose a valid index from the currently displayed student list";
     public static final String MESSAGE_NO_STUDENTS_DISPLAYED = "No students are currently displayed.";
-    public static final String MESSAGE_PERSONS_LISTED_OVERVIEW = "%1$d person(s) listed!";
     public static final String MESSAGE_STUDENTS_LISTED_OVERVIEW = "%1$d student(s) listed.";
     public static final String MESSAGE_GUARDIANS_LISTED_OVERVIEW = "%1$d guardian(s) listed.";
     public static final String MESSAGE_NO_GUARDIANS_MATCH_SEARCH = "No guardians match the given search.";
@@ -42,23 +39,6 @@ public class Messages {
                 Stream.of(duplicatePrefixes).map(Prefix::toString).collect(Collectors.toSet());
 
         return MESSAGE_DUPLICATE_FIELDS + String.join(" ", duplicateFields);
-    }
-
-    /**
-     * Formats the {@code person} for display to the user.
-     */
-    public static String format(Person person) {
-        final StringBuilder builder = new StringBuilder();
-        builder.append(person.getName())
-                .append("; Phone: ")
-                .append(person.getPhone())
-                .append("; Email: ")
-                .append(person.getEmail())
-                .append("; Address: ")
-                .append(person.getAddress())
-                .append("; Tags: ");
-        person.getTags().forEach(builder::append);
-        return builder.toString();
     }
 
     /** Formats a student for display to the user. */

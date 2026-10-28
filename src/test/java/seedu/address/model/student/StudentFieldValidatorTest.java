@@ -17,6 +17,7 @@ public class StudentFieldValidatorTest {
     @Test
     public void isValidName_validAndInvalidValues() {
         assertTrue(StudentFieldValidator.isValidName("Mary-Jane O'Connor"));
+        assertTrue(StudentFieldValidator.isValidName("John s/o Raj"));
         assertFalse(StudentFieldValidator.isValidName("Henry&Tan"));
         assertFalse(StudentFieldValidator.isValidName(""));
     }
@@ -26,6 +27,9 @@ public class StudentFieldValidatorTest {
         assertTrue(StudentFieldValidator.isValidEmail("mary.jane+school@example.com"));
         assertFalse(StudentFieldValidator.isValidEmail("@example.com"));
         assertFalse(StudentFieldValidator.isValidEmail("mary@@example.com"));
+        assertFalse(StudentFieldValidator.isValidEmail(".alice@example.com"));
+        assertFalse(StudentFieldValidator.isValidEmail("alice.@example.com"));
+        assertFalse(StudentFieldValidator.isValidEmail("alice..test@example.com"));
         assertFalse(StudentFieldValidator.isValidEmail("mary?@example.com"));
         assertFalse(StudentFieldValidator.isValidEmail("mary@example..com"));
         assertFalse(StudentFieldValidator.isValidEmail("mary@-example.com"));

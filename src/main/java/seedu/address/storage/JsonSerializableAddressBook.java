@@ -12,7 +12,6 @@ import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.model.AddressBook;
 import seedu.address.model.ReadOnlyAddressBook;
 import seedu.address.model.guardian.Guardian;
-import seedu.address.model.person.Person;
 import seedu.address.model.student.Student;
 
 /**
@@ -21,29 +20,21 @@ import seedu.address.model.student.Student;
 @JsonRootName(value = "addressbook")
 class JsonSerializableAddressBook {
 
-    public static final String MESSAGE_DUPLICATE_PERSON = "Persons list contains duplicate person(s).";
     public static final String MESSAGE_DUPLICATE_GUARDIAN = "Guardians list contains duplicate guardian(s).";
     public static final String MESSAGE_INVALID_LINK = "Student-guardian link references a missing contact.";
     public static final String MESSAGE_INVALID_LESSON = "Lesson references a missing student.";
 
-    private final List<JsonAdaptedPerson> persons = new ArrayList<>();
     private final List<JsonAdaptedStudent> students = new ArrayList<>();
     private final List<JsonAdaptedGuardian> guardians = new ArrayList<>();
     private final List<JsonAdaptedStudentGuardianLink> links = new ArrayList<>();
     private final List<JsonAdaptedLesson> lessons = new ArrayList<>();
 
-    /**
-     * Constructs a {@code JsonSerializableAddressBook} with the given persons.
-     */
+    /** Constructs a {@code JsonSerializableAddressBook} with the given TutorTrack data. */
     @JsonCreator
-    public JsonSerializableAddressBook(@JsonProperty("persons") List<JsonAdaptedPerson> persons,
-            @JsonProperty("students") List<JsonAdaptedStudent> students,
+    public JsonSerializableAddressBook(@JsonProperty("students") List<JsonAdaptedStudent> students,
             @JsonProperty("guardians") List<JsonAdaptedGuardian> guardians,
             @JsonProperty("links") List<JsonAdaptedStudentGuardianLink> links,
             @JsonProperty("lessons") List<JsonAdaptedLesson> lessons) {
-        if (persons != null) {
-            this.persons.addAll(persons);
-        }
         if (students != null) {
             this.students.addAll(students);
         }
@@ -58,23 +49,21 @@ class JsonSerializableAddressBook {
         }
     }
 
-    /**
-     * Constructs serializable address-book data without guardians for compatibility with older callers.
-     */
-    public JsonSerializableAddressBook(List<JsonAdaptedPerson> persons, List<JsonAdaptedStudent> students) {
-        this(persons, students, null, null, null);
+    /** Constructs serializable address-book data without guardians for compatibility with older callers. */
+    public JsonSerializableAddressBook(List<JsonAdaptedStudent> students) {
+        this(students, null, null, null);
     }
 
     /** Constructs serializable data without links for compatibility with older callers. */
-    public JsonSerializableAddressBook(List<JsonAdaptedPerson> persons, List<JsonAdaptedStudent> students,
+    public JsonSerializableAddressBook(List<JsonAdaptedStudent> students,
             List<JsonAdaptedGuardian> guardians) {
-        this(persons, students, guardians, null, null);
+        this(students, guardians, null, null);
     }
 
     /** Constructs serializable data without lessons for compatibility with older callers. */
-    public JsonSerializableAddressBook(List<JsonAdaptedPerson> persons, List<JsonAdaptedStudent> students,
+    public JsonSerializableAddressBook(List<JsonAdaptedStudent> students,
             List<JsonAdaptedGuardian> guardians, List<JsonAdaptedStudentGuardianLink> links) {
-        this(persons, students, guardians, links, null);
+        this(students, guardians, links, null);
     }
 
     /**
@@ -83,7 +72,6 @@ class JsonSerializableAddressBook {
      * @param source future changes to this will not affect the created {@code JsonSerializableAddressBook}.
      */
     public JsonSerializableAddressBook(ReadOnlyAddressBook source) {
-        persons.addAll(source.getPersonList().stream().map(JsonAdaptedPerson::new).collect(Collectors.toList()));
         students.addAll(source.getStudentList().stream().map(JsonAdaptedStudent::new).collect(Collectors.toList()));
         guardians.addAll(source.getGuardianList().stream().map(JsonAdaptedGuardian::new).collect(Collectors.toList()));
         links.addAll(source.getStudentGuardianLinkList().stream()
@@ -99,13 +87,6 @@ class JsonSerializableAddressBook {
      */
     public AddressBook toModelType() throws IllegalValueException {
         AddressBook addressBook = new AddressBook();
-        for (JsonAdaptedPerson jsonAdaptedPerson : persons) {
-            Person person = jsonAdaptedPerson.toModelType();
-            if (addressBook.hasPerson(person)) {
-                throw new IllegalValueException(MESSAGE_DUPLICATE_PERSON);
-            }
-            addressBook.addPerson(person);
-        }
         for (JsonAdaptedStudent jsonAdaptedStudent : students) {
             Student student = jsonAdaptedStudent.toModelType();
             if (addressBook.hasStudent(student)) {
