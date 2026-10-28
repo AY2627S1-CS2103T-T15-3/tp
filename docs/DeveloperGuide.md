@@ -289,6 +289,26 @@ The following sequence diagram shows how the `mark-paid` command goes through th
   * Pros: Idempotent.
   * Cons: The tutor gets no feedback that the command had no effect.
 
+### Link guardian feature
+
+#### Implementation
+
+The `link-g STUDENT_INDEX g/GUARDIAN_INDEX` command links an existing guardian to an existing student. The link is stored as a `StudentGuardianLink` in `AddressBook`, so one guardian can be linked to many students and one student can have many guardians.
+
+The sequence diagram below shows the interactions within the `Logic` and `Model` components for the command `link-g 1 g/2`.
+
+<puml src="diagrams/LinkGuardianSequenceDiagram.puml" alt="Interactions Inside the Logic Component for the `link-g 1 g/2` Command" />
+
+1. `LinkGuardianCommandParser` parses the student index and the `g/` guardian index, and creates a `LinkGuardianCommand`.
+1. When executed, `LinkGuardianCommand` looks up the student and guardian in the currently displayed (filtered) student and guardian lists. If either index is out of range, a `CommandException` is thrown.
+1. A `StudentGuardianLink` is created from the two. It is added to the model only if it does not already exist, so linking the same pair twice has no effect.
+
+The sequence diagram below shows how `Model#addStudentGuardianLink(l)` stores the link inside the `Model` component.
+
+<puml src="diagrams/LinkGuardianSequenceDiagram-Model.puml" alt="Interactions Inside the Model Component for adding a StudentGuardianLink" />
+
+`ModelManager` passes the link to `AddressBook`, which checks again for a duplicate before adding it to its `studentGuardianLinks` list.
+
 ### \[Proposed\] Undo/redo feature
 
 #### Proposed Implementation
