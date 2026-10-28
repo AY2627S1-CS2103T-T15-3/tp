@@ -1,5 +1,6 @@
 package seedu.address.logic.parser;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
@@ -8,6 +9,8 @@ import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -101,6 +104,53 @@ public class AddressBookParserTest {
     public void parseCommand_addGuardian() throws Exception {
         Command command = parser.parseCommand("add-g n/Ben Tan p/92345678 e/ben@example.com a/12 ABCD Ave 3");
         assertTrue(command instanceof AddGuardianCommand);
+    }
+
+    @Test
+    public void parseCommand_supportedCommandWordCaseVariants_areAccepted() {
+        Map<String, String> commands = Map.ofEntries(
+                Map.entry("add-s", " n/Henry Tan p/91234567 e/henry@example.com a/12 Road l/JC 1 s/Math"),
+                Map.entry("add-g", " n/Ben Tan p/92345678 e/ben@example.com a/12 Road"),
+                Map.entry("edit-s", " 1 n/Alice Tan"),
+                Map.entry("edit-g", " 1 n/Alice Tan"),
+                Map.entry("find-s", " Alice"),
+                Map.entry("find-g", " Alice"),
+                Map.entry("filter", " l/JC 1"),
+                Map.entry("list-s", ""),
+                Map.entry("list-g", ""),
+                Map.entry("sort-s", ""),
+                Map.entry("remove-s", " 1"),
+                Map.entry("remove-g", " 1"),
+                Map.entry("link-g", " 1 g/1"),
+                Map.entry("unlink-g", " 1 g/1"),
+                Map.entry("mark-paid", " 1 m/2026-10"),
+                Map.entry("set-remark-s", " 1 A remark"),
+                Map.entry("clear-remark-s", " 1"),
+                Map.entry("clear", ""),
+                Map.entry("exit", ""),
+                Map.entry("help", ""));
+
+        commands.forEach((commandWord, arguments) ->
+                acceptedCommandWordVariants(commandWord).forEach(variant ->
+                        assertDoesNotThrow(() -> parser.parseCommand(variant + arguments))));
+    }
+
+    @Test
+    public void parseCommand_unsupportedMixedCaseCommandWord_isRejected() {
+        assertThrows(ParseException.class, MESSAGE_UNKNOWN_COMMAND, () -> parser.parseCommand("lIst-S"));
+    }
+
+    private List<String> acceptedCommandWordVariants(String commandWord) {
+        if (!commandWord.contains("-")) {
+            return List.of(commandWord, Character.toUpperCase(commandWord.charAt(0)) + commandWord.substring(1),
+                    commandWord.toUpperCase(Locale.ROOT));
+        }
+        int lastHyphen = commandWord.lastIndexOf('-');
+        String lastToken = commandWord.substring(lastHyphen + 1);
+        String capitalizedFirst = Character.toUpperCase(commandWord.charAt(0)) + commandWord.substring(1);
+        String capitalizedLast = commandWord.substring(0, lastHyphen + 1)
+                + Character.toUpperCase(lastToken.charAt(0)) + lastToken.substring(1);
+        return List.of(commandWord, capitalizedFirst, capitalizedLast, commandWord.toUpperCase(Locale.ROOT));
     }
 
     @Test
