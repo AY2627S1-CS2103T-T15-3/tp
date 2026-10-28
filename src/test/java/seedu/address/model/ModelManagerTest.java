@@ -16,6 +16,8 @@ import org.junit.jupiter.api.Test;
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.model.guardian.Guardian;
 import seedu.address.model.lesson.Lesson;
+import seedu.address.model.lesson.LessonMatchesDatePredicate;
+import seedu.address.model.lesson.LessonMatchesStudentPredicate;
 import seedu.address.model.link.StudentGuardianLink;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
@@ -177,11 +179,37 @@ public class ModelManagerTest {
     }
 
     @Test
+    public void lessonOperations_filterByDateAndStudent_returnsMatchingLessons() {
+        Student henry = student("Henry Tan", "91234567", "henry@example.com");
+        Student alice = student("Alice Tan", "92345678", "alice@example.com");
+        Lesson henryFirst = new Lesson(henry, LocalDate.of(2026, 10, 25), LocalTime.of(14, 0),
+                Duration.ofMinutes(60));
+        Lesson henrySecond = new Lesson(henry, LocalDate.of(2026, 11, 1), LocalTime.of(14, 0),
+                Duration.ofMinutes(60));
+        Lesson aliceLesson = new Lesson(alice, LocalDate.of(2026, 10, 25), LocalTime.of(16, 0),
+                Duration.ofMinutes(60));
+
+        modelManager.addStudent(henry);
+        modelManager.addStudent(alice);
+        modelManager.addLesson(henrySecond);
+        modelManager.addLesson(aliceLesson);
+        modelManager.addLesson(henryFirst);
+
+        modelManager.updateFilteredLessonList(new LessonMatchesDatePredicate(LocalDate.of(2026, 10, 25)));
+        assertEquals(List.of(henryFirst, aliceLesson), modelManager.getFilteredLessonList());
+
+        modelManager.updateFilteredLessonList(new LessonMatchesStudentPredicate(henry));
+        assertEquals(List.of(henryFirst, henrySecond), modelManager.getFilteredLessonList());
+    }
+
+    @Test
     public void lessonOperations_nullInputs_throwNullPointerException() {
         assertThrows(NullPointerException.class, () ->
                 modelManager.addLesson(null));
         assertThrows(NullPointerException.class, () ->
                 modelManager.deleteLesson(null));
+        assertThrows(NullPointerException.class, () ->
+                modelManager.updateFilteredLessonList(null));
     }
 
     @Test
