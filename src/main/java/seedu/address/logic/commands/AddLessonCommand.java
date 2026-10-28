@@ -22,7 +22,7 @@ public class AddLessonCommand extends Command {
     public static final String COMMAND_WORD = "add-l";
     public static final int MAX_WEEKS = 52;
     public static final String MESSAGE_USAGE = "Usage: " + COMMAND_WORD
-            + " INDEX d/YYYY-MM-DD t/HH:MM l/LENGTH(MINUTES) w/WEEKS";
+            + " INDEX d/DATE(YYYY-MM-DD) t/TIME(HH:MM) len/LENGTH(MINUTES) w/WEEKS";
     public static final String MESSAGE_INVALID_WEEKS =
             "Number of weeks must be between 1 and " + MAX_WEEKS + ".";
     public static final String MESSAGE_SUCCESS = "Added %1$d lesson(s) for %2$s.";
