@@ -19,8 +19,6 @@ public class LessonCard extends UiPart<Region> {
     @FXML
     private Label id;
     @FXML
-    private Label date;
-    @FXML
     private Label time;
 
     /** Creates a card displaying the given lesson and its displayed index. */
@@ -29,7 +27,6 @@ public class LessonCard extends UiPart<Region> {
         id.setText(displayedIndex + ". ");
         name.getChildren().setAll(HighlightText.create(
                 lesson.getStudent().getName().fullName, List.of()).getChildren());
-        date.setText("Date: " + lesson.getDate());
         time.setText("Time: " + lesson.getStartDateTime().format(DATE_TIME_FORMATTER)
                 + " - " + lesson.getEndDateTime().format(DATE_TIME_FORMATTER));
     }

@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
@@ -56,6 +57,9 @@ public class MainWindow extends UiPart<Stage> {
 
     @FXML
     private StackPane lessonListPanelPlaceholder;
+
+    @FXML
+    private Label lessonTitle;
 
     @FXML
     private StackPane resultDisplayPlaceholder;
@@ -129,6 +133,7 @@ public class MainWindow extends UiPart<Stage> {
         guardianListPanel = new GuardianListPanel(logic.getFilteredGuardianList());
         lessonListPanel = new LessonListPanel(logic.getFilteredLessonList(),
                 date -> logic.updateFilteredLessonList(lesson -> lesson.getDate().equals(date)));
+        lessonTitle.setText("Lessons for " + lessonListPanel.getDisplayedDate());
         personListPanelPlaceholder.getChildren().add(studentListPanel.getRoot());
         guardianListPanelPlaceholder.getChildren().add(guardianListPanel.getRoot());
         lessonListPanelPlaceholder.getChildren().add(lessonListPanel.getRoot());
@@ -199,6 +204,7 @@ public class MainWindow extends UiPart<Stage> {
     /** Updates the date shown by the lesson list for future date-view commands. */
     public void setLessonListDate(LocalDate date) {
         lessonListPanel.setDisplayedDate(date);
+        lessonTitle.setText("Lessons for " + date);
     }
 
     /**
