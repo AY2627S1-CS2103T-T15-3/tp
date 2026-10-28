@@ -17,6 +17,7 @@ public class StudentFieldValidatorTest {
     @Test
     public void isValidName_validAndInvalidValues() {
         assertTrue(StudentFieldValidator.isValidName("Mary-Jane O'Connor"));
+        assertTrue(StudentFieldValidator.isValidName("John s/o Raj"));
         assertFalse(StudentFieldValidator.isValidName("Henry&Tan"));
         assertFalse(StudentFieldValidator.isValidName(""));
     }

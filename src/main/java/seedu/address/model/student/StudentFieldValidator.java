@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 public final class StudentFieldValidator {
     public static final String NAME_MESSAGE =
             "Student names must be 1-100 characters long and may contain only alphanumeric characters, "
-                    + "spaces, hyphens and apostrophes.";
+                    + "spaces, hyphens, apostrophes and slashes.";
     public static final String PHONE_MESSAGE =
             "Phone numbers must contain 3-15 digits and may start with '+'.";
     public static final String EMAIL_MESSAGE =
@@ -19,7 +19,7 @@ public final class StudentFieldValidator {
             "Addresses must be 1-200 characters long, must not be blank, and may contain only letters, "
                     + "digits, spaces and the punctuation , . # - / ( ) '.";
 
-    private static final Pattern NAME_PATTERN = Pattern.compile("[\\p{Alnum} '-]+");
+    private static final Pattern NAME_PATTERN = Pattern.compile("[\\p{Alnum} '/-]+");
     private static final Pattern PHONE_PATTERN = Pattern.compile("\\+?\\d{3,15}");
     private static final Pattern EMAIL_LOCAL_PATTERN = Pattern.compile("[A-Za-z0-9+_.-]+");
     private static final Pattern EMAIL_DOMAIN_PART_PATTERN =

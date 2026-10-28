@@ -22,7 +22,9 @@ import seedu.address.model.student.Subject;
 
 /** Parses the {@code edit-s} command. */
 public class EditStudentCommandParser implements Parser<EditStudentCommand> {
-    private static final Pattern PREFIX_PATTERN = Pattern.compile("(?<!\\S)([A-Za-z][A-Za-z0-9-]*)/");
+    /* Treat the relationship marker "s/o" as name content rather than the subject prefix "s/". */
+    private static final Pattern PREFIX_PATTERN =
+            Pattern.compile("(?<!\\S)(?!s/o(?:\\s|$))([A-Za-z][A-Za-z0-9-]*)/");
     private static final Set<String> SUPPORTED_PREFIXES = Set.of("n/", "p/", "e/", "a/", "l/", "s/");
     private static final Set<String> SINGLE_VALUE_PREFIXES = Set.of("n/", "p/", "e/", "a/", "l/");
 
