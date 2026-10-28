@@ -327,6 +327,11 @@ public class LinkGuardianUiTest {
         }
 
         @Override
+        public javafx.collections.ObservableList<seedu.address.model.lesson.Lesson> getFilteredLessonList() {
+            return FXCollections.observableArrayList();
+        }
+
+        @Override
         public List<Guardian> getGuardiansForStudent(Student ignored) {
             return List.of(guardian);
         }

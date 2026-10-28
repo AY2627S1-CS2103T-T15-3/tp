@@ -61,6 +61,8 @@
               <StackPane fx:id="guardianListPanelPlaceholder" VBox.vgrow="ALWAYS" />
             </VBox>
           </SplitPane>
+          <Label text="Lessons" styleClass="label-bright" />
+          <StackPane fx:id="lessonListPanelPlaceholder" minHeight="100" prefHeight="150" VBox.vgrow="NEVER" />
         </VBox>
 
         <StackPane fx:id="statusbarPlaceholder" VBox.vgrow="NEVER" />

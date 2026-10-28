@@ -37,6 +37,7 @@ public class MainWindow extends UiPart<Stage> {
     // Independent Ui parts residing in this Ui container
     private StudentListPanel studentListPanel;
     private GuardianListPanel guardianListPanel;
+    private LessonListPanel lessonListPanel;
     private ResultDisplay resultDisplay;
     private HelpWindow helpWindow;
 
@@ -51,6 +52,9 @@ public class MainWindow extends UiPart<Stage> {
 
     @FXML
     private StackPane guardianListPanelPlaceholder;
+
+    @FXML
+    private StackPane lessonListPanelPlaceholder;
 
     @FXML
     private StackPane resultDisplayPlaceholder;
@@ -122,8 +126,10 @@ public class MainWindow extends UiPart<Stage> {
     void fillInnerParts() {
         studentListPanel = new StudentListPanel(logic.getFilteredStudentList(), logic::getGuardiansForStudent);
         guardianListPanel = new GuardianListPanel(logic.getFilteredGuardianList());
+        lessonListPanel = new LessonListPanel(logic.getFilteredLessonList());
         personListPanelPlaceholder.getChildren().add(studentListPanel.getRoot());
         guardianListPanelPlaceholder.getChildren().add(guardianListPanel.getRoot());
+        lessonListPanelPlaceholder.getChildren().add(lessonListPanel.getRoot());
 
         resultDisplay = new ResultDisplay();
         resultDisplayPlaceholder.getChildren().add(resultDisplay.getRoot());
@@ -181,6 +187,10 @@ public class MainWindow extends UiPart<Stage> {
 
     public GuardianListPanel getGuardianListPanel() {
         return guardianListPanel;
+    }
+
+    public LessonListPanel getLessonListPanel() {
+        return lessonListPanel;
     }
 
     /**
