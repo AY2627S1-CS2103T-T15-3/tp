@@ -38,6 +38,22 @@ public class EditGuardianCommandTest {
     }
 
     @Test
+    public void execute_editPreservesActiveFilter() throws Exception {
+        Guardian other = guardian("Jane Lim", "91234567", "jane@example.com", "31 Clementi Avenue");
+        ModelManager model = new ModelManager();
+        model.addGuardian(BEN);
+        model.addGuardian(other);
+        model.updateFilteredGuardianList(guardian -> guardian.getName().fullName.equals("Ben Tan"));
+        EditGuardianDescriptor descriptor = new EditGuardianDescriptor();
+        descriptor.setPhone(new Phone("98765432"));
+
+        new EditGuardianCommand(Index.fromOneBased(1), descriptor).execute(model);
+
+        Guardian edited = guardian("Ben Tan", "98765432", "ben@example.com", "25 Happy Road");
+        assertEquals(java.util.List.of(edited), model.getFilteredGuardianList());
+    }
+
+    @Test
     public void execute_invalidIndex_failure() throws Exception {
         ModelManager model = new ModelManager();
         model.addGuardian(BEN);

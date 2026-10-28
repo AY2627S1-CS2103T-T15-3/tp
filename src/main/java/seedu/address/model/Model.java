@@ -86,6 +86,9 @@ public interface Model {
     /** Returns the scheduled lessons. */
     ObservableList<Lesson> getLessonList();
 
+    /** Returns the displayed lesson list, sorted by date and start time. */
+    ObservableList<Lesson> getFilteredLessonList();
+
     /**
      * Sorts the displayed student list by student name in ascending order.
      * The underlying student list and its storage order are not changed.

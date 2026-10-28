@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.logic.commands.AddGuardianCommand;
+import seedu.address.logic.commands.AddLessonCommand;
 import seedu.address.logic.commands.AddStudentCommand;
 import seedu.address.logic.commands.ClearCommand;
 import seedu.address.logic.commands.ClearStudentRemarkCommand;
@@ -25,6 +26,7 @@ import seedu.address.logic.commands.ListGuardianCommand;
 import seedu.address.logic.commands.ListStudentCommand;
 import seedu.address.logic.commands.MarkPaidCommand;
 import seedu.address.logic.commands.RemoveGuardianCommand;
+import seedu.address.logic.commands.RemoveLessonCommand;
 import seedu.address.logic.commands.RemoveStudentCommand;
 import seedu.address.logic.commands.SetStudentRemarkCommand;
 import seedu.address.logic.commands.SortStudentCommand;
@@ -65,12 +67,14 @@ public class AddressBookParser {
 
         return switch (commandWord) {
             case AddGuardianCommand.COMMAND_WORD -> new AddGuardianCommandParser().parse(arguments);
+            case AddLessonCommand.COMMAND_WORD -> new AddLessonCommandParser().parse(arguments);
             case AddStudentCommand.COMMAND_WORD -> new AddStudentCommandParser().parse(arguments);
             case EditGuardianCommand.COMMAND_WORD -> new EditGuardianCommandParser().parse(arguments);
             case LinkGuardianCommand.COMMAND_WORD -> new LinkGuardianCommandParser().parse(arguments);
             case UnlinkGuardianCommand.COMMAND_WORD -> new UnlinkGuardianCommandParser().parse(arguments);
             case EditStudentCommand.COMMAND_WORD -> new EditStudentCommandParser().parse(arguments);
             case RemoveGuardianCommand.COMMAND_WORD -> new RemoveGuardianCommandParser().parse(arguments);
+            case RemoveLessonCommand.COMMAND_WORD -> new RemoveLessonCommandParser().parse(arguments);
             case RemoveStudentCommand.COMMAND_WORD -> new RemoveStudentCommandParser().parse(arguments);
             case SetStudentRemarkCommand.COMMAND_WORD -> new SetStudentRemarkCommandParser().parse(arguments);
             case ClearStudentRemarkCommand.COMMAND_WORD -> new ClearStudentRemarkCommandParser().parse(arguments);

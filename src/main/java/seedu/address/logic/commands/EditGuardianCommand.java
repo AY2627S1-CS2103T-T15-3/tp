@@ -1,7 +1,6 @@
 package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
-import static seedu.address.model.Model.PREDICATE_SHOW_ALL_GUARDIANS;
 
 import java.util.List;
 
@@ -47,7 +46,6 @@ public class EditGuardianCommand extends Command {
         }
 
         model.setGuardian(guardianToEdit, editedGuardian);
-        model.updateFilteredGuardianList(PREDICATE_SHOW_ALL_GUARDIANS);
         return new CommandResult(String.format(MESSAGE_SUCCESS, Messages.format(editedGuardian)), editedGuardian);
     }
 

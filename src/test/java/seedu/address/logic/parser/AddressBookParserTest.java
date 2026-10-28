@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.commands.AddGuardianCommand;
+import seedu.address.logic.commands.AddLessonCommand;
 import seedu.address.logic.commands.AddStudentCommand;
 import seedu.address.logic.commands.ClearCommand;
 import seedu.address.logic.commands.ClearStudentRemarkCommand;
@@ -31,6 +32,7 @@ import seedu.address.logic.commands.ListGuardianCommand;
 import seedu.address.logic.commands.ListStudentCommand;
 import seedu.address.logic.commands.MarkPaidCommand;
 import seedu.address.logic.commands.RemoveGuardianCommand;
+import seedu.address.logic.commands.RemoveLessonCommand;
 import seedu.address.logic.commands.RemoveStudentCommand;
 import seedu.address.logic.commands.SetStudentRemarkCommand;
 import seedu.address.logic.commands.SortStudentCommand;
@@ -47,6 +49,14 @@ import seedu.address.model.student.Subject;
 public class AddressBookParserTest {
 
     private final AddressBookParser parser = new AddressBookParser();
+
+    @Test
+    public void parseCommand_lesson_returnsAddLessonCommand() throws Exception {
+        Command command = new AddressBookParser().parseCommand(
+                "add-l 1 d/2026-11-01 t/14:00 len/60 w/4");
+
+        assertTrue(command instanceof AddLessonCommand);
+    }
 
     @Test
     public void parseCommand_studentRemarks_routesBothCommands() throws Exception {
@@ -128,6 +138,20 @@ public class AddressBookParserTest {
         RemoveStudentCommand command = (RemoveStudentCommand) parser.parseCommand(
                 RemoveStudentCommand.COMMAND_WORD + " " + INDEX_FIRST_PERSON.getOneBased());
         assertEquals(new RemoveStudentCommand(INDEX_FIRST_PERSON), command);
+    }
+
+    @Test
+    public void parseCommand_removeLesson() throws Exception {
+        RemoveLessonCommand command = (RemoveLessonCommand) parser.parseCommand("remove-l 1");
+        assertEquals(new RemoveLessonCommand(INDEX_FIRST_PERSON), command);
+    }
+
+    @Test
+    public void parseCommand_removeLesson_invalidArguments() {
+        assertThrows(ParseException.class, seedu.address.logic.Messages.MESSAGE_INVALID_LESSON_DISPLAYED_INDEX, () ->
+                parser.parseCommand("remove-l 0"));
+        assertThrows(ParseException.class, "Invalid command format.\n"
+                + RemoveLessonCommand.MESSAGE_USAGE, () -> parser.parseCommand("remove-l abc"));
     }
 
     @Test

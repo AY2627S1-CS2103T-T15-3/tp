@@ -16,7 +16,7 @@ import seedu.address.logic.parser.exceptions.ParseException;
 public class EditGuardianCommandParser implements Parser<EditGuardianCommand> {
     /* Treat the relationship marker "s/o" as name content, not as an unknown prefix. */
     private static final Pattern PREFIX_PATTERN =
-            Pattern.compile("(?<!\\S)(?!s/o(?:\\s|$))([A-Za-z][A-Za-z0-9-]*)/");
+            Pattern.compile("(?<!\\S)(?!s/o(?:\\s|$))([a-z][a-z0-9-]*)/");
     private static final Set<String> SUPPORTED_PREFIXES = Set.of("n/", "p/", "e/", "a/");
 
     @Override

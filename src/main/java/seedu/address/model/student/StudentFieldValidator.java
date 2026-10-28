@@ -13,8 +13,9 @@ public final class StudentFieldValidator {
     public static final String PHONE_MESSAGE =
             "Phone numbers must contain 3-15 digits and may start with '+'.";
     public static final String EMAIL_MESSAGE =
-            "Emails should be of the format local-part@domain, must not contain spaces, "
-                    + "and must have a domain such as example.com.";
+            "Emails must use the format local-part@domain, must not contain spaces, "
+                    + "must have a domain such as example.com, and must not start or end with a full stop (.) "
+                    + "or contain consecutive full stops (.) in the local part.";
     public static final String ADDRESS_MESSAGE =
             "Addresses must be 1-200 characters long, must not be blank, and may contain only letters, "
                     + "digits, spaces and the punctuation , . # - / ( ) '.";
