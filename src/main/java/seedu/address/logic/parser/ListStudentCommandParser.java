@@ -6,7 +6,7 @@ import seedu.address.logic.commands.ListStudentCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 
 /**
- * Parses input arguments and creates a new FindCommand object
+ * Parses input arguments and creates a new ListStudentCommand object.
  */
 public class ListStudentCommandParser implements Parser<ListStudentCommand> {
 

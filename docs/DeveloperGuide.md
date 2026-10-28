@@ -50,7 +50,7 @@ The bulk of the app's work is done by the following four components:
 
 **How the architecture components interact with each other**
 
-The *Sequence Diagram* below shows how the components interact with each other for the scenario where the user issues the command `delete 1`.
+The *Sequence Diagram* below shows how the components interact with each other for the scenario where the user issues the command `remove-s 1`.
 
 <puml src="diagrams/ArchitectureSequenceDiagram.puml" width="574" />
 
@@ -69,7 +69,7 @@ The sections below give more details of each component.
 
 The **API** of this component is specified in [`Ui.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/ui/Ui.java)
 
-<puml src="diagrams/UiClassDiagram.puml" alt="Structure of the UI Component"/>
+<puml src="diagrams/UiClassDiagram.puml" alt="Structure of the UI Component" />
 
 The UI consists of a `MainWindow` and its parts, such as `CommandBox`, `ResultDisplay`, `PersonListPanel`, and `StatusBarFooter`. All of these, including `MainWindow`, inherit from the abstract `UiPart` class, which captures common behavior among classes that represent visible GUI parts.
 
@@ -88,34 +88,34 @@ The `UI` component,
 
 Here's a (partial) class diagram of the `Logic` component:
 
-<puml src="diagrams/LogicClassDiagram.puml" width="550"/>
+<puml src="diagrams/LogicClassDiagram.puml" width="550" />
 
-The sequence diagram below illustrates the interactions within the `Logic` component, taking `execute("delete 1")` API call as an example.
+The sequence diagram below illustrates the interactions within the `Logic` component, taking `execute("remove-s 1")` API call as an example.
 
-<puml src="diagrams/DeleteSequenceDiagram.puml" alt="Interactions Inside the Logic Component for the `delete 1` Command" />
+<puml src="diagrams/DeleteSequenceDiagram.puml" alt="Interactions Inside the Logic Component for the `remove-s 1` Command" />
 
 The following sequence diagram shows how `unlink-g` removes an existing student-guardian link.
 
 <puml src="diagrams/UnlinkGuardianSequenceDiagram.puml"
-      alt="Interactions for the unlink-g command" />
+      alt="Interactions for the unlink-g command"></puml>
 
 <box type="info" seamless>
 
-**Note:** The lifeline for `DeleteCommandParser` should end at the destroy marker (X), but due to a limitation of PlantUML, the lifeline continues till the end of diagram.
+**Note:** The lifeline for `RemoveStudentCommandParser` should end at the destroy marker (X), but due to a limitation of PlantUML, the lifeline continues till the end of diagram.
 </box>
 
 
 How the `Logic` component works:
 
-1. When `Logic` is called upon to execute a command, the command is passed to an `AddressBookParser` object, which in turn creates a parser that matches the command (e.g., `DeleteCommandParser`) and uses it to parse the command.
-1. This results in a `Command` object (more precisely, an object of one of its subclasses e.g., `DeleteCommand`) which is executed by the `LogicManager`.
-1. The command can communicate with the `Model` when it is executed (e.g. to delete a person).<br>
+1. When `Logic` is called upon to execute a command, the command is passed to an `AddressBookParser` object, which in turn creates a parser that matches the command (e.g., `RemoveStudentCommandParser`) and uses it to parse the command.
+1. This results in a `Command` object (more precisely, an object of one of its subclasses e.g., `RemoveStudentCommand`) which is executed by the `LogicManager`.
+1. The command can communicate with the `Model` when it is executed (e.g. to remove a student).<br>
    Note that although this is shown as a single step in the diagram above for simplicity, the code can require several interactions between the command object and the `Model` to complete the operation.
 1. The result of the command execution is encapsulated as a `CommandResult` object which is returned from `Logic`.
 
 Here are the other classes in `Logic` (omitted from the class diagram above) that are used for parsing a user command:
 
-<puml src="diagrams/ParserClasses.puml" width="600"/>
+<puml src="diagrams/ParserClasses.puml" width="600"></puml>
 
 How the parsing works:
 * When called upon to parse a user command, the `AddressBookParser` class creates an `XYZCommandParser` (`XYZ` is a placeholder for the specific command name, e.g., `AddCommandParser`). The parser uses the other classes shown above to parse the user command and create an `XYZCommand` object (e.g., `AddCommand`). The `AddressBookParser` returns that object as a `Command` object.
@@ -195,7 +195,7 @@ The `find-s` command accepts one or more name keywords. `FindStudentCommandParse
 update the filtered student list. Matching is case-insensitive, and a student is included
 when their name contains any of the supplied keywords.
 
-<puml src="diagrams/FindSequenceDiagram.puml" alt="Interactions Inside the Logic Component for the `find-s alice` Command"></puml>
+<puml src="diagrams/FindSequenceDiagram.puml" alt="Interactions Inside the Logic Component for the `find-s alice` Command" />
 
 The same process is followed for `find-g`, using the corresponding guardian command parser,
 command, predicate, and filtered guardian list.
@@ -445,17 +445,15 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 **MSS**
 
 1. User requests to add a student.
-2. User provides the student's name, phone number, email address, postal
-   address, academic level, and at least one subject.
-3. TutorTrack adds the student to the student records.
+2. User provides the required student details.
+3. TutorTrack validates and adds the student record.
 4. TutorTrack confirms that the student was added.
 
    Use case ends.
 
 **Extensions**
 
-* 2a. The provided details are invalid, incomplete, or contain an unsupported
-  or repeated parameter.
+* 2a. The provided details are invalid or incomplete.
 
   * 2a1. TutorTrack informs the user of the error.
   * 2a2. User provides corrected details.
@@ -463,7 +461,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
     Steps 2a1-2a2 are repeated until the details are valid and complete. Use
     case resumes from step 3.
 
-* 2b. A student with the same normalized name and phone number already exists.
+* 2b. A student with the same identifying details already exists.
 
   * 2b1. TutorTrack informs the user that the student already exists.
 
@@ -474,17 +472,15 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 **MSS**
 
 1. User requests to add a guardian.
-2. User provides the guardian's name, phone number, email address, and postal
-   address.
-3. TutorTrack adds the guardian's contact details to the guardian records.
+2. User provides the required guardian details.
+3. TutorTrack validates and adds the guardian record.
 4. TutorTrack confirms that the guardian was added.
 
    Use case ends.
 
 **Extensions**
 
-* 2a. The provided details are invalid, incomplete, or contain an unsupported
-  or repeated parameter.
+* 2a. The provided details are invalid or incomplete.
 
   * 2a1. TutorTrack informs the user of the error.
   * 2a2. User provides corrected details.
@@ -492,7 +488,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
     Steps 2a1-2a2 are repeated until the details are valid and complete. Use
     case resumes from step 3.
 
-* 2b. A guardian with the same normalized name and phone number already exists.
+* 2b. A guardian with the same identifying details already exists.
 
   * 2b1. TutorTrack informs the user that the guardian already exists.
 
@@ -688,7 +684,31 @@ separate use case.
 
   Use case ends.
 
-**Use case: U12 - Schedule a lesson**
+**Use case: U12 - Sort students**
+
+**MSS**
+
+1. User requests to sort the displayed students by name.
+2. TutorTrack sorts the displayed student list in ascending order by name.
+3. TutorTrack displays the sorted student list.
+
+   Use case ends.
+
+**Extensions**
+
+* 1a. User provides arguments with the sorting request.
+
+  * 1a1. TutorTrack shows an error message.
+
+    Use case ends.
+
+* 2a. The student list is empty.
+
+  * 2a1. TutorTrack displays the empty student list.
+
+    Use case ends.
+
+**Use case: U13 - Schedule a lesson**
 
 **Command:** `add-l INDEX d/YYYY-MM-DD t/HH:MM l/LENGTH(MINUTES) w/WEEKS`
 
@@ -730,7 +750,7 @@ separate use case.
 
       Use case resumes at step 2.
 
-**Use case: U13 - Mark a student's payment as paid**
+**Use case: U14 - Mark a student's payment as paid**
 
 **MSS**
 
@@ -764,7 +784,7 @@ separate use case.
 
       Use case ends.
 
-**Use case: U14 - Set student remark**
+**Use case: U15 - Set student remark**
 
 **MSS**
 
@@ -788,7 +808,7 @@ separate use case.
 
     Use case ends.
 
-**Use case: U15 - Clear student remark**
+**Use case: U16 - Clear student remark**
 
 **MSS**
 
