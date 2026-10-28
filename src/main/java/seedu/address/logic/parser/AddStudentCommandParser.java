@@ -1,5 +1,7 @@
 package seedu.address.logic.parser;
 
+import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -21,7 +23,6 @@ import seedu.address.model.student.Subject;
 
 /** Parses the {@code add-s} command. */
 public class AddStudentCommandParser implements Parser<AddStudentCommand> {
-    private static final String MESSAGE_INVALID_FORMAT = "Invalid command format.\n";
     /* Treat the relationship marker "s/o" as name content rather than the subject prefix "s/". */
     private static final Pattern PREFIX_PATTERN =
             Pattern.compile("(?<!\\S)(?!s/o(?:\\s|$))([A-Za-z][A-Za-z0-9-]*)/");
@@ -82,7 +83,8 @@ public class AddStudentCommandParser implements Parser<AddStudentCommand> {
     }
 
     private static ParseException invalidFormat() {
-        return new ParseException(MESSAGE_INVALID_FORMAT + AddStudentCommand.MESSAGE_USAGE);
+        return new ParseException(
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddStudentCommand.MESSAGE_USAGE));
     }
 
     private record PrefixMatch(int start, int end, String prefix) {

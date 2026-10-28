@@ -178,14 +178,14 @@ public class StudentRemarkCommandTest {
         Map<String, String> parseErrors = new LinkedHashMap<>();
         for (String token : List.of("abc", "-1", "0", "2147483648", "1\u00002")) {
             parseErrors.put("set-remark-s " + token + " Hello",
-                    "Invalid command format!\nUsage: set-remark-s INDEX REMARK\nINDEX must be a positive integer.");
+                    "Invalid command format.\nUsage: set-remark-s INDEX REMARK\nINDEX must be a positive integer.");
             parseErrors.put("clear-remark-s " + token,
-                    "Invalid command format!\nUsage: clear-remark-s INDEX\nINDEX must be a positive integer.");
+                    "Invalid command format.\nUsage: clear-remark-s INDEX\nINDEX must be a positive integer.");
         }
         parseErrors.put("set-remark-s",
-                "Invalid command format!\nUsage: set-remark-s INDEX REMARK\nINDEX must be a positive integer.");
+                "Invalid command format.\nUsage: set-remark-s INDEX REMARK\nINDEX must be a positive integer.");
         parseErrors.put("clear-remark-s",
-                "Invalid command format!\nUsage: clear-remark-s INDEX\nINDEX must be a positive integer.");
+                "Invalid command format.\nUsage: clear-remark-s INDEX\nINDEX must be a positive integer.");
         parseErrors.put("set-remark-s 1", SetStudentRemarkCommand.MESSAGE_REMARK_REQUIRED);
         parseErrors.put("set-remark-s 1 " + "a".repeat(301), Remark.MESSAGE_CONSTRAINTS);
         for (int displayedCount : List.of(2, 1, 0)) {
