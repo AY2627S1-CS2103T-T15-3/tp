@@ -53,6 +53,7 @@ public class AddressBookParser {
         Map<String, String> aliases = new HashMap<>();
         List.of(
                 AddGuardianCommand.COMMAND_WORD,
+                AddLessonCommand.COMMAND_WORD,
                 AddStudentCommand.COMMAND_WORD,
                 EditGuardianCommand.COMMAND_WORD,
                 LinkGuardianCommand.COMMAND_WORD,
@@ -70,6 +71,7 @@ public class AddressBookParser {
                 ListGuardianCommand.COMMAND_WORD,
                 ListStudentCommand.COMMAND_WORD,
                 SortStudentCommand.COMMAND_WORD,
+                RemoveLessonCommand.COMMAND_WORD,
                 ExitCommand.COMMAND_WORD,
                 HelpCommand.COMMAND_WORD)
                 .forEach(commandWord -> addCommandWordAliases(aliases, commandWord));
