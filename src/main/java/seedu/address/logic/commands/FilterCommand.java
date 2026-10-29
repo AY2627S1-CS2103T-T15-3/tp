@@ -24,6 +24,8 @@ public class FilterCommand extends Command {
             + "[" + PREFIX_SUBJECT + "SUBJECT]... "
             + "[" + PREFIX_PAID + "YYYY-MM] "
             + "[" + PREFIX_UNPAID + "YYYY-MM]";
+    public static final String MESSAGE_NO_FILTER = "At least one field to filter by must be provided.\n"
+            + MESSAGE_USAGE;
 
     private final StudentMatchesFilterPredicate predicate;
 
