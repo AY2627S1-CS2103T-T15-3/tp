@@ -3,6 +3,10 @@ package seedu.address.logic.parser;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.Messages.MESSAGE_UNKNOWN_COMMAND;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,6 +47,49 @@ public class AddressBookParser {
      */
     private static final Pattern BASIC_COMMAND_FORMAT = Pattern.compile("(?<commandWord>\\S+)(?<arguments>.*)");
     private static final Logger logger = LogsCenter.getLogger(AddressBookParser.class);
+    private static final Map<String, String> COMMAND_WORD_ALIASES = createCommandWordAliases();
+
+    private static Map<String, String> createCommandWordAliases() {
+        Map<String, String> aliases = new HashMap<>();
+        List.of(
+                AddGuardianCommand.COMMAND_WORD,
+                AddLessonCommand.COMMAND_WORD,
+                AddStudentCommand.COMMAND_WORD,
+                EditGuardianCommand.COMMAND_WORD,
+                LinkGuardianCommand.COMMAND_WORD,
+                UnlinkGuardianCommand.COMMAND_WORD,
+                EditStudentCommand.COMMAND_WORD,
+                RemoveGuardianCommand.COMMAND_WORD,
+                RemoveStudentCommand.COMMAND_WORD,
+                SetStudentRemarkCommand.COMMAND_WORD,
+                ClearStudentRemarkCommand.COMMAND_WORD,
+                MarkPaidCommand.COMMAND_WORD,
+                ClearCommand.COMMAND_WORD,
+                FilterCommand.COMMAND_WORD,
+                FindGuardianCommand.COMMAND_WORD,
+                FindStudentCommand.COMMAND_WORD,
+                ListGuardianCommand.COMMAND_WORD,
+                ListStudentCommand.COMMAND_WORD,
+                SortStudentCommand.COMMAND_WORD,
+                RemoveLessonCommand.COMMAND_WORD,
+                ExitCommand.COMMAND_WORD,
+                HelpCommand.COMMAND_WORD)
+                .forEach(commandWord -> addCommandWordAliases(aliases, commandWord));
+        return Map.copyOf(aliases);
+    }
+
+    private static void addCommandWordAliases(Map<String, String> aliases, String commandWord) {
+        aliases.put(commandWord, commandWord);
+        aliases.put(Character.toUpperCase(commandWord.charAt(0)) + commandWord.substring(1), commandWord);
+        aliases.put(commandWord.toUpperCase(Locale.ROOT), commandWord);
+        if (commandWord.contains("-")) {
+            int lastHyphen = commandWord.lastIndexOf('-');
+            String lastToken = commandWord.substring(lastHyphen + 1);
+            String capitalizedLast = commandWord.substring(0, lastHyphen + 1)
+                    + Character.toUpperCase(lastToken.charAt(0)) + lastToken.substring(1);
+            aliases.put(capitalizedLast, commandWord);
+        }
+    }
 
     /**
      * Parses user input into command for execution.
@@ -57,13 +104,19 @@ public class AddressBookParser {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, HelpCommand.MESSAGE_USAGE));
         }
 
-        final String commandWord = matcher.group("commandWord");
+        final String rawCommandWord = matcher.group("commandWord");
+        final String commandWord = COMMAND_WORD_ALIASES.get(rawCommandWord);
         final String arguments = matcher.group("arguments");
+
+        if (commandWord == null) {
+            logger.finer("This user input caused a ParseException: " + userInput);
+            throw new ParseException(MESSAGE_UNKNOWN_COMMAND);
+        }
 
         // Note to developers: Change LOG_LEVEL in LogsCenter to enable lower level (i.e., FINE, FINER and lower)
         // log messages such as the one below.
         // Lower level log messages are used sparingly to minimize noise in the code.
-        logger.fine("Command word: " + commandWord + "; Arguments: " + arguments);
+        logger.fine("Command word: " + rawCommandWord + "; Arguments: " + arguments);
 
         return switch (commandWord) {
             case AddGuardianCommand.COMMAND_WORD -> new AddGuardianCommandParser().parse(arguments);
