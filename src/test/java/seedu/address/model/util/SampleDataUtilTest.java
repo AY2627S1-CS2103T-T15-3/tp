@@ -17,7 +17,9 @@ public class SampleDataUtilTest {
         assertEquals(3, sampleAddressBook.getGuardianList().size());
         assertFalse(sampleAddressBook.getStudentList().get(0).getRemark().isEmpty());
         assertFalse(sampleAddressBook.getStudentList().get(0).getPaidMonths().isEmpty());
-        assertEquals(0, sampleAddressBook.getLessonList().size());
-        assertEquals(0, sampleAddressBook.getStudentGuardianLinkList().size());
+        assertEquals(7, sampleAddressBook.getLessonList().size());
+        assertEquals(4, sampleAddressBook.getStudentGuardianLinkList().size());
+        assertEquals(2, sampleAddressBook.getStudentGuardianLinkList().stream()
+                .filter(link -> link.getStudent().equals(sampleAddressBook.getStudentList().get(0))).count());
     }
 }

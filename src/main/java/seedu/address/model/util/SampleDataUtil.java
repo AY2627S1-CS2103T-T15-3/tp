@@ -1,11 +1,16 @@
 package seedu.address.model.util;
 
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import seedu.address.model.AddressBook;
 import seedu.address.model.ReadOnlyAddressBook;
 import seedu.address.model.guardian.Guardian;
+import seedu.address.model.lesson.Lesson;
+import seedu.address.model.link.StudentGuardianLink;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
@@ -38,10 +43,33 @@ public class SampleDataUtil {
         addressBook.addStudent(lucy);
         addressBook.addStudent(sam);
 
-        addressBook.addGuardian(createGuardian("Billie O'Connor", "6598765432", "billie@example.com",
-                "30 River Valley Road"));
-        addressBook.addGuardian(createGuardian("John Tan", "91234567", "john@example.com", "10 Main Street"));
-        addressBook.addGuardian(createGuardian("Mary Jane", "6598765432", "mary@example.com", "25 Happy Road"));
+        Guardian billie = createGuardian("Billie O'Connor", "6598765432", "billie@example.com",
+                "30 River Valley Road");
+        Guardian john = createGuardian("John Tan", "91234567", "john@example.com", "10 Main Street");
+        Guardian mary = createGuardian("Mary Jane", "6598765432", "mary@example.com", "25 Happy Road");
+        addressBook.addGuardian(billie);
+        addressBook.addGuardian(john);
+        addressBook.addGuardian(mary);
+
+        addressBook.addStudentGuardianLink(new StudentGuardianLink(alice, billie));
+        addressBook.addStudentGuardianLink(new StudentGuardianLink(alice, john));
+        addressBook.addStudentGuardianLink(new StudentGuardianLink(henry, john));
+        addressBook.addStudentGuardianLink(new StudentGuardianLink(lucy, mary));
+
+        addressBook.addLesson(new Lesson(alice, LocalDate.of(2026, 11, 1), LocalTime.of(14, 0),
+                Duration.ofMinutes(60)));
+        addressBook.addLesson(new Lesson(henry, LocalDate.of(2026, 11, 2), LocalTime.of(16, 0),
+                Duration.ofMinutes(90)));
+        addressBook.addLesson(new Lesson(lucy, LocalDate.of(2026, 11, 3), LocalTime.of(10, 0),
+                Duration.ofMinutes(60)));
+        addressBook.addLesson(new Lesson(sam, LocalDate.of(2026, 11, 4), LocalTime.of(18, 0),
+                Duration.ofMinutes(120)));
+        addressBook.addLesson(new Lesson(alice, LocalDate.of(2026, 11, 8), LocalTime.of(14, 0),
+                Duration.ofMinutes(60)));
+        addressBook.addLesson(new Lesson(henry, LocalDate.of(2026, 11, 9), LocalTime.of(16, 0),
+                Duration.ofMinutes(90)));
+        addressBook.addLesson(new Lesson(lucy, LocalDate.of(2026, 11, 10), LocalTime.of(23, 30),
+                Duration.ofMinutes(120)));
 
         return addressBook;
     }
