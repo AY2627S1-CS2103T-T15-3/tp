@@ -9,8 +9,8 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.commands.FindGuardianCommand;
+import seedu.address.model.guardian.GuardianFieldValidator;
 import seedu.address.model.guardian.GuardianNameContainsKeywordsPredicate;
-import seedu.address.model.person.Name;
 
 /** Contains unit tests for {@code FindGuardianCommandParser}. */
 public class FindGuardianCommandParserTest {
@@ -36,7 +36,7 @@ public class FindGuardianCommandParserTest {
 
     @Test
     public void parse_invalidName_throwsParseException() {
-        assertParseFailure(parser, "!@aa", Name.MESSAGE_CONSTRAINTS);
+        assertParseFailure(parser, "!@aa", GuardianFieldValidator.NAME_MESSAGE);
     }
 
     @Test
@@ -47,6 +47,6 @@ public class FindGuardianCommandParserTest {
                 new GuardianNameContainsKeywordsPredicate(List.of(firstKeyword, secondKeyword)));
 
         assertParseSuccess(parser, firstKeyword + " " + secondKeyword, expected);
-        assertParseFailure(parser, "a".repeat(101), Name.MESSAGE_CONSTRAINTS);
+        assertParseFailure(parser, "a".repeat(101), GuardianFieldValidator.NAME_MESSAGE);
     }
 }

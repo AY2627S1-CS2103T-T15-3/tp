@@ -144,7 +144,7 @@ public class StudentRemarkCommandTest {
                     new ClearStudentRemarkCommand(SECOND))) {
                 CommandException exception = assertThrows(CommandException.class, () -> command.execute(model));
                 assertEquals(filtered ? Messages.MESSAGE_NO_STUDENTS_DISPLAYED
-                        : Messages.MESSAGE_STUDENT_INDEX_OUT_OF_RANGE, exception.getMessage());
+                        : Messages.MESSAGE_INVALID_STUDENT_DISPLAYED_INDEX, exception.getMessage());
                 assertEquals(before, model.getAddressBook());
             }
         }
@@ -199,7 +199,7 @@ public class StudentRemarkCommandTest {
                 assertEquals(savedJson, Files.readString(dataPath));
             }
             String message = displayedCount == 0 ? "No students are currently displayed."
-                    : "Student index is out of range, choose a valid index from the currently displayed student list";
+                    : "The student index provided is invalid.";
             for (String input : List.of("set-remark-s 999 Hello", "clear-remark-s 999")) {
                 CommandException exception = assertThrows(CommandException.class, () -> logic.execute(input));
                 assertEquals(message, exception.getMessage());

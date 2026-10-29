@@ -3,10 +3,8 @@ package seedu.address.logic.parser;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.Messages.MESSAGE_UNKNOWN_COMMAND;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
-import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -48,11 +46,7 @@ public class AddressBookParser {
      */
     private static final Pattern BASIC_COMMAND_FORMAT = Pattern.compile("(?<commandWord>\\S+)(?<arguments>.*)");
     private static final Logger logger = LogsCenter.getLogger(AddressBookParser.class);
-    private static final Map<String, String> COMMAND_WORD_ALIASES = createCommandWordAliases();
-
-    private static Map<String, String> createCommandWordAliases() {
-        Map<String, String> aliases = new HashMap<>();
-        List.of(
+    private static final Set<String> COMMAND_WORDS = Set.of(
                 AddGuardianCommand.COMMAND_WORD,
                 AddLessonCommand.COMMAND_WORD,
                 AddStudentCommand.COMMAND_WORD,
@@ -75,23 +69,7 @@ public class AddressBookParser {
                 RemoveLessonCommand.COMMAND_WORD,
                 ViewLessonCommand.COMMAND_WORD,
                 ExitCommand.COMMAND_WORD,
-                HelpCommand.COMMAND_WORD)
-                .forEach(commandWord -> addCommandWordAliases(aliases, commandWord));
-        return Map.copyOf(aliases);
-    }
-
-    private static void addCommandWordAliases(Map<String, String> aliases, String commandWord) {
-        aliases.put(commandWord, commandWord);
-        aliases.put(Character.toUpperCase(commandWord.charAt(0)) + commandWord.substring(1), commandWord);
-        aliases.put(commandWord.toUpperCase(Locale.ROOT), commandWord);
-        if (commandWord.contains("-")) {
-            int lastHyphen = commandWord.lastIndexOf('-');
-            String lastToken = commandWord.substring(lastHyphen + 1);
-            String capitalizedLast = commandWord.substring(0, lastHyphen + 1)
-                    + Character.toUpperCase(lastToken.charAt(0)) + lastToken.substring(1);
-            aliases.put(capitalizedLast, commandWord);
-        }
-    }
+                HelpCommand.COMMAND_WORD);
 
     /**
      * Parses user input into command for execution.
@@ -107,10 +85,11 @@ public class AddressBookParser {
         }
 
         final String rawCommandWord = matcher.group("commandWord");
-        final String commandWord = COMMAND_WORD_ALIASES.get(rawCommandWord);
+        // Command words are case-insensitive.
+        final String commandWord = rawCommandWord.toLowerCase(Locale.ROOT);
         final String arguments = matcher.group("arguments");
 
-        if (commandWord == null) {
+        if (!COMMAND_WORDS.contains(commandWord)) {
             logger.finer("This user input caused a ParseException: " + userInput);
             throw new ParseException(MESSAGE_UNKNOWN_COMMAND);
         }

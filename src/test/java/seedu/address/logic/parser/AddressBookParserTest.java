@@ -115,7 +115,7 @@ public class AddressBookParserTest {
     }
 
     @Test
-    public void parseCommand_supportedCommandWordCaseVariants_areAccepted() {
+    public void parseCommand_commandWordCaseVariants_areAccepted() {
         Map<String, String> commands = Map.ofEntries(
                 Map.entry("add-s", " n/Henry Tan p/91234567 e/henry@example.com a/12 Road l/JC 1 s/Math"),
                 Map.entry("add-g", " n/Ben Tan p/92345678 e/ben@example.com a/12 Road"),
@@ -144,21 +144,18 @@ public class AddressBookParserTest {
     }
 
     @Test
-    public void parseCommand_unsupportedMixedCaseCommandWord_isRejected() {
-        assertThrows(ParseException.class, MESSAGE_UNKNOWN_COMMAND, () -> parser.parseCommand("lIst-S"));
+    public void parseCommand_mixedCaseCommandWord_isAccepted() throws Exception {
+        assertTrue(parser.parseCommand("lIst-S") instanceof ListStudentCommand);
+        assertTrue(parser.parseCommand("aDd-g n/Ben Tan p/92345678 e/ben@example.com a/12 Road")
+                instanceof AddGuardianCommand);
     }
 
     private List<String> acceptedCommandWordVariants(String commandWord) {
-        if (!commandWord.contains("-")) {
-            return List.of(commandWord, Character.toUpperCase(commandWord.charAt(0)) + commandWord.substring(1),
-                    commandWord.toUpperCase(Locale.ROOT));
-        }
-        int lastHyphen = commandWord.lastIndexOf('-');
-        String lastToken = commandWord.substring(lastHyphen + 1);
         String capitalizedFirst = Character.toUpperCase(commandWord.charAt(0)) + commandWord.substring(1);
-        String capitalizedLast = commandWord.substring(0, lastHyphen + 1)
-                + Character.toUpperCase(lastToken.charAt(0)) + lastToken.substring(1);
-        return List.of(commandWord, capitalizedFirst, capitalizedLast, commandWord.toUpperCase(Locale.ROOT));
+        String alternatingCase = commandWord.chars()
+                .mapToObj(c -> String.valueOf((char) c))
+                .reduce("", (prefix, c) -> prefix + (prefix.length() % 2 == 0 ? c : c.toUpperCase(Locale.ROOT)));
+        return List.of(commandWord, capitalizedFirst, alternatingCase, commandWord.toUpperCase(Locale.ROOT));
     }
 
     @Test
@@ -206,8 +203,8 @@ public class AddressBookParserTest {
 
     @Test
     public void parseCommand_removeLesson_invalidArguments() {
-        assertThrows(ParseException.class, seedu.address.logic.Messages.MESSAGE_INVALID_LESSON_DISPLAYED_INDEX, () ->
-                parser.parseCommand("remove-l 0"));
+        assertThrows(ParseException.class, "Invalid command format.\n"
+                + RemoveLessonCommand.MESSAGE_USAGE, () -> parser.parseCommand("remove-l 0"));
         assertThrows(ParseException.class, "Invalid command format.\n"
                 + RemoveLessonCommand.MESSAGE_USAGE, () -> parser.parseCommand("remove-l abc"));
     }

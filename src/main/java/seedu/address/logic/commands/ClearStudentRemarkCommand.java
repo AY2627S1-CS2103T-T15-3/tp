@@ -40,7 +40,7 @@ public class ClearStudentRemarkCommand extends Command {
             throw new CommandException(Messages.MESSAGE_NO_STUDENTS_DISPLAYED);
         }
         if (index.getZeroBased() >= students.size()) {
-            throw new CommandException(Messages.MESSAGE_STUDENT_INDEX_OUT_OF_RANGE);
+            throw new CommandException(Messages.MESSAGE_INVALID_STUDENT_DISPLAYED_INDEX);
         }
         Student original = students.get(index.getZeroBased());
         if (original.getRemark().isEmpty()) {

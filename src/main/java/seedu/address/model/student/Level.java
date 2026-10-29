@@ -12,7 +12,8 @@ import java.util.Locale;
 public class Level {
 
     public static final String MESSAGE_CONSTRAINTS =
-            "Academic level must be 1-50 characters long and may contain only alphanumeric characters and spaces.";
+            "Academic level must be 1-50 characters long and may contain only alphanumeric characters, "
+                    + "spaces and parentheses.";
     public static final String VALIDATION_REGEX = "[\\p{Alnum} ()]+";
     private static final int MAX_LENGTH = 50;
 

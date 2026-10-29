@@ -20,11 +20,7 @@ public class MarkPaidCommand extends Command {
 
     public static final String COMMAND_WORD = "mark-paid";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Marks the student identified by the index number used in the displayed student list "
-            + "as paid for the given month.\n"
-            + "Parameters: INDEX (must be a positive integer) " + PREFIX_MONTH + "YYYY-MM\n"
-            + "Example: " + COMMAND_WORD + " 1 " + PREFIX_MONTH + "2026-10";
+    public static final String MESSAGE_USAGE = "Usage: " + COMMAND_WORD + " INDEX " + PREFIX_MONTH + "YYYY-MM";
 
     public static final String MESSAGE_SUCCESS = "Marked %1$s as paid for %2$s.";
     public static final String MESSAGE_ALREADY_PAID = "%1$s is already marked as paid for %2$s.";

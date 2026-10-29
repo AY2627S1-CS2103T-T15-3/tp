@@ -137,8 +137,8 @@ The student and guardian MVP commands follow the same parser-command flow:
   Newly added or edited records are displayed only when they match that predicate.
 * The list commands reset their respective filtered lists to show all students or guardians.
 * The find commands filter their respective lists by name, matching any full-word keyword case-insensitively.
-* Command words accept four documented capitalization variants: lower-case, first-letter capitalized, final-token
-  capitalized, and all-uppercase. Parameter prefixes remain case-sensitive.
+* Command words are case-insensitive: `AddressBookParser` lower-cases the command word before matching it.
+  Parameter prefixes remain case-sensitive.
 
 ### Model component
 **API** : [`Model.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/model/Model.java)
