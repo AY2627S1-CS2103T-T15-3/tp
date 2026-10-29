@@ -282,7 +282,7 @@ of students in the displayed list.
 * The month must be in the format `YYYY-MM`, with a two-digit month from `01` to `12`, e.g. `2026-10`.
 * A student who is already marked as paid for that month is left unchanged, and an error is shown.
 * Each student's card shows the months they have paid for at the bottom of the card, most recent first, e.g. `Paid: Oct 2026, Sep 2026`.
-* Only the 3 most recent months are shown. If there are more, click the `+N more` dropdown beside them to see the older months.
+* Only the 3 most recent months are shown. If there are more, click the `+N more` button beside them to show all months, and click `Show less` to hide the older months again.
 
 Examples:
 * `mark-paid 1 m/2026-10` marks the 1st student in the displayed student list as paid for October 2026.
