@@ -142,9 +142,15 @@ public class FilterCommandParserTest {
 
         // disallowed characters
         assertParseFailure(parser, " l/JC-1", Level.MESSAGE_CONSTRAINTS);
+    }
 
-        // unsupported prefix is read as part of the level
-        assertParseFailure(parser, " l/JC 1 n/Henry", Level.MESSAGE_CONSTRAINTS);
+    @Test
+    public void parse_unknownParameter_failure() {
+        assertParseFailure(parser, " l/JC 1 x/foo", "Unknown parameter: x/");
+        assertParseFailure(parser, " paid/2026-10 m/2026-11", "Unknown parameter: m/");
+        assertParseFailure(parser, " x/foo s/Mathematics", "Unknown parameter: x/");
+        assertParseFailure(parser, " l/JC 1 n/Henry", "Unknown parameter: n/");
+        assertParseFailure(parser, " x/foo", "Unknown parameter: x/");
     }
 
     @Test
