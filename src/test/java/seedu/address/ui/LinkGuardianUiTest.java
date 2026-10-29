@@ -128,6 +128,30 @@ public class LinkGuardianUiTest {
     }
 
     @Test
+    public void mainWindow_viewLesson_updatesLessonHeading() throws Exception {
+        runOnFxThread(() -> {
+            MainWindow window = new MainWindow(new javafx.stage.Stage(),
+                    new StubLogic(student("Lucy Lim"), guardian("Ben Tan")), Path.of("data.json"));
+            window.fillInnerParts();
+            window.show();
+            Method executeCommand = MainWindow.class.getDeclaredMethod("executeCommand", String.class);
+            executeCommand.setAccessible(true);
+
+            assertEquals("Lessons for " + LocalDate.now(), ((Label)
+                    window.getRoot().getScene().lookup("#lessonTitle")).getText());
+
+            executeCommand.invoke(window, "view-l d/2026-11-01");
+            assertEquals("Lessons for 2026-11-01", ((Label)
+                    window.getRoot().getScene().lookup("#lessonTitle")).getText());
+
+            executeCommand.invoke(window, "view-l");
+            assertEquals("Lessons", ((Label) window.getRoot().getScene().lookup("#lessonTitle")).getText());
+            window.getPrimaryStage().hide();
+            return null;
+        });
+    }
+
+    @Test
     public void mainWindow_removeGuardian_refreshesAllLinkedStudentCards(@TempDir Path temporaryFolder)
             throws Exception {
         runOnFxThread(() -> {
@@ -331,6 +355,12 @@ public class LinkGuardianUiTest {
 
         @Override
         public CommandResult execute(String commandText) throws CommandException, ParseException {
+            if (commandText.equals("view-l d/2026-11-01")) {
+                return new CommandResult("Showing lessons on 2026-11-01.");
+            }
+            if (commandText.equals("view-l")) {
+                return new CommandResult("Showing all lessons.");
+            }
             return commandText.equals("student")
                     ? new CommandResult("student", student) : new CommandResult("guardian", guardian);
         }

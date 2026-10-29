@@ -1,20 +1,16 @@
 package seedu.address.ui;
 
 import java.time.LocalDate;
-import java.util.Comparator;
 import java.util.function.Consumer;
 
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
-import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.Region;
 import seedu.address.model.lesson.Lesson;
-import seedu.address.model.lesson.LessonMatchesDatePredicate;
 
 /** Panel containing the scheduled lessons. */
 public class LessonListPanel extends UiPart<Region> {
@@ -22,11 +18,11 @@ public class LessonListPanel extends UiPart<Region> {
 
     @FXML
     private ListView<Lesson> lessonListView;
-    private final FilteredList<Lesson> filteredLessons;
-    private final Consumer<LocalDate> displayedDateUpdater;
     private LocalDate displayedDate;
+    private final Consumer<LocalDate> displayedDateUpdater;
+    private String searchDescription;
 
-    /** Creates a panel displaying lessons filtered to the current day. */
+    /** Creates a panel displaying the supplied filtered lesson list. */
     public LessonListPanel(ObservableList<Lesson> lessonList) {
         this(lessonList, null);
     }
@@ -36,13 +32,11 @@ public class LessonListPanel extends UiPart<Region> {
         super(FXML);
         this.displayedDateUpdater = displayedDateUpdater;
         displayedDate = LocalDate.now();
+        searchDescription = displayedDate.toString();
         if (displayedDateUpdater != null) {
             displayedDateUpdater.accept(displayedDate);
         }
-        filteredLessons = new FilteredList<>(lessonList, new LessonMatchesDatePredicate(displayedDate));
-        SortedList<Lesson> sortedLessons = new SortedList<>(filteredLessons,
-                Comparator.comparing(Lesson::getDate).thenComparing(Lesson::getStartTime));
-        lessonListView.setItems(sortedLessons);
+        lessonListView.setItems(lessonList);
         updatePlaceholder();
         lessonListView.setCellFactory(listView -> new LessonListViewCell());
         lessonList.addListener((ListChangeListener<Lesson>) change -> {
@@ -60,13 +54,19 @@ public class LessonListPanel extends UiPart<Region> {
         lessonListView.refresh();
     }
 
-    /** Changes the date whose lessons are displayed. */
+    /** Updates the description used when the current lesson filter has no results. */
+    public void setSearchDescription(String description) {
+        searchDescription = description;
+        updatePlaceholder();
+    }
+
+    /** Updates the displayed date label and, when supplied, the model's lesson predicate. */
     public void setDisplayedDate(LocalDate date) {
         displayedDate = date;
+        searchDescription = date.toString();
         if (displayedDateUpdater != null) {
             displayedDateUpdater.accept(date);
         }
-        filteredLessons.setPredicate(new LessonMatchesDatePredicate(displayedDate));
         updatePlaceholder();
     }
 
@@ -76,7 +76,7 @@ public class LessonListPanel extends UiPart<Region> {
     }
 
     private void updatePlaceholder() {
-        Label placeholder = new Label("No lessons scheduled for " + displayedDate + ".");
+        Label placeholder = new Label("No lessons for " + searchDescription + ".");
         placeholder.getStyleClass().add("label-bright");
         placeholder.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
         placeholder.setWrapText(true);
