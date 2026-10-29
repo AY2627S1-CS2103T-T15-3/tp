@@ -15,9 +15,13 @@ package Model as ModelPackage <<Rectangle>> {
 
     Class UniqueStudentList
     Class UniqueGuardianList
+    Class UniqueLessonList
     Class StudentGuardianLink
     Class Student
     Class Guardian
+    Class Lesson
+    Class LessonMatchesDatePredicate
+    Class LessonMatchesStudentPredicate
     Class Name
     Class Phone
     Class Email
@@ -38,9 +42,18 @@ ModelManager -right-> "1" UserPrefs
 ' AddressBook owns the three main collections and the relationship records.
 AddressBook *-- "1" UniqueStudentList
 AddressBook *-- "1" UniqueGuardianList
+AddressBook *-- "1" UniqueLessonList
 AddressBook *-- "0..*" StudentGuardianLink
 UniqueStudentList --> "0..*" Student
 UniqueGuardianList --> "0..*" Guardian
+UniqueLessonList --> "0..*" Lesson
+
+' Lessons belong to students and can be filtered by date or student.
+Lesson "0..*" --> "1" Student
+LessonMatchesDatePredicate ..> Lesson
+LessonMatchesStudentPredicate ..> Lesson
+ModelManager ..> LessonMatchesDatePredicate
+ModelManager ..> LessonMatchesStudentPredicate
 
 ' A link reifies the relationship between a student and a guardian.
 StudentGuardianLink "0..*" --> "1" Student

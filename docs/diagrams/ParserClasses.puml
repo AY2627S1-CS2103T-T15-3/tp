@@ -11,6 +11,8 @@ package "Parser classes"{
 Class "<<interface>>\nParser" as Parser
 Class AddressBookParser
 Class XYZCommandParser
+Class ViewLessonCommandParser
+Class ViewLessonCommand
 Class CliSyntax
 Class ParserUtil
 Class ArgumentMultimap
@@ -22,8 +24,10 @@ Class HiddenOutside #FFFFFF
 HiddenOutside ..> AddressBookParser
 
 AddressBookParser .down.> XYZCommandParser: <<create>>
+AddressBookParser .down.> ViewLessonCommandParser: <<create>>
 
 XYZCommandParser ..> XYZCommand : <<create>>
+ViewLessonCommandParser ..> ViewLessonCommand : <<create>>
 AddressBookParser ..> Command : <<use>>
 XYZCommandParser .up.|> Parser
 XYZCommandParser ..> ArgumentMultimap
@@ -35,6 +39,7 @@ XYZCommandParser ..> ParserUtil
 ParserUtil .down.> Prefix
 ArgumentTokenizer .down.> Prefix
 XYZCommand -up-|> Command
+ViewLessonCommand -up-|> Command
 
 note right of XYZCommandParser: XYZCommandParser = AddStudentCommandParser, \nLinkGuardianCommandParser, etc
 note bottom of ArgumentTokenizer: Used only by prefix-based parsers \nsuch as FilterCommandParser \nand MarkPaidCommandParser
