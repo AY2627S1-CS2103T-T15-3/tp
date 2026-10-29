@@ -94,11 +94,6 @@ The sequence diagram below illustrates the interactions within the `Logic` compo
 
 <puml src="diagrams/DeleteSequenceDiagram.puml" alt="Interactions Inside the Logic Component for the `remove-s 1` Command" />
 
-The following sequence diagram shows how `unlink-g` removes an existing student-guardian link.
-
-<puml src="diagrams/UnlinkGuardianSequenceDiagram.puml"
-      alt="Interactions for the unlink-g command"></puml>
-
 <box type="info" seamless>
 
 **Note:** The lifeline for `RemoveStudentCommandParser` should end at the destroy marker (X), but due to a limitation of PlantUML, the lifeline continues till the end of diagram.
