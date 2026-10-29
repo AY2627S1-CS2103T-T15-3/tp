@@ -62,6 +62,17 @@ public class UniqueLessonListTest {
     }
 
     @Test
+    public void add_overlappingLesson_throwsDuplicateLessonException() {
+        uniqueLessonList.add(LESSON);
+        Lesson overlapping = new Lesson(STUDENT, DATE, LocalTime.of(14, 30), Duration.ofMinutes(60));
+
+        DuplicateLessonException exception = assertThrows(DuplicateLessonException.class, () ->
+                uniqueLessonList.add(overlapping));
+
+        assertEquals("Lesson overlaps an existing lesson", exception.getMessage());
+    }
+
+    @Test
     public void remove_lesson_removesSuccessfully() {
         uniqueLessonList.add(LESSON);
 
@@ -101,6 +112,18 @@ public class UniqueLessonListTest {
     }
 
     @Test
+    public void setLesson_overlappingLesson_throwsDuplicateLessonException() {
+        uniqueLessonList.add(LESSON);
+        uniqueLessonList.add(OTHER_LESSON);
+        Lesson overlapping = new Lesson(STUDENT, DATE, LocalTime.of(16, 30), Duration.ofMinutes(60));
+
+        DuplicateLessonException exception = assertThrows(DuplicateLessonException.class, () ->
+                uniqueLessonList.setLesson(LESSON, overlapping));
+
+        assertEquals("Lesson overlaps an existing lesson", exception.getMessage());
+    }
+
+    @Test
     public void setLesson_sameLesson_replacesSuccessfully() {
         uniqueLessonList.add(LESSON);
 
@@ -113,6 +136,16 @@ public class UniqueLessonListTest {
     public void setLessons_duplicateList_throwsDuplicateLessonException() {
         assertThrows(DuplicateLessonException.class, () ->
                 uniqueLessonList.setLessons(List.of(LESSON, LESSON)));
+    }
+
+    @Test
+    public void setLessons_overlappingList_throwsDuplicateLessonException() {
+        Lesson overlapping = new Lesson(STUDENT, DATE, LocalTime.of(14, 30), Duration.ofMinutes(60));
+
+        DuplicateLessonException exception = assertThrows(DuplicateLessonException.class, () ->
+                uniqueLessonList.setLessons(List.of(LESSON, overlapping)));
+
+        assertEquals("Lesson overlaps an existing lesson", exception.getMessage());
     }
 
     @Test

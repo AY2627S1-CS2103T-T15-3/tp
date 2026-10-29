@@ -24,7 +24,7 @@ import seedu.address.model.student.Subject;
 public class EditStudentCommandParser implements Parser<EditStudentCommand> {
     /* Treat the relationship marker "s/o" as name content rather than the subject prefix "s/". */
     private static final Pattern PREFIX_PATTERN =
-            Pattern.compile("(?<!\\S)(?!s/o(?:\\s|$))([A-Za-z][A-Za-z0-9-]*)/");
+            Pattern.compile("(?<!\\S)(?!s/o(?:\\s|$))([a-z][a-z0-9-]*)/");
     private static final Set<String> SUPPORTED_PREFIXES = Set.of("n/", "p/", "e/", "a/", "l/", "s/");
     private static final Set<String> SINGLE_VALUE_PREFIXES = Set.of("n/", "p/", "e/", "a/", "l/");
 

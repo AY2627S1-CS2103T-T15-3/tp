@@ -1,11 +1,13 @@
 package seedu.address.ui;
 
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.logging.Logger;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.input.KeyCombination;
@@ -19,6 +21,7 @@ import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.CommandResult.HighlightTarget;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.lesson.LessonMatchesDatePredicate;
 
 /**
  * The Main Window. Provides the basic application layout containing
@@ -37,6 +40,7 @@ public class MainWindow extends UiPart<Stage> {
     // Independent Ui parts residing in this Ui container
     private StudentListPanel studentListPanel;
     private GuardianListPanel guardianListPanel;
+    private LessonListPanel lessonListPanel;
     private ResultDisplay resultDisplay;
     private HelpWindow helpWindow;
 
@@ -51,6 +55,12 @@ public class MainWindow extends UiPart<Stage> {
 
     @FXML
     private StackPane guardianListPanelPlaceholder;
+
+    @FXML
+    private StackPane lessonListPanelPlaceholder;
+
+    @FXML
+    private Label lessonTitle;
 
     @FXML
     private StackPane resultDisplayPlaceholder;
@@ -122,8 +132,12 @@ public class MainWindow extends UiPart<Stage> {
     void fillInnerParts() {
         studentListPanel = new StudentListPanel(logic.getFilteredStudentList(), logic::getGuardiansForStudent);
         guardianListPanel = new GuardianListPanel(logic.getFilteredGuardianList());
+        lessonListPanel = new LessonListPanel(logic.getFilteredLessonList(),
+                date -> logic.updateFilteredLessonList(new LessonMatchesDatePredicate(date)));
+        lessonTitle.setText("Lessons for " + lessonListPanel.getDisplayedDate());
         personListPanelPlaceholder.getChildren().add(studentListPanel.getRoot());
         guardianListPanelPlaceholder.getChildren().add(guardianListPanel.getRoot());
+        lessonListPanelPlaceholder.getChildren().add(lessonListPanel.getRoot());
 
         resultDisplay = new ResultDisplay();
         resultDisplayPlaceholder.getChildren().add(resultDisplay.getRoot());
@@ -183,6 +197,17 @@ public class MainWindow extends UiPart<Stage> {
         return guardianListPanel;
     }
 
+    /** Returns the lesson list panel. */
+    public LessonListPanel getLessonListPanel() {
+        return lessonListPanel;
+    }
+
+    /** Updates the date shown by the lesson list for future date-view commands. */
+    public void setLessonListDate(LocalDate date) {
+        lessonListPanel.setDisplayedDate(date);
+        lessonTitle.setText("Lessons for " + date);
+    }
+
     /**
      * Executes the command and returns the result.
      *
@@ -199,6 +224,7 @@ public class MainWindow extends UiPart<Stage> {
             if (commandResult.shouldRefreshStudentList()) {
                 studentListPanel.refresh();
             }
+            lessonListPanel.refresh();
 
             if (commandResult.getStudentToHighlight() != null) {
                 studentListPanel.refresh();

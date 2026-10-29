@@ -289,6 +289,26 @@ The following sequence diagram shows how the `mark-paid` command goes through th
   * Pros: Idempotent.
   * Cons: The tutor gets no feedback that the command had no effect.
 
+### Link guardian feature
+
+#### Implementation
+
+The `link-g STUDENT_INDEX g/GUARDIAN_INDEX` command links an existing guardian to an existing student. The link is stored as a `StudentGuardianLink` in `AddressBook`, so one guardian can be linked to many students and one student can have many guardians.
+
+The sequence diagram below shows the interactions within the `Logic` and `Model` components for the command `link-g 1 g/2`.
+
+<puml src="diagrams/LinkGuardianSequenceDiagram.puml" alt="Interactions Inside the Logic Component for the `link-g 1 g/2` Command" />
+
+1. `LinkGuardianCommandParser` parses the student index and the `g/` guardian index, and creates a `LinkGuardianCommand`.
+1. When executed, `LinkGuardianCommand` looks up the student and guardian in the currently displayed (filtered) student and guardian lists. If either index is out of range, a `CommandException` is thrown.
+1. A `StudentGuardianLink` is created from the two. It is added to the model only if it does not already exist, so linking the same pair twice has no effect.
+
+The sequence diagram below shows how `Model#addStudentGuardianLink(l)` stores the link inside the `Model` component.
+
+<puml src="diagrams/LinkGuardianSequenceDiagram-Model.puml" alt="Interactions Inside the Model Component for adding a StudentGuardianLink" />
+
+`ModelManager` passes the link to `AddressBook`, which checks again for a duplicate before adding it to its `studentGuardianLinks` list.
+
 ### \[Proposed\] Undo/redo feature
 
 #### Proposed Implementation
@@ -710,11 +730,15 @@ separate use case.
 
 **Use case: U13 - Schedule a lesson**
 
+**Command:** `add-l INDEX d/YYYY-MM-DD t/HH:MM len/LENGTH(MINUTES) w/WEEKS`
+
+The lesson-length prefix `len/` may be shortened to `l/`.
+
 **MSS**
 
 1. User <u>requests to list students (U3)</u>.
-2. User requests to schedule a lesson for a specific student in the list, giving the day, start time and duration.
-3. TutorTrack saves the lesson and shows the updated lesson slot.
+2. User requests a weekly series of lessons for a specific student in the list, giving the first day, start time, duration and number of weeks.
+3. TutorTrack saves all lessons in the series and shows the updated lesson slots.
 
     Use case ends.
 
@@ -736,19 +760,43 @@ separate use case.
 
       Use case resumes at step 2.
 
-* 2c. The lesson overlaps another student's lesson.
+* 2c. A lesson in the series overlaps an existing lesson or another lesson in the series.
 
-    * 2c1. TutorTrack shows a clash error message.
-
-      Use case resumes at step 2.
-
-* 2d. The lesson is less than 30 minutes from another lesson.
-
-    * 2d1. TutorTrack shows a travel-time warning.
+    * 2c1. TutorTrack shows a clash error message and adds none of the lessons in the series.
 
       Use case resumes at step 2.
 
-**Use case: U14 - Mark a student's payment as paid**
+* 2d. The number of weeks is not between 1 and 52.
+
+    * 2d1. TutorTrack shows an error message.
+
+      Use case resumes at step 2.
+
+**Use case: U14 - Remove a lesson**
+
+**Command:** `remove-l INDEX`
+
+**MSS**
+
+1. User views the currently displayed lesson list.
+2. User requests to remove a lesson by its displayed index.
+3. TutorTrack removes the selected lesson and displays the updated lesson list.
+
+    Use case ends.
+
+**Extensions**
+
+* 1a. The lesson list is empty.
+
+  Use case ends.
+
+* 2a. The given index is invalid or outside the displayed lesson list.
+
+    * 2a1. TutorTrack shows an error message and leaves the lesson list unchanged.
+
+      Use case resumes at step 2.
+
+**Use case: U15 - Mark a student's payment as paid**
 
 **MSS**
 
@@ -782,7 +830,7 @@ separate use case.
 
       Use case ends.
 
-**Use case: U15 - Set student remark**
+**Use case: U16 - Set student remark**
 
 **MSS**
 
@@ -806,7 +854,7 @@ separate use case.
 
     Use case ends.
 
-**Use case: U16 - Clear student remark**
+**Use case: U17 - Clear student remark**
 
 **MSS**
 

@@ -2,7 +2,7 @@ package seedu.address.logic.commands;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static seedu.address.testutil.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
 import java.util.Set;
@@ -45,14 +45,16 @@ public class LinkGuardianCommandTest {
     }
 
     @Test
-    public void execute_duplicateLink_doesNotDuplicate() throws Exception {
+    public void execute_duplicateLink_failure() throws Exception {
         ModelManager model = new ModelManager();
         model.addStudent(STUDENT);
         model.addGuardian(GUARDIAN);
         LinkGuardianCommand command = new LinkGuardianCommand(Index.fromOneBased(1), Index.fromOneBased(1));
         command.execute(model);
-        command.execute(model);
 
+        CommandException exception = assertThrows(CommandException.class, () -> command.execute(model));
+
+        assertEquals("Student Lucy Lim is already linked to guardian Ben Tan.", exception.getMessage());
         assertEquals(1, model.getGuardiansForStudent(STUDENT).size());
         assertEquals(List.of(GUARDIAN), model.getGuardiansForStudent(STUDENT));
     }
@@ -63,10 +65,12 @@ public class LinkGuardianCommandTest {
         model.addStudent(STUDENT);
         model.addGuardian(GUARDIAN);
 
-        assertThrows(CommandException.class, LinkGuardianCommand.MESSAGE_INVALID_STUDENT_INDEX, () ->
+        CommandException invalidStudentIndex = assertThrows(CommandException.class, () ->
                 new LinkGuardianCommand(Index.fromOneBased(2), Index.fromOneBased(1)).execute(model));
-        assertThrows(CommandException.class, LinkGuardianCommand.MESSAGE_INVALID_GUARDIAN_INDEX, () ->
+        assertEquals(LinkGuardianCommand.MESSAGE_INVALID_STUDENT_INDEX, invalidStudentIndex.getMessage());
+        CommandException invalidGuardianIndex = assertThrows(CommandException.class, () ->
                 new LinkGuardianCommand(Index.fromOneBased(1), Index.fromOneBased(2)).execute(model));
+        assertEquals(LinkGuardianCommand.MESSAGE_INVALID_GUARDIAN_INDEX, invalidGuardianIndex.getMessage());
     }
 
     @Test

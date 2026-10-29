@@ -3,6 +3,7 @@ package seedu.address.model;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
@@ -29,6 +30,8 @@ public class ModelManager implements Model {
     private final FilteredList<Student> filteredStudents;
     private final SortedList<Student> sortedStudents;
     private final FilteredList<Guardian> filteredGuardians;
+    private final FilteredList<Lesson> filteredLessons;
+    private final SortedList<Lesson> sortedLessons;
 
     /**
      * Initializes a ModelManager with the given addressBook and userPrefs.
@@ -43,6 +46,9 @@ public class ModelManager implements Model {
         filteredStudents = new FilteredList<>(this.addressBook.getStudentList());
         sortedStudents = new SortedList<>(filteredStudents);
         filteredGuardians = new FilteredList<>(this.addressBook.getGuardianList());
+        filteredLessons = new FilteredList<>(this.addressBook.getLessonList());
+        sortedLessons = new SortedList<>(filteredLessons,
+                Comparator.comparing(Lesson::getDate).thenComparing(Lesson::getStartTime));
     }
 
     public ModelManager() {
@@ -139,6 +145,17 @@ public class ModelManager implements Model {
     @Override
     public ObservableList<Lesson> getLessonList() {
         return addressBook.getLessonList();
+    }
+
+    @Override
+    public ObservableList<Lesson> getFilteredLessonList() {
+        return sortedLessons;
+    }
+
+    @Override
+    public void updateFilteredLessonList(Predicate<Lesson> predicate) {
+        requireNonNull(predicate);
+        filteredLessons.setPredicate(predicate);
     }
 
     //=========== Guardian Operations ========================================================================

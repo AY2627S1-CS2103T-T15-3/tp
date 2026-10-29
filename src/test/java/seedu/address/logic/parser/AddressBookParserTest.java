@@ -1,5 +1,6 @@
 package seedu.address.logic.parser;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
@@ -8,6 +9,8 @@ import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -15,6 +18,7 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.commands.AddGuardianCommand;
+import seedu.address.logic.commands.AddLessonCommand;
 import seedu.address.logic.commands.AddStudentCommand;
 import seedu.address.logic.commands.ClearCommand;
 import seedu.address.logic.commands.ClearStudentRemarkCommand;
@@ -31,10 +35,12 @@ import seedu.address.logic.commands.ListGuardianCommand;
 import seedu.address.logic.commands.ListStudentCommand;
 import seedu.address.logic.commands.MarkPaidCommand;
 import seedu.address.logic.commands.RemoveGuardianCommand;
+import seedu.address.logic.commands.RemoveLessonCommand;
 import seedu.address.logic.commands.RemoveStudentCommand;
 import seedu.address.logic.commands.SetStudentRemarkCommand;
 import seedu.address.logic.commands.SortStudentCommand;
 import seedu.address.logic.commands.UnlinkGuardianCommand;
+import seedu.address.logic.commands.ViewLessonCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.guardian.GuardianNameContainsKeywordsPredicate;
 import seedu.address.model.student.Level;
@@ -47,6 +53,14 @@ import seedu.address.model.student.Subject;
 public class AddressBookParserTest {
 
     private final AddressBookParser parser = new AddressBookParser();
+
+    @Test
+    public void parseCommand_lesson_returnsAddLessonCommand() throws Exception {
+        Command command = new AddressBookParser().parseCommand(
+                "add-l 1 d/2026-11-01 t/14:00 len/60 w/4");
+
+        assertTrue(command instanceof AddLessonCommand);
+    }
 
     @Test
     public void parseCommand_studentRemarks_routesBothCommands() throws Exception {
@@ -94,6 +108,60 @@ public class AddressBookParserTest {
     }
 
     @Test
+    public void parseCommand_viewLesson() throws Exception {
+        assertTrue(parser.parseCommand("view-l d/2026-11-01") instanceof ViewLessonCommand);
+        assertTrue(parser.parseCommand("view-l stu/1") instanceof ViewLessonCommand);
+        assertTrue(parser.parseCommand("view-l") instanceof ViewLessonCommand);
+    }
+
+    @Test
+    public void parseCommand_supportedCommandWordCaseVariants_areAccepted() {
+        Map<String, String> commands = Map.ofEntries(
+                Map.entry("add-s", " n/Henry Tan p/91234567 e/henry@example.com a/12 Road l/JC 1 s/Math"),
+                Map.entry("add-g", " n/Ben Tan p/92345678 e/ben@example.com a/12 Road"),
+                Map.entry("edit-s", " 1 n/Alice Tan"),
+                Map.entry("edit-g", " 1 n/Alice Tan"),
+                Map.entry("find-s", " Alice"),
+                Map.entry("find-g", " Alice"),
+                Map.entry("filter", " l/JC 1"),
+                Map.entry("list-s", ""),
+                Map.entry("list-g", ""),
+                Map.entry("sort-s", ""),
+                Map.entry("remove-s", " 1"),
+                Map.entry("remove-g", " 1"),
+                Map.entry("link-g", " 1 g/1"),
+                Map.entry("unlink-g", " 1 g/1"),
+                Map.entry("mark-paid", " 1 m/2026-10"),
+                Map.entry("set-remark-s", " 1 A remark"),
+                Map.entry("clear-remark-s", " 1"),
+                Map.entry("clear", ""),
+                Map.entry("exit", ""),
+                Map.entry("help", ""));
+
+        commands.forEach((commandWord, arguments) ->
+                acceptedCommandWordVariants(commandWord).forEach(variant ->
+                        assertDoesNotThrow(() -> parser.parseCommand(variant + arguments))));
+    }
+
+    @Test
+    public void parseCommand_unsupportedMixedCaseCommandWord_isRejected() {
+        assertThrows(ParseException.class, MESSAGE_UNKNOWN_COMMAND, () -> parser.parseCommand("lIst-S"));
+    }
+
+    private List<String> acceptedCommandWordVariants(String commandWord) {
+        if (!commandWord.contains("-")) {
+            return List.of(commandWord, Character.toUpperCase(commandWord.charAt(0)) + commandWord.substring(1),
+                    commandWord.toUpperCase(Locale.ROOT));
+        }
+        int lastHyphen = commandWord.lastIndexOf('-');
+        String lastToken = commandWord.substring(lastHyphen + 1);
+        String capitalizedFirst = Character.toUpperCase(commandWord.charAt(0)) + commandWord.substring(1);
+        String capitalizedLast = commandWord.substring(0, lastHyphen + 1)
+                + Character.toUpperCase(lastToken.charAt(0)) + lastToken.substring(1);
+        return List.of(commandWord, capitalizedFirst, capitalizedLast, commandWord.toUpperCase(Locale.ROOT));
+    }
+
+    @Test
     public void parseCommand_editGuardian() throws Exception {
         Command command = parser.parseCommand("edit-g 1 n/Ben Tan");
         assertTrue(command instanceof EditGuardianCommand);
@@ -128,6 +196,20 @@ public class AddressBookParserTest {
         RemoveStudentCommand command = (RemoveStudentCommand) parser.parseCommand(
                 RemoveStudentCommand.COMMAND_WORD + " " + INDEX_FIRST_PERSON.getOneBased());
         assertEquals(new RemoveStudentCommand(INDEX_FIRST_PERSON), command);
+    }
+
+    @Test
+    public void parseCommand_removeLesson() throws Exception {
+        RemoveLessonCommand command = (RemoveLessonCommand) parser.parseCommand("remove-l 1");
+        assertEquals(new RemoveLessonCommand(INDEX_FIRST_PERSON), command);
+    }
+
+    @Test
+    public void parseCommand_removeLesson_invalidArguments() {
+        assertThrows(ParseException.class, seedu.address.logic.Messages.MESSAGE_INVALID_LESSON_DISPLAYED_INDEX, () ->
+                parser.parseCommand("remove-l 0"));
+        assertThrows(ParseException.class, "Invalid command format.\n"
+                + RemoveLessonCommand.MESSAGE_USAGE, () -> parser.parseCommand("remove-l abc"));
     }
 
     @Test
