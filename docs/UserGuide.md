@@ -79,9 +79,7 @@ TutorTrack is a **desktop application for private tutors to manage students and 
   For example, `add-g n/NAME p/PHONE e/EMAIL a/ADDRESS` can be entered as
   `add-g p/PHONE n/NAME a/ADDRESS e/EMAIL`.
 
-* Command words accept four capitalization forms: the documented lower-case
-  form, the first-letter-capitalized form, the final command token capitalized
-  form, and the all-uppercase form. For example, `list-s`, `List-s`, `list-S`,
+* Command words are case-insensitive. For example, `list-s`, `List-s`, `lIst-S`,
   and `LIST-S` are equivalent. Parameter prefixes such as `n/` and `d/` remain
   case-sensitive.
 
