@@ -1,5 +1,7 @@
 package seedu.address.logic.parser;
 
+import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -63,7 +65,8 @@ public class UnlinkGuardianCommandParser implements Parser<UnlinkGuardianCommand
     }
 
     private static ParseException invalidFormat() {
-        return new ParseException("Invalid command format.\n" + UnlinkGuardianCommand.MESSAGE_USAGE);
+        return new ParseException(
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, UnlinkGuardianCommand.MESSAGE_USAGE));
     }
 
     private record PrefixMatch(int start, int end, String prefix) {
