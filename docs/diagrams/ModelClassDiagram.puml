@@ -28,6 +28,8 @@ package Model as ModelPackage <<Rectangle>> {
     Class Address
     Class Level
     Class Subject
+    Class Remark
+    Class PaymentMonth
 }
 
 ' Component APIs and their implementations
@@ -68,6 +70,8 @@ Student *-- "1" Email
 Student *-- "1" Address
 Student *-- "1" Level
 Student *-- "1..*" Subject
+Student *-- "1" Remark
+Student *-- "0..*" PaymentMonth
 
 Guardian *-- "1" Name
 Guardian *-- "1" Phone

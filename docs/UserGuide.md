@@ -26,6 +26,16 @@ TutorTrack is a **desktop application for private tutors to manage students and 
    TutorTrack's graphical interface should appear in a few seconds.<br>
    ![Ui](images/Ui.png)
 
+   The window has the following parts:
+   * **Command box** (top): type commands here and press Enter.
+   * **Result display** (below the command box): shows the outcome of each command, or an error message.
+   * **Students panel** (left): each student card shows contact details, academic level, subjects, linked guardians,
+     the remark (if any) and the months paid for.
+   * **Guardians panel** (middle): each guardian card shows contact details.
+   * **Lessons panel** (right): shows scheduled lessons. On launch, it shows today's lessons; use `view-l` to change
+     which lessons are shown. The panel title shows the active lesson filter, e.g. `Lessons for 2026-11-01`.
+   * **Status bar** (bottom): shows where the data file is saved.
+
    On the first launch, TutorTrack displays representative sample students, guardians,
    links, payments, remarks, and lessons. Run `clear` if you want to start with an
    empty address book before entering your own data.
@@ -85,15 +95,38 @@ TutorTrack is a **desktop application for private tutors to manage students and 
 
 * For `set-remark-s` and `clear-remark-s`, the index must come first. In `set-remark-s`, everything after the index is remark text; no prefix is needed.
 
-* Extraneous parameters for commands that take no parameters, such as `help`, `exit`, and `clear`, are ignored.<br>
-  For example, `help 123` is interpreted as `help`.
+* Extraneous parameters for `help`, `exit`, and `clear` are ignored.<br>
+  For example, `help 123` is interpreted as `help`. In contrast, `list-s`, `list-g` and `sort-s` reject any
+  extra parameters.
+
+* `INDEX`, `STUDENT_INDEX` and `GUARDIAN_INDEX` refer to the index number shown in the currently displayed list
+  (which may be a filtered or searched list), and must be a positive integer such as 1, 2, 3, ...
 
 * If you are using a PDF version of this document, be careful when copying and pasting commands that span multiple lines as space characters surrounding line-breaks may be omitted when copied over to the application.
 </box>
 
+### Accepted parameter values
+
+Parameter | Constraints | Example
+----------|-------------|--------
+`NAME` | 1-100 characters. Letters, digits, spaces, periods, hyphens, apostrophes and slashes, with at least one letter or digit. | `Mary-Jane O'Connor`, `John s/o Raj`
+`PHONE` | 3-15 digits, optionally starting with `+`. | `91234567`, `+6591234567`
+`EMAIL` | `local-part@domain`, with no spaces and a domain such as `example.com`. | `henry@example.com`
+`ADDRESS` | 1-200 characters. Letters, digits, spaces and the punctuation `, . # - / ( ) '`. | `12 ABCD Ave 3, #04-15`
+`LEVEL` | 1-50 characters. Letters, digits, spaces and parentheses. | `Secondary 3 (Express)`
+`SUBJECT` | 1-50 characters. Letters, digits, spaces, hyphens and parentheses. | `A-Level (H2)`
+`REMARK` | Up to 300 characters, not blank, on a single line. | `Practise fractions`
+`YYYY-MM` | A month of a year, with a two-digit month from `01` to `12`. | `2026-10`
+`YYYY-MM-DD` | A valid calendar date. | `2026-11-01`
+`HH:MM` | A valid 24-hour time. | `14:00`
+
+Two students (or two guardians) are treated as the same person if they have the same name, ignoring
+capitalization and extra spaces, and the same phone number.
+
 ### Viewing help: `help`
 
-Shows a message explaining how to access the help page.
+Opens a help window with a link to this user guide. Click `Copy URL` to copy the link. The help window can also be
+opened from the `Help` menu or by pressing `F1`.
 
 ![help message](images/helpMessage.png)
 
@@ -109,9 +142,9 @@ Format: `add-s n/NAME p/PHONE e/EMAIL a/ADDRESS l/LEVEL s/SUBJECT [s/SUBJECT]...
 * All fields are required, and at least one `s/SUBJECT` must be provided.
 * Additional `s/SUBJECT` parameters may be provided.
 * The parameters can be entered in any order.
-* A student with the same normalized name and phone number cannot be added again.
-* Adding a student preserves any active student filter. The new student is displayed only if it matches the filter.
-* Names may contain alphanumeric characters, spaces, hyphens, apostrophes, periods and slashes, such as `John s/o Raj`, and must contain at least one alphanumeric character.
+* A student with the same name (ignoring capitalization and extra spaces) and phone number cannot be added again.
+* Adding a student preserves any active student filter or search. The new student is displayed only if it matches it.
+* See [Accepted parameter values](#accepted-parameter-values) for the allowed format of each field.
 
 Examples:
 * `add-s n/Henry Tan p/91234567 e/henry@example.com a/12 ABCD Ave 3 l/Secondary 3 s/Mathematics s/Physics`
@@ -126,9 +159,9 @@ Format: `add-g n/NAME p/PHONE e/EMAIL a/ADDRESS`
 * All fields are required and must be provided exactly once.
 * The parameters can be entered in any order.
 * Adding a guardian does not link them to a student; use `link-g` separately.
-* A guardian with the same normalized name and phone number cannot be added again.
+* A guardian with the same name (ignoring capitalization and extra spaces) and phone number cannot be added again.
 * Adding a guardian preserves any active guardian search. The new guardian is displayed only if it matches the search.
-* Names may contain alphanumeric characters, spaces, hyphens, apostrophes, periods and slashes, such as `John s/o Raj`, and must contain at least one alphanumeric character.
+* See [Accepted parameter values](#accepted-parameter-values) for the allowed format of each field.
 
 Examples:
 * `add-g n/Ben Tan p/92345678 e/ben.tan@gmail.com a/12 ABCD Ave 3`
@@ -136,9 +169,9 @@ Examples:
 
 ### Scheduling lessons: `add-l`
 
-Adds a weekly series of lessons for the student at the specified displayed
-index. Each lesson has the same start time and duration, and the dates are one
-week apart.
+Adds a weekly series of lessons for the student at the specified index in the
+displayed student list. Each lesson has the same start time and duration, and
+the dates are one week apart.
 
 Format: `add-l INDEX d/YYYY-MM-DD t/HH:MM len/LENGTH(MINUTES) w/WEEKS`
 
@@ -146,7 +179,9 @@ The `d/`, `t/`, `len/`, and `w/` prefixes are required and may each be specified
 only once. The `len/` prefix can be shortened to `l/`. `len/LENGTH(MINUTES)` (or
 `l/LENGTH(MINUTES)`) and `w/WEEKS` must be positive integers. `w/WEEKS` must
 not exceed 52. Dates and times must be valid, and a lesson cannot overlap an
-existing lesson or another lesson in the new series.
+existing lesson (of any student) or another lesson in the new series. If a
+lesson is longer than 4 hours, the lessons are still added, but TutorTrack shows
+a warning in case the length was entered by mistake.
 
 Example:
 
@@ -156,10 +191,16 @@ This schedules four one-hour lessons for the first displayed student, starting
 at 2:00 PM on 1 November 2026. If a conflict is found, no lessons from the
 series are added and the conflicting lesson is shown in the error message.
 
+The active lesson filter is kept after adding lessons. For example, running
+`view-l stu/4` followed by `add-l 4 d/2026-11-14 t/18:00 len/120 w/3` shows the
+new lessons together with the student's existing lessons:
+
+![Result of adding lessons](images/addLessonResult.png)
+
 ### Viewing lessons: `view-l`
 
 Shows lessons for a selected date or student. The lesson list is sorted by date
-and start time.
+and start time. When TutorTrack starts, the lessons panel shows today's lessons.
 
 Formats:
 
@@ -170,12 +211,23 @@ Formats:
 
 The date must use the `YYYY-MM-DD` format. `d/` and `stu/` may not be used
 together, and each may be specified only once. `INDEX` must be a positive
-integer within the currently displayed student list. Extra arguments and
-invalid dates or indexes are rejected without changing the lesson filter.
+integer within the currently displayed student list. Extra arguments,
+unknown parameters (e.g. `x/`), and invalid dates or indexes are rejected
+without changing the lesson filter.
+
+If lessons are filtered by student and that student is then edited with
+`edit-s`, the filter follows the edited student, so their lessons remain shown.
 
 A lesson is shown for every date it overlaps. For example, a lesson beginning
 late on 1 November and ending after midnight on 2 November appears when either
 date is selected.
+
+The title of the lessons panel shows the active filter, such as `Lessons for 2026-11-01` or
+`Lessons for Lucy Lim`, and changes back to `Lessons` when all lessons are shown.
+
+![Viewing lessons on a date](images/viewLessonsByDate.png)
+
+![Viewing lessons for a student](images/viewLessonsByStudent.png)
 
 Examples:
 
@@ -204,13 +256,13 @@ index is invalid, TutorTrack shows an error and no lesson is removed.
 
 ### Listing all students: `list-s`
 
-Shows a list of all students in TutorTrack.
+Shows a list of all students in TutorTrack, clearing any active `filter` or `find-s` search.
 
 Format: `list-s`
 
 ### Listing all guardians: `list-g`
 
-Shows a list of all guardians in TutorTrack.
+Shows a list of all guardians in TutorTrack, clearing any active `find-g` search.
 
 Format: `list-g`
 
@@ -225,6 +277,7 @@ Format: `edit-s INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [l/LEVEL] [s/SUBJ
 * If `s/` is provided, it replaces the student's complete subject list. Retype existing subjects to keep them.
 * A student must always have at least one subject.
 * The edited student must not duplicate another student by name and phone number.
+* The student's remark, payment history, guardian links and lessons are kept, and are shown with the updated details.
 
 Examples:
 * `edit-s 2 p/98765432 l/JC 2`
@@ -237,14 +290,17 @@ Adds or updates a remark for a specified student.
 Format: `set-remark-s INDEX REMARK`
 
 * `INDEX` must be a positive integer within the currently displayed student list.
-* `REMARK` must be nonblank and cannot exceed 300 Unicode code points.
+* `REMARK` must be nonblank, on a single line, and cannot exceed 300 characters.
 * Each student has one remark; setting a new remark replaces the previous remark, if any.
+* The remark is shown on the student's card as `Remark: ...`.
 
 Examples:
 
 Assuming Henry Tan, phone `91234567`, is student 1 in the displayed list:
 * `set-remark-s 1 Practise fractions before the next lesson` displays the corresponding remark on Henry's information card.
 * `set-remark-s 1 Bring the algebra worksheet on Friday` replaces Henry's previous remark with the new remark.
+
+![Result of setting a remark](images/setRemarkResult.png)
 
 
 ### Clearing a student remark: `clear-remark-s`
@@ -255,6 +311,7 @@ Format: `clear-remark-s INDEX`
 
 * `INDEX` must be a positive integer within the currently displayed student list.
 * Clearing a remark hides the remark field on the student's information card.
+* If the student has no remark, TutorTrack shows an error.
 
 Example:
 * `clear-remark-s 1` clears the remark of the first displayed student, as well as hides the remark field on their information card
@@ -280,8 +337,8 @@ Format: `link-g STUDENT_INDEX g/GUARDIAN_INDEX`
 
 * Both indexes are required and must be positive integers within their respective displayed lists.
 * The student and guardian must already exist.
-* Repeating an existing link does not create another link.
-* After a successful link, the student is highlighted and the guardian selection is cleared.
+* If the student and guardian are already linked, TutorTrack shows an error and no duplicate link is created.
+* After a successful link, the student is highlighted and the guardian appears in the student card's `Guardians:` line.
 * A student can be linked to multiple guardians, and a guardian can be linked to multiple students.
 * Links are saved with TutorTrack and restored when the application is restarted.
 * If a linked student or guardian is edited, the updated details are shown everywhere that record is linked.
@@ -289,6 +346,8 @@ Format: `link-g STUDENT_INDEX g/GUARDIAN_INDEX`
 Examples:
 * `link-g 2 g/1`
 * `link-g 3 g/1`
+
+![Result of linking a guardian](images/linkGuardianResult.png)
 
 ### Unlinking a guardian from a student: `unlink-g`
 
@@ -318,12 +377,17 @@ index number shown in the currently displayed student list.
 of students in the displayed list.
 * The month must be in the format `YYYY-MM`, with a two-digit month from `01` to `12`, e.g. `2026-10`.
 * A student who is already marked as paid for that month is left unchanged, and an error is shown.
-* Each student's card shows the months they have paid for at the bottom of the card, most recent first, e.g. `Paid: Oct 2026, Sep 2026`.
+* Parameters other than `m/` are rejected with an `Unknown parameter` error.
+* Each student's card shows the months they have paid for at the bottom of the card, most recent first, e.g. `Paid: Oct 2026, Sep 2026`. A student with no recorded payments shows `Paid: None`.
 * Only the 3 most recent months are shown. If there are more, click the `+N more` button beside them to show all months, and click `Show less` to hide the older months again.
+
+![Paid months expanded](images/paidMonthsExpanded.png)
 
 Examples:
 * `mark-paid 1 m/2026-10` marks the 1st student in the displayed student list as paid for October 2026.
 * `mark-paid 2 m/2026-11` marks the 2nd student in the displayed student list as paid for November 2026.
+
+![Result of marking a payment](images/markPaidResult.png)
 
 ### Locating students by name: `find-s`
 
@@ -336,9 +400,15 @@ Format: `find-s KEYWORD [MORE_KEYWORDS]`
 * The search considers only student names.
 * Matches by prefix of each part of the name.
 * Students matching at least one keyword are returned (an `OR` search).
+* Matching parts of names are highlighted in the results.
+* The active search is shown above the student list, e.g. `Search: alice lucy`, and remains visible while other
+  commands are executed. It is cleared by `list-s` or replaced by a new `find-s` or `filter` command.
 
-Example:
+Examples:
 * `find-s alex david` returns matching students named Alex or David.
+* `find-s alice lucy` returns `Alice Tan` and `Lucy Lim` from the sample data:
+
+  ![Result of find-s alice lucy](images/findStudentResult.png)
 
 ### Locating guardians by name: `find-g`
 
@@ -351,11 +421,15 @@ Format: `find-g KEYWORD [MORE_KEYWORDS]`
 * The search considers only guardian names.
 * Matches by prefix of each part of the name.
 * Guardians matching at least one keyword are returned (an `OR` search).
-* The active search is shown above the guardian list and remains visible while other commands are executed. It is
-  cleared by `list-g` or replaced by a new `find-g` command.
+* Matching parts of names are highlighted in the results.
+* The active search is shown above the guardian list, e.g. `Search: tan`, and remains visible while other commands
+  are executed. It is cleared by `list-g` or replaced by a new `find-g` command.
 
-Example:
+Examples:
 * `find-g alex david` returns matching guardians named Alex or David.
+* `find-g tan` returns `John Tan` from the sample data:
+
+  ![Result of find-g tan](images/findGuardianResult.png)
 
 ### Filtering students: `filter`
 
@@ -370,18 +444,23 @@ Format: `filter [l/LEVEL] [s/SUBJECT]... [paid/YYYY-MM] [unpaid/YYYY-MM]`
 * `paid/YYYY-MM` shows students who have been marked as paid for that month using `mark-paid`.
 * `unpaid/YYYY-MM` shows students who have **not** been marked as paid for that month.
 * `l/`, `paid/` and `unpaid/` can each be given at most once.
+* Any other parameter, such as `n/` or a misspelt `unpiad/`, is rejected with an `Unknown parameter` error, and the
+  displayed list is not changed.
 * Student indexes in later commands, such as `mark-paid` or `edit-s`, refer to the filtered list.
-* The active filter is shown above the student list and remains visible while other commands, such as `sort-s`,
-  are executed. It is cleared by `list-s` or replaced by a new `filter` or `find-s` command.
+* The active filter is shown above the student list, e.g. `Filtered: Unpaid: Oct 2026`, and remains visible while
+  other commands, such as `sort-s`, are executed. It is cleared by `list-s` or replaced by a new `filter` or `find-s`
+  command.
 
 Examples:
 * `filter l/JC 1 s/Mathematics` shows JC 1 students who take Mathematics.
 * `filter unpaid/2026-10` shows students who have not paid for October 2026.
 * `filter l/Secondary 3 paid/2026-09 unpaid/2026-10` shows Secondary 3 students who paid for September 2026 but not for October 2026.
 
+![Result of filter unpaid/2026-10](images/filterResult.png)
+
 ### Sorting students: `sort-s`
 
-Sorts the displayed student list by name in ascending order.
+Sorts the displayed student list by name in ascending order. Any active filter or search is kept.
 
 Format: `sort-s`
 
@@ -395,8 +474,8 @@ Format: `remove-s INDEX`
 index number shown in the currently displayed student list.
 * The index **must be a positive integer** 1, 2, 3, ..., and must not exceed the number
 of students in the displayed list.
-* Removing a student also removes all associated student-guardian links, but the associated
-guardian record is not deleted.
+* Removing a student also removes the student's lessons and all associated student-guardian links, but the
+associated guardian records are not deleted.
 
 Examples:
 * `remove-s 2` removes the 2nd student in the currently displayed student list.
@@ -421,7 +500,7 @@ Examples:
 
 ### Clearing all entries: `clear`
 
-Clears all students, guardians, and their relationships from TutorTrack.
+Clears all students, guardians, lessons, and student-guardian links from TutorTrack, including the sample data.
 
 Format: `clear`
 
@@ -443,7 +522,8 @@ TutorTrack data is saved automatically as a JSON file at
 <box type="warning" seamless>
 
 **Caution:**
-If the data file is invalid, TutorTrack starts with an empty data set at the next run. The invalid file remains on disk until you run a command, because TutorTrack saves after every command. Back up the file before making any manual changes.
+If the data file is invalid, TutorTrack **deletes it** and starts with an empty data set at the next run. Back up the file before making any manual changes.<br>
+If the data file is missing, TutorTrack starts with the sample data instead.
 </box>
 
 --------------------------------------------------------------------------------------------------------------------
