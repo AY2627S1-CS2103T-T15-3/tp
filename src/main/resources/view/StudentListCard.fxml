@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.GridPane?>
@@ -31,7 +32,6 @@
       <Label fx:id="email" styleClass="cell_small_label" />
       <Label fx:id="address" styleClass="cell_small_label" />
       <Label fx:id="level" styleClass="cell_small_label" />
-      <Label fx:id="payments" styleClass="cell_small_label" />
       <FlowPane fx:id="subjects" hgap="5">
         <Label text="Subjects:" styleClass="cell_small_label" />
       </FlowPane>
@@ -40,6 +40,10 @@
       </FlowPane>
       <Label fx:id="remark" styleClass="cell_small_label" wrapText="true"
              minWidth="0" minHeight="-Infinity" maxWidth="Infinity" />
+      <HBox spacing="5" alignment="CENTER_LEFT">
+        <Label fx:id="payments" styleClass="cell_small_label" />
+        <MenuButton fx:id="morePayments" styleClass="cell_small_label" />
+      </HBox>
     </VBox>
   </GridPane>
 </HBox>

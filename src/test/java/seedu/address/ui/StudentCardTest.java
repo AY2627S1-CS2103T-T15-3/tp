@@ -12,6 +12,8 @@ import org.junit.jupiter.api.Test;
 
 import javafx.application.Platform;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.FlowPane;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
@@ -43,14 +45,36 @@ public class StudentCardTest {
     }
 
     @Test
-    public void constructor_withPayments_displaysMonthsChronologically() {
+    public void constructor_withPayments_displaysMostRecentMonthsFirst() {
         Student student = student()
-                .withPaymentFor(new PaymentMonth("2026-10"))
-                .withPaymentFor(new PaymentMonth("2026-09"));
+                .withPaymentFor(new PaymentMonth("2026-09"))
+                .withPaymentFor(new PaymentMonth("2025-12"))
+                .withPaymentFor(new PaymentMonth("2026-10"));
 
         StudentCard card = new StudentCard(student, 1, ignored -> List.of());
 
-        assertEquals("Paid: Sep 2026, Oct 2026", paymentsText(card));
+        assertEquals("Paid: Oct 2026, Sep 2026, Dec 2025", paymentsText(card));
+        assertFalse(morePayments(card).isVisible());
+        assertFalse(morePayments(card).isManaged());
+    }
+
+    @Test
+    public void constructor_manyPayments_movesOlderMonthsIntoDropdown() {
+        Student student = student()
+                .withPaymentFor(new PaymentMonth("2026-06"))
+                .withPaymentFor(new PaymentMonth("2026-07"))
+                .withPaymentFor(new PaymentMonth("2026-08"))
+                .withPaymentFor(new PaymentMonth("2026-09"))
+                .withPaymentFor(new PaymentMonth("2026-10"));
+
+        StudentCard card = new StudentCard(student, 1, ignored -> List.of());
+        MenuButton morePayments = morePayments(card);
+
+        assertEquals("Paid: Oct 2026, Sep 2026, Aug 2026", paymentsText(card));
+        assertTrue(morePayments.isVisible());
+        assertEquals("+2 more", morePayments.getText());
+        assertEquals(List.of("Jul 2026", "Jun 2026"),
+                morePayments.getItems().stream().map(MenuItem::getText).toList());
     }
 
     @Test
@@ -83,6 +107,10 @@ public class StudentCardTest {
 
     private static String paymentsText(StudentCard card) {
         return ((Label) card.getRoot().lookup("#payments")).getText();
+    }
+
+    private static MenuButton morePayments(StudentCard card) {
+        return (MenuButton) card.getRoot().lookup("#morePayments");
     }
 
     private static Student student() {

@@ -3,10 +3,11 @@ package seedu.address.ui;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Region;
 import javafx.scene.text.TextFlow;
@@ -17,6 +18,8 @@ import seedu.address.model.student.Student;
 /** UI component that displays a student. */
 public class StudentCard extends UiPart<Region> {
     private static final String FXML = "StudentListCard.fxml";
+    /** Number of most recent paid months shown before the rest are moved into the dropdown. */
+    private static final int PAID_MONTHS_SHOWN = 3;
 
     public final Student student;
 
@@ -34,6 +37,8 @@ public class StudentCard extends UiPart<Region> {
     private Label level;
     @FXML
     private Label payments;
+    @FXML
+    private MenuButton morePayments;
     @FXML
     private FlowPane subjects;
     @FXML
@@ -71,10 +76,17 @@ public class StudentCard extends UiPart<Region> {
         remark.setText("Remark: " + student.getRemark().value);
         remark.setVisible(!student.getRemark().isEmpty());
         remark.setManaged(remark.isVisible());
-        payments.setText("Paid: " + (student.getPaidMonths().isEmpty() ? "None"
-                : student.getPaidMonths().stream()
-                        .map(PaymentMonth::toDisplayString)
-                        .collect(Collectors.joining(", "))));
+        List<String> paidMonths = student.getPaidMonths().reversed().stream()
+                .map(PaymentMonth::toDisplayString)
+                .toList();
+        int shownCount = Math.min(paidMonths.size(), PAID_MONTHS_SHOWN);
+        List<String> hiddenMonths = paidMonths.subList(shownCount, paidMonths.size());
+        payments.setText("Paid: " + (paidMonths.isEmpty() ? "None"
+                : String.join(", ", paidMonths.subList(0, shownCount))));
+        morePayments.setText("+" + hiddenMonths.size() + " more");
+        hiddenMonths.forEach(month -> morePayments.getItems().add(new MenuItem(month)));
+        morePayments.setVisible(!hiddenMonths.isEmpty());
+        morePayments.setManaged(morePayments.isVisible());
         student.getSubjects().stream()
                 .sorted(Comparator.comparing(subject -> subject.value))
                 .forEach(subject -> subjects.getChildren().add(new Label(subject.value)));

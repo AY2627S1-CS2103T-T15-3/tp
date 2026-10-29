@@ -237,7 +237,7 @@ Step 3. The command calls `s.hasPaidFor(2026-10)`. If a payment is already recor
 
 Step 4. Otherwise, the command calls `s.withPaymentFor(2026-10)` to create the updated student, then calls `Model#setStudent(s, paidStudent)`. `AddressBook#setStudent` also updates any `StudentGuardianLink` that refers to `s`, so the student's guardian links are preserved.
 
-Step 5. The student list in the UI updates, and the `StudentCard` shows the new month in its `Paid:` line, e.g. `Paid: Sep 2026, Oct 2026`.
+Step 5. The student list in the UI updates, and the `StudentCard` shows the new month in its `Paid:` line, e.g. `Paid: Oct 2026, Sep 2026`. The line shows the 3 most recent months, most recent first, and any older months are listed in a `+N more` dropdown beside it.
 
 The following sequence diagram shows how the `mark-paid` command goes through the `Logic` and `Model` components:
 
@@ -957,7 +957,7 @@ testers are expected to do more *exploratory* testing.
       Expected: No change. The status message says the student is already marked as paid for Oct 2026.
 
    1. Test case: `mark-paid 1 m/2026-09`<br>
-      Expected: The first student's `Paid:` line shows `Sep 2026, Oct 2026`, in chronological order.
+      Expected: The first student's `Paid:` line shows `Oct 2026, Sep 2026`, with the most recent month first.
 
    1. Test case: `mark-paid 0 m/2026-10`<br>
       Expected: No student is updated. The status message shows an invalid command format error.
