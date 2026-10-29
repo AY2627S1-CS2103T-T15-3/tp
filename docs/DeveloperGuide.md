@@ -4,7 +4,7 @@
   pageNav: 3
 ---
 
-# AB-3 Developer Guide
+# TutorTrack Developer Guide
 
 <!-- * Table of Contents -->
 <page-nav-print />
@@ -13,7 +13,11 @@
 
 ## **Acknowledgements**
 
-* _{List the sources of reused or adapted ideas, code, documentation, and third-party libraries here, with links to the originals.}_
+* TutorTrack is adapted from [AddressBook-Level3](https://se-education.org/addressbook-level3/) (AB3) by the
+  [SE-EDU initiative](https://se-education.org). Its overall architecture, much of its code, and parts of this guide
+  are reused from AB3.
+* Libraries used: [JavaFX](https://openjfx.io/), [Jackson](https://github.com/FasterXML/jackson),
+  [JUnit5](https://github.com/junit-team/junit5).
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -35,7 +39,7 @@ The following provides a quick overview of the main components and their interac
 
 **Main components of the architecture**
 
-**`Main`** (consisting of classes [`Main`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/Main.java) and [`MainApp`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/MainApp.java)) is in charge of the app launch and shut down.
+**`Main`** (consisting of classes [`Main`](https://github.com/AY2627S1-CS2103T-T15-3/tp/tree/master/src/main/java/seedu/address/Main.java) and [`MainApp`](https://github.com/AY2627S1-CS2103T-T15-3/tp/tree/master/src/main/java/seedu/address/MainApp.java)) is in charge of the app launch and shut down.
 * At app launch, it initializes the other components in the correct sequence, and connects them up with each other.
 * At shut down, it shuts down the other components and invokes cleanup methods where necessary.
 
@@ -67,24 +71,29 @@ The sections below give more details of each component.
 
 ### UI component
 
-The **API** of this component is specified in [`Ui.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/ui/Ui.java)
+The **API** of this component is specified in [`Ui.java`](https://github.com/AY2627S1-CS2103T-T15-3/tp/tree/master/src/main/java/seedu/address/ui/Ui.java)
 
 <puml src="diagrams/UiClassDiagram.puml" alt="Structure of the UI Component" />
 
-The UI consists of a `MainWindow` and its parts, such as `CommandBox`, `ResultDisplay`, `PersonListPanel`, and `StatusBarFooter`. All of these, including `MainWindow`, inherit from the abstract `UiPart` class, which captures common behavior among classes that represent visible GUI parts.
+The UI consists of a `MainWindow` and its parts, such as `CommandBox`, `ResultDisplay`, `StudentListPanel`, `GuardianListPanel`, `LessonListPanel`, and `StatusBarFooter`. Each list panel displays its items using the corresponding `StudentCard`, `GuardianCard`, or `LessonCard`. All of these, including `MainWindow`, inherit from the abstract `UiPart` class, which captures common behavior among classes that represent visible GUI parts.
 
-The `UI` component uses the JavaFX UI framework. The layouts of these UI parts are defined in matching `.fxml` files in `src/main/resources/view`. For example, [`MainWindow.fxml`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/resources/view/MainWindow.fxml) specifies the layout of [`MainWindow`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/ui/MainWindow.java).
+The figure below shows the main window with the sample data. From top to bottom and left to right, it shows the `CommandBox`, the `ResultDisplay`, the `StudentListPanel`, `GuardianListPanel` and `LessonListPanel`, and the `StatusBarFooter`.
+
+![Main window of TutorTrack](images/Ui.png)
+
+The `UI` component uses the JavaFX UI framework. The layouts of these UI parts are defined in matching `.fxml` files in `src/main/resources/view`. For example, [`MainWindow.fxml`](https://github.com/AY2627S1-CS2103T-T15-3/tp/tree/master/src/main/resources/view/MainWindow.fxml) specifies the layout of [`MainWindow`](https://github.com/AY2627S1-CS2103T-T15-3/tp/tree/master/src/main/java/seedu/address/ui/MainWindow.java).
 
 The `UI` component,
 
 * executes user commands using the `Logic` component.
 * listens for changes to `Model` data so that the UI can be updated with the modified data.
 * keeps a reference to the `Logic` component, because the `UI` relies on the `Logic` to execute commands.
-* depends on some classes in the `Model` component because it displays `Person` objects from the model.
+* depends on some classes in the `Model` component because it displays `Student`, `Guardian`, and `Lesson` objects from the model.
+* uses the `CommandResult` returned by `Logic` to decide how to update the display, e.g. which student or guardian to highlight, which name keywords to highlight after a search, and whether to show, replace, or clear the active filter or search label above the student and guardian lists.
 
 ### Logic component
 
-**API** : [`Logic.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/logic/Logic.java)
+**API** : [`Logic.java`](https://github.com/AY2627S1-CS2103T-T15-3/tp/tree/master/src/main/java/seedu/address/logic/Logic.java)
 
 Here's a (partial) class diagram of the `Logic` component:
 
@@ -113,8 +122,9 @@ Here are the other classes in `Logic` (omitted from the class diagram above) tha
 <puml src="diagrams/ParserClasses.puml" width="600"></puml>
 
 How the parsing works:
-* When called upon to parse a user command, the `AddressBookParser` class creates an `XYZCommandParser` (`XYZ` is a placeholder for the specific command name, e.g., `AddCommandParser`). The parser uses the other classes shown above to parse the user command and create an `XYZCommand` object (e.g., `AddCommand`). The `AddressBookParser` returns that object as a `Command` object.
-* All `XYZCommandParser` classes, such as `AddCommandParser` and `DeleteCommandParser`, implement the `Parser` interface so they can be treated similarly where appropriate, for example during testing.
+* When called upon to parse a user command, the `AddressBookParser` class creates an `XYZCommandParser` (`XYZ` is a placeholder for the specific command name, e.g., `AddStudentCommandParser`). The parser uses the other classes shown above to parse the user command and create an `XYZCommand` object (e.g., `AddStudentCommand`). The `AddressBookParser` returns that object as a `Command` object.
+* All `XYZCommandParser` classes, such as `AddStudentCommandParser` and `RemoveStudentCommandParser`, implement the `Parser` interface so they can be treated similarly where appropriate, for example during testing.
+* Commands that take no arguments that need parsing (`clear`, `exit` and `help`) are created directly by `AddressBookParser` without a dedicated parser.
 
 The student and guardian MVP commands follow the same parser-command flow:
 
@@ -130,29 +140,41 @@ The student and guardian MVP commands follow the same parser-command flow:
 * `FindGuardianCommandParser` parses name keywords for `find-g` before creating a `FindGuardianCommand`.
 * `ViewLessonCommandParser` parses an optional date or displayed student index for `view-l` before creating a
   `ViewLessonCommand`. A bare `view-l` creates a command that clears the lesson filter.
+* `FilterCommandParser`, `ViewLessonCommandParser` and `MarkPaidCommandParser` scan the arguments for any
+  `word/` token that is not one of their supported prefixes and reject it with an `Unknown parameter: PREFIX` error.
+  Without this check, an unknown prefix would be silently treated as part of the preceding value, producing a
+  misleading format error.
 * The edit commands update only supplied fields and preserve the remaining values, including student remarks and payment history.
-* `LinkGuardianCommand` creates a `StudentGuardianLink` in the model and treats repeated pair as an existing link.
+* `AddLessonCommandParser` parses a student index and the `d/`, `t/`, `len/` (or `l/`) and `w/` prefixes before
+  creating an `AddLessonCommand`, while `RemoveLessonCommandParser` parses a displayed lesson index.
+* `MarkPaidCommandParser`, `FilterCommandParser` and `SortStudentCommandParser` parse the payment, filter and sort
+  commands described in the [Implementation](#implementation) section.
+* `LinkGuardianCommand` creates a `StudentGuardianLink` in the model and rejects a pair that is already linked.
 * `UnlinkGuardianCommand` checks that the selected link exists before asking the model to remove it.
 * The add and edit commands preserve the active predicate for their respective student or guardian lists.
   Newly added or edited records are displayed only when they match that predicate.
 * The list commands reset their respective filtered lists to show all students or guardians.
-* The find commands filter their respective lists by name, matching any full-word keyword case-insensitively.
+* The find commands filter their respective lists by name, keeping a record if any word in its name starts with any
+  keyword, ignoring case.
 * Command words are case-insensitive: `AddressBookParser` lower-cases the command word before matching it.
   Parameter prefixes remain case-sensitive.
 
 ### Model component
-**API** : [`Model.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/model/Model.java)
+**API** : [`Model.java`](https://github.com/AY2627S1-CS2103T-T15-3/tp/tree/master/src/main/java/seedu/address/model/Model.java)
 
 <puml src="diagrams/ModelClassDiagram.puml" width="450" />
 
 
-The `Model` component is the in-memory domain model for TutorTrack. The diagram focuses on the classes needed to manage students, guardians, and their relationships; legacy generic-person classes and utility classes are omitted for readability.
+The `Model` component is the in-memory domain model for TutorTrack. The diagram focuses on the classes needed to manage students, guardians, lessons, and their relationships; utility classes and predicates other than the lesson predicates are omitted for readability.
 
 * `ModelManager` implements the `Model` API and owns an `AddressBook` and `UserPrefs`. `AddressBook` and `UserPrefs` expose read-only interfaces to other components.
-* `AddressBook` owns a unique student list, a unique guardian list, and the collection of `StudentGuardianLink` objects.
+* `AddressBook` owns a unique student list, a unique guardian list, a unique lesson list, and the collection of `StudentGuardianLink` objects.
 * `AddressBook` can remove an individual `StudentGuardianLink` without deleting either the student or the guardian.
-* `Student` contains shared contact details together with an academic level and one or more subjects. `Guardian` contains the shared contact details. These domain classes are composed from value objects such as `Name`, `Phone`, `Email`, and `Address`.
+* `Student` contains shared contact details together with an academic level, one or more subjects, a `Remark` (which may be `Remark.EMPTY`), and the set of `PaymentMonth`s the student has paid for. `Guardian` contains the shared contact details. These domain classes are composed from value objects such as `Name`, `Phone`, `Email`, and `Address`.
+* Two students (or two guardians) are considered the same record when their names match after trimming, collapsing whitespace and ignoring case, and their phone numbers match. This identity is used to reject duplicates.
+* `Lesson` represents one scheduled session of a student, with a date, start time, and duration. `UniqueLessonList` rejects lessons that overlap any existing lesson.
 * `StudentGuardianLink` represents a relationship between one student and one guardian. Duplicate links are rejected, and links are updated or removed when their linked student or guardian changes.
+* When a student is edited, `AddressBook#setStudent` also replaces the student in their lessons and links. When a student is removed, their lessons and links are removed too. Removing a guardian removes only that guardian's links.
 * `ModelManager` maintains filtered student, guardian, and lesson views for the UI. Lessons are sorted by date and
   start time, while the displayed student view can also be sorted by name without changing the underlying storage order.
   Lesson filters can match either a date or a student.
@@ -162,7 +184,7 @@ The `Model` component is the in-memory domain model for TutorTrack. The diagram 
 
 ### Storage component
 
-**API** : [`Storage.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/storage/Storage.java)
+**API** : [`Storage.java`](https://github.com/AY2627S1-CS2103T-T15-3/tp/tree/master/src/main/java/seedu/address/storage/Storage.java)
 
 <puml src="diagrams/StorageClassDiagram.puml" width="550" />
 
@@ -177,6 +199,16 @@ Student–guardian links are persisted in the address-book JSON under a `links` 
 Student remarks are persisted as a `remark` string on each student. A missing `remark` field is treated as an empty remark for compatibility with existing address-book files.
 
 Each student's paid months are persisted in a `paidMonths` array of `YYYY-MM` strings. A missing `paidMonths` field is treated as an empty list for compatibility with existing address-book files.
+
+Lessons are persisted in a `lessons` array. Each entry stores the student's name and phone, which identify the
+student, together with the `date`, `startTime` and `durationMinutes` of the lesson. A lesson that refers to a missing
+student, or that overlaps another stored lesson, is rejected as invalid data.
+
+When the app starts, `MainApp` asks `Storage` to read the address book:
+
+* If the data file does not exist, the app starts with the sample data from `SampleDataUtil`.
+* If the data file cannot be read or contains invalid data, the invalid file is deleted and the app starts with an
+  empty address book.
 
 
 ### Common classes
@@ -196,7 +228,10 @@ This section describes some noteworthy details on how certain features are imple
 The `find-s` command accepts one or more name keywords. `FindStudentCommandParser` creates a
 `StudentNameContainsKeywordsPredicate`, which `FindStudentCommand` passes to the model to
 update the filtered student list. Matching is case-insensitive, and a student is included
-when their name contains any of the supplied keywords.
+when any word in their name starts with any of the supplied keywords. For example, `find-s ali` matches `Alice Tan`.
+
+`FindStudentCommand` returns a `CommandResult` carrying the keywords, so that `StudentCard` can highlight the
+matching parts of each name, and a description of the search (e.g. `Search: alice lucy`) to be shown above the list.
 
 <puml src="diagrams/FindSequenceDiagram.puml" alt="Interactions Inside the Logic Component for the `find-s alice` Command" />
 
@@ -212,13 +247,58 @@ visible after commands such as `sort-s`. `ListStudentCommand` explicitly clears 
 and `ListGuardianCommand` provide the equivalent status updates for the guardian search displayed above the guardian
 cards.
 
+The screenshot below shows the label displayed after `filter unpaid/2026-10`.
+
+![Active filter label above the student list](images/filterResult.png)
+
+### Add lesson feature
+
+#### Implementation
+
+The `add-l INDEX d/YYYY-MM-DD t/HH:MM len/LENGTH(MINUTES) w/WEEKS` command schedules a weekly series of lessons for a
+student. `AddLessonCommandParser` validates the index, date, time, length and number of weeks, and accepts `l/` as a
+short form of `len/`. Dates and times are parsed strictly by `DateTimeParser`.
+
+When executed, `AddLessonCommand`:
+
+1. looks up the student in the displayed student list, throwing a `CommandException` if the index is out of range;
+1. creates one `Lesson` per week, each a week after the previous one;
+1. checks every new lesson against all existing lessons (`Model#getLessonList()`) and against the other lessons in the
+   same series, using `Lesson#overlaps(Lesson)`. If any overlap is found, no lesson is added and the error names the
+   conflicting lesson;
+1. otherwise adds all the lessons to the model. If the lesson length exceeds `Lesson.MAX_RECOMMENDED_DURATION`
+   (4 hours), the success message also contains a warning.
+
+The activity diagram below summarizes how `AddLessonCommand` decides whether to add the series.
+
+<puml src="diagrams/AddLessonActivityDiagram.puml" alt="Activity diagram of the add-l command" width="400" />
+
+Validating the whole series before adding any lesson keeps the command all-or-nothing, so a clash in a later week
+never leaves a partially added series.
+
+#### Design considerations:
+
+**Aspect: Handling a clash in one week of a series:**
+
+* **Alternative 1 (current choice):** Reject the whole series and name the clashing lesson.
+  * Pros: The schedule never ends up with a partial series that the tutor did not ask for.
+  * Cons: The tutor must re-enter the command, e.g. as two shorter series, to skip the clashing week.
+
+* **Alternative 2:** Add every lesson that does not clash, and report the skipped weeks.
+  * Pros: Fewer commands when only one week clashes.
+  * Cons: Easy to miss that a week was skipped, and the result depends on the existing schedule in a way that is
+    harder to predict.
+
+The lesson filter is not changed by `add-l`, so the new lessons appear in the lesson panel only if they match it.
+`remove-l INDEX` removes one lesson from the displayed lesson list without affecting the rest of its series.
+
 ### View lesson feature
 
 #### Implementation
 
 The `view-l` command supports three modes. `ViewLessonCommandParser` accepts no arguments, a date with the `d/`
-prefix, or a displayed student index with the `stu/` prefix. It rejects extra arguments, duplicate prefixes, invalid
-dates, and simultaneous date and student filters.
+prefix, or a displayed student index with the `stu/` prefix. It rejects extra arguments, unknown prefixes, duplicate
+prefixes, invalid dates, and simultaneous date and student filters.
 
 `ViewLessonCommand` updates the model's filtered lesson list with one of the following predicates:
 
@@ -235,6 +315,11 @@ The UI's `LessonListPanel` displays the filtered list using `LessonCard` compone
 for the schedule view, refreshes after commands execute, and shows a placeholder when no lessons match. The main
 window connects date changes from the panel to the model's `LessonMatchesDatePredicate`, while `view-l stu/INDEX`
 changes the model filter through the normal command flow.
+
+`ModelManager` remembers the active lesson predicate. When `Model#setStudent` replaces a student while the lessons are
+filtered by that student (checked with `LessonMatchesStudentPredicate#matchesStudent`), it replaces the predicate with
+one for the edited student. Without this, editing the student would leave the lesson panel empty, because the old
+predicate would refer to a `Student` object that no longer exists.
 
 The command flow is illustrated below. The three branches represent date
 filtering, student filtering, and clearing the filter with a bare `view-l`.
@@ -342,7 +427,8 @@ The sequence diagram below shows the interactions within the `Logic` and `Model`
 
 1. `LinkGuardianCommandParser` parses the student index and the `g/` guardian index, and creates a `LinkGuardianCommand`.
 1. When executed, `LinkGuardianCommand` looks up the student and guardian in the currently displayed (filtered) student and guardian lists. If either index is out of range, a `CommandException` is thrown.
-1. A `StudentGuardianLink` is created from the two. It is added to the model only if it does not already exist, so linking the same pair twice has no effect.
+1. A `StudentGuardianLink` is created from the two. If the model already contains this link, a `CommandException` is thrown and the model is left unchanged. Otherwise, the link is added to the model.
+1. The `CommandResult` identifies the student, so the UI highlights the student, whose card now lists the guardian.
 
 The sequence diagram below shows how `Model#addStudentGuardianLink(l)` stores the link inside the `Model` component.
 
@@ -381,11 +467,11 @@ Step 1. The user launches the application for the first time. The `VersionedAddr
 
 <puml src="diagrams/UndoRedoState0.puml" alt="UndoRedoState0" />
 
-Step 2. The user executes `delete 5` command to delete the 5th person in the address book. The `delete` command calls `Model#commitAddressBook()`, causing the modified state of the address book after the `delete 5` command executes to be saved in the `addressBookStateList`, and the `currentStatePointer` is shifted to the newly inserted address book state.
+Step 2. The user executes `remove-s 5` command to remove the 5th student in TutorTrack. The `remove-s` command calls `Model#commitAddressBook()`, causing the modified state of the address book after the `remove-s 5` command executes to be saved in the `addressBookStateList`, and the `currentStatePointer` is shifted to the newly inserted address book state.
 
 <puml src="diagrams/UndoRedoState1.puml" alt="UndoRedoState1" />
 
-Step 3. The user executes `add n/David …​` to add a new person. The `add` command also calls `Model#commitAddressBook()`, causing another modified address book state to be saved into the `addressBookStateList`.
+Step 3. The user executes `add-s n/David …​` to add a new student. The `add-s` command also calls `Model#commitAddressBook()`, causing another modified address book state to be saved into the `addressBookStateList`.
 
 <puml src="diagrams/UndoRedoState2.puml" alt="UndoRedoState2" />
 
@@ -394,7 +480,7 @@ Step 3. The user executes `add n/David …​` to add a new person. The `add` co
 **Note:** If a command fails its execution, it will not call `Model#commitAddressBook()`, so the address book state will not be saved into the `addressBookStateList`.
 </box>
 
-Step 4. The user now decides that adding the person was a mistake, and decides to undo that action by executing the `undo` command. The `undo` command will call `Model#undoAddressBook()`, which will shift the `currentStatePointer` once to the left, pointing it to the previous address book state, and restores the address book to that state.
+Step 4. The user now decides that adding the student was a mistake, and decides to undo that action by executing the `undo` command. The `undo` command will call `Model#undoAddressBook()`, which will shift the `currentStatePointer` once to the left, pointing it to the previous address book state, and restores the address book to that state.
 
 <puml src="diagrams/UndoRedoState3.puml" alt="UndoRedoState3" />
 
@@ -425,11 +511,11 @@ The `redo` command does the opposite — it calls `Model#redoAddressBook()`, whi
 **Note:** If the `currentStatePointer` is at index `addressBookStateList.size() - 1`, pointing to the latest address book state, then there are no undone AddressBook states to restore. The `redo` command uses `Model#canRedoAddressBook()` to check if this is the case. If so, it will return an error to the user rather than attempting to perform the redo.
 </box>
 
-Step 5. The user then decides to execute the command `list`. Commands that do not modify the address book, such as `list`, will usually not call `Model#commitAddressBook()`, `Model#undoAddressBook()` or `Model#redoAddressBook()`. Thus, the `addressBookStateList` remains unchanged.
+Step 5. The user then decides to execute the command `list-s`. Commands that do not modify the address book, such as `list-s`, `find-s` and `view-l`, will usually not call `Model#commitAddressBook()`, `Model#undoAddressBook()` or `Model#redoAddressBook()`. Thus, the `addressBookStateList` remains unchanged.
 
 <puml src="diagrams/UndoRedoState4.puml" alt="UndoRedoState4" />
 
-Step 6. The user executes `clear`, which calls `Model#commitAddressBook()`. Since the `currentStatePointer` is not pointing at the end of the `addressBookStateList`, all address book states after the `currentStatePointer` will be purged. Reason: It no longer makes sense to redo the `add n/David …` command. This is the behavior that most modern desktop applications follow.
+Step 6. The user executes `clear`, which calls `Model#commitAddressBook()`. Since the `currentStatePointer` is not pointing at the end of the `addressBookStateList`, all address book states after the `currentStatePointer` will be purged. Reason: It no longer makes sense to redo the `add-s n/David …` command. This is the behavior that most modern desktop applications follow.
 
 <puml src="diagrams/UndoRedoState5.puml" alt="UndoRedoState5" />
 
@@ -447,14 +533,45 @@ The following activity diagram summarizes what happens when a user executes a ne
 
 * **Alternative 2:** Individual command knows how to undo/redo by
   itself.
-  * Pros: Will use less memory (e.g. for `delete`, just save the person being deleted).
+  * Pros: Will use less memory (e.g. for `remove-s`, just save the student being removed).
+  * Cons: In TutorTrack, removing a student also removes their lessons and guardian links, so the command would have
+    to save and restore all of these as well.
   * Cons: We must ensure that the implementation of each individual command is correct.
 
-_{more aspects and alternatives to be added}_
+**Aspect: What is restored by undo:**
+
+* **Alternative 1 (current choice):** Each saved state is a copy of the whole `AddressBook`, including students,
+  guardians, lessons, and links.
+  * Pros: Undoing `remove-s` automatically restores the student's lessons and links, keeping all entities consistent.
+  * Cons: The displayed filters (e.g. an active `filter` or `view-l`) are not part of the state, so they are not
+    restored.
 
 ### \[Proposed\] Data archiving
 
-_{Explain here how the data archiving feature will be implemented}_
+#### Proposed Implementation
+
+Archiving lets a tutor hide past students from the student list without losing their records. The proposed
+implementation adds an `isArchived` flag to `Student`, together with two commands:
+
+* `archive-s INDEX` replaces the student with a copy whose flag is set, using a `Student#withArchived(boolean)` method
+  in the same way as `Student#withRemark`. The student's remark, payments, guardian links, and lessons are preserved.
+* `unarchive-s INDEX` clears the flag.
+
+The model's default student predicate would change from "show all" to "show non-archived students", and `list-s`
+would accept an optional `archived/` flag to show archived students instead. Existing commands such as `filter` and
+`find-s` would combine their predicates with the non-archived predicate, so archived students only appear when asked
+for. `JsonAdaptedStudent` would store the flag as an optional `archived` field, treating a missing field as `false`
+so that existing data files still load.
+
+**Aspect: What happens to an archived student's lessons:**
+
+* **Alternative 1:** Keep future lessons, and show them as usual.
+  * Pros: Simple, and nothing is lost if the student is archived by mistake.
+  * Cons: The schedule may show lessons for students who have stopped attending.
+
+* **Alternative 2:** Remove the student's future lessons when archiving, after asking the user to confirm.
+  * Pros: Keeps the schedule accurate.
+  * Cons: Unarchiving cannot restore the removed lessons.
 
 
 --------------------------------------------------------------------------------------------------------------------
@@ -474,13 +591,15 @@ _{Explain here how the data archiving feature will be implemented}_
 
 **Target user profile**:
 
-* has a need to manage a significant number of contacts
+* is a private tutor who teaches a significant number of students, possibly across different levels and subjects
+* needs to keep track of students' guardians, weekly lessons, monthly payments, and notes about each student
 * prefers desktop apps over other types of applications
 * can type fast
 * prefers typing to mouse interactions
 * is reasonably comfortable using CLI apps
 
-**Value proposition**: Manage contacts faster than with a typical mouse-driven GUI application.
+**Value proposition**: Manage students, guardians, lesson schedules, and payments in one place, faster than with a
+typical mouse-driven GUI application or a collection of spreadsheets and chat messages.
 
 
 ### User stories
@@ -509,469 +628,340 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 | `*`      | tutor with past students         | archive student data                                              | keep my student list uncluttered while not completely deleting past students |
 | `* *`    | tutor managing monthly payments  | mark a student as paid for a month                                | keep an accurate record of which months each student has paid for            |
 | `*`      | tutor managing monthly payments  | view students payment status                                      | quickly identify whose payments need to be collected                         |
+| `* * *`  | tutor                            | link a guardian to a student                                      | see on the student's card whom to contact about that student                 |
+| `* *`    | tutor                            | unlink a guardian from a student                                  | correct a wrong link without deleting either record                          |
+| `* *`    | tutor with siblings as students  | link one guardian to several students                             | avoid entering the same guardian more than once                              |
+| `* * *`  | tutor                            | search for a guardian by name                                     | find a guardian's contact details quickly                                    |
+| `* *`    | tutor with weekly lessons        | schedule a recurring weekly series of lessons in one command      | avoid entering every lesson separately                                       |
+| `* *`    | tutor                            | view all lessons of a particular student                          | prepare for that student's upcoming lessons                                  |
+| `* *`    | tutor whose lesson is cancelled  | remove a single lesson from a weekly series                       | keep my schedule accurate without rescheduling the whole series              |
+| `* *`    | tutor managing monthly payments  | filter students who have not paid for a month                     | follow up only with those students                                           |
+| `* *`    | tutor working with a filtered list | see which search or filter is currently applied                 | avoid mistaking a filtered list for the full list                            |
+| `*`      | fast typist                      | type command words without worrying about capitalization          | avoid errors caused by accidental capital letters                            |
+| `*`      | tutor who makes mistakes         | undo my last command                                              | recover quickly from a wrong edit or removal                                 |
 
 ### Use cases
 
-(For all use cases below, the **System** is `TutorTrack` and the **Actor** is the `user`, unless specified otherwise)
+(For all use cases below, the **System** is `TutorTrack` and the **Actor** is the `user`, unless specified otherwise.)
+
+Simple interactions that consist of a single request and response, such as listing students or guardians, sorting
+students, opening help and exiting, are not documented as use cases.
 
 **Use case: U1 - Add a student**
 
 **MSS**
 
-1. User requests to add a student.
-2. User provides the required student details.
-3. TutorTrack validates and adds the student record.
-4. TutorTrack confirms that the student was added.
+1. User requests to add a student, providing the student's name, phone, email, address, level, and subjects.
+2. TutorTrack adds the student and shows the student's details.
 
    Use case ends.
 
 **Extensions**
 
-* 2a. The provided details are invalid or incomplete.
+* 1a. A required detail is missing, or a detail is in an invalid format.
 
-  * 2a1. TutorTrack informs the user of the error.
-  * 2a2. User provides corrected details.
+  * 1a1. TutorTrack shows an error message describing the expected format.
+  * 1a2. User corrects the request.
 
-    Steps 2a1-2a2 are repeated until the details are valid and complete. Use
-    case resumes from step 3.
+    Steps 1a1-1a2 are repeated until the request is valid. Use case resumes from step 2.
 
-* 2b. A student with the same identifying details already exists.
+* 1b. A student with the same name (ignoring capitalization and extra spaces) and phone number already exists.
 
-  * 2b1. TutorTrack informs the user that the student already exists.
+  * 1b1. TutorTrack informs the user that the student already exists.
 
     Use case ends.
 
-**Use case: U2 - Add a guardian**
+* 2a. A student filter or search is active, and the new student does not match it.
 
-**MSS**
-
-1. User requests to add a guardian.
-2. User provides the required guardian details.
-3. TutorTrack validates and adds the guardian record.
-4. TutorTrack confirms that the guardian was added.
-
-   Use case ends.
-
-**Extensions**
-
-* 2a. The provided details are invalid or incomplete.
-
-  * 2a1. TutorTrack informs the user of the error.
-  * 2a2. User provides corrected details.
-
-    Steps 2a1-2a2 are repeated until the details are valid and complete. Use
-    case resumes from step 3.
-
-* 2b. A guardian with the same identifying details already exists.
-
-  * 2b1. TutorTrack informs the user that the guardian already exists.
+  * 2a1. TutorTrack adds the student but keeps the current filter, so the student is not displayed.
 
     Use case ends.
 
-The guardian is not associated with a student by this use case; linking is a
-separate use case.
+*Adding a guardian* is similar, except that only the name, phone, email, and address are provided, and the guardian is
+not linked to any student.
 
-**Use case: U3 - List students**
+**Use case: U2 - Edit a student**
 
 **MSS**
 
-1. User requests to list students.
-2. TutorTrack shows the full list of students.
+1. User <u>finds the student (U5)</u>, or views the full student list.
+2. User requests to edit the student at a given index, providing the details to change.
+3. TutorTrack updates only the given details, keeping the student's remark, payments, guardian links, and lessons.
 
    Use case ends.
 
 **Extensions**
 
-* 1a. The list is empty.
-
-  Use case ends.
-
-**Use case: U4 - List guardians**
-
-**MSS**
-
-1. User requests to list guardians.
-2. TutorTrack shows the full list of guardians.
-
-   Use case ends.
-
-**Extensions**
-
-* 1a. The list is empty.
-
-  Use case ends.
-
-**Use case: U5 - Edit student details**
-
-**MSS**
-
-1. User <u>requests to list students (U3)</u>.
-2. User requests to edit a specific student in the list.
-3. TutorTrack requests the details to be edited.
-4. User enters the details to be edited.
-5. TutorTrack updates the student's details.
-
-   Use case ends.
-
-**Extensions**
-
-* 2a. The given index is invalid.
+* 2a. The index is invalid, or no details are given.
 
   * 2a1. TutorTrack shows an error message.
 
+    Use case resumes at step 2.
+
+* 2b. A detail is in an invalid format.
+
+  * 2b1. TutorTrack shows an error message describing the expected format.
+
+    Use case resumes at step 2.
+
+* 2c. The edited student would have the same name and phone number as another student.
+
+  * 2c1. TutorTrack informs the user that the student already exists, and leaves the student unchanged.
+
     Use case ends.
 
-* 4a. There is an error in the entered data.
+*Editing a guardian* is similar. Giving new subjects (`s/`) replaces all of a student's subjects; this does not apply to
+guardians.
 
-  * 4a1. TutorTrack requests the correct data.
-  * 4a2. User enters new data.
-
-    Steps 4a1-4a2 are repeated until the data entered is correct. Use case resumes from step 5.
-
-**Use case: U6 - Edit guardian details**
+**Use case: U3 - Remove a student**
 
 **MSS**
 
-1. User <u>requests to list guardians (U4)</u>.
-2. User requests to edit a specific guardian in the list.
-3. TutorTrack requests the details to be edited.
-4. User enters the details to be edited.
-5. TutorTrack updates the guardian's details.
+1. User <u>finds the student (U5)</u>, or views the full student list.
+2. User requests to remove the student at a given index.
+3. TutorTrack removes the student, together with the student's lessons and guardian links.
 
    Use case ends.
 
 **Extensions**
 
-* 2a. The given index is invalid.
+* 2a. The index is invalid.
 
   * 2a1. TutorTrack shows an error message.
 
-    Use case ends.
+    Use case resumes at step 2.
 
-* 4a. There is an error in the entered data.
+*Removing a guardian* is similar, except that only the guardian's links are removed; the linked students remain.
 
-  * 4a1. TutorTrack requests the correct data.
-  * 4a2. User enters new data.
-
-    Steps 4a1-4a2 are repeated until the data entered is correct. Use case resumes from step 5.
-
-**Use case: U7 - Delete student**
+**Use case: U4 - Link a guardian to a student**
 
 **MSS**
 
-1. User <u>requests to list students (U3)</u>.
-2. User requests to delete a specific student in the list.
-3. TutorTrack deletes the student.
+1. User locates the student and the guardian in the displayed student and guardian lists.
+2. User requests to link the student at a given index to the guardian at a given index.
+3. TutorTrack links them, highlights the student, and lists the guardian on the student's card.
 
    Use case ends.
 
 **Extensions**
 
-* 2a. The given index is invalid.
+* 2a. One or both indexes are invalid.
 
   * 2a1. TutorTrack shows an error message.
 
+    Use case resumes at step 2.
+
+* 2b. The student and guardian are already linked.
+
+  * 2b1. TutorTrack informs the user that they are already linked, and no duplicate link is created.
+
     Use case ends.
 
-**Use case: U8 - Delete guardian**
+*Unlinking a guardian from a student* is similar, except that in 2b, TutorTrack informs the user that the student is
+not linked to the guardian, and on success, both records are kept.
+
+**Use case: U5 - Find or filter students**
 
 **MSS**
 
-1. User <u>requests to list guardians (U4)</u>.
-2. User requests to delete a specific guardian in the list.
-3. TutorTrack deletes the guardian.
+1. User requests to find students by name keywords, or to filter students by level, subjects, and payment status.
+2. TutorTrack shows only the matching students, highlights matching parts of names (for a search), and shows the
+   active search or filter above the student list.
+3. User performs other commands on the displayed students, using their indexes in the displayed list.
+4. User requests to list all students.
+5. TutorTrack shows all students and hides the search or filter label.
 
    Use case ends.
 
 **Extensions**
 
-* 2a. The given index is invalid.
+* 1a. No keyword or criterion is given, a criterion is invalid, or an unknown parameter is given.
+
+  * 1a1. TutorTrack shows an error message and leaves the displayed list unchanged.
+
+    Use case resumes at step 1.
+
+* 2a. No student matches.
+
+  * 2a1. TutorTrack shows an empty student list.
+
+    Use case ends.
+
+* 3a. User requests a new search or filter.
+
+  * 3a1. TutorTrack replaces the previous search or filter.
+
+    Use case resumes at step 3.
+
+*Finding guardians* is similar, but guardians can only be found by name, and the search is shown above the guardian
+list.
+
+**Use case: U6 - Schedule weekly lessons**
+
+**MSS**
+
+1. User locates the student in the displayed student list.
+2. User requests to schedule lessons for the student at a given index, providing the first date, start time, length,
+   and number of weeks.
+3. TutorTrack adds one lesson per week, all with the same start time and length.
+
+   Use case ends.
+
+**Extensions**
+
+* 2a. The index is invalid, or the date, time, length, or number of weeks is invalid.
 
   * 2a1. TutorTrack shows an error message.
 
+    Use case resumes at step 2.
+
+* 2b. A lesson in the series overlaps an existing lesson or another lesson in the series.
+
+  * 2b1. TutorTrack shows the clashing lesson and adds none of the lessons in the series.
+
+    Use case resumes at step 2.
+
+* 3a. The lesson length exceeds 4 hours.
+
+  * 3a1. TutorTrack adds the lessons and shows a warning that the length may be a mistake.
+
     Use case ends.
 
-**Use case: U9 - Link guardian to student**
+* 3b. A lesson filter is active, and the new lessons do not match it.
+
+  * 3b1. TutorTrack adds the lessons but keeps the filter, so they are not displayed.
+
+    Use case ends.
+
+**Use case: U7 - View lessons**
 
 **MSS**
 
-1. User <u>requests to list students (U3)</u>.
-2. User <u>requests to list guardians (U4)</u>.
-3. User selects a student and a guardian to link.
-4. TutorTrack links the student with the guardian.
+1. User requests to view lessons on a date, or of the student at a given index.
+2. TutorTrack shows the matching lessons sorted by date and start time, and shows the filter in the lessons panel
+   title.
 
    Use case ends.
 
 **Extensions**
 
-* 3a. One or both indices given are invalid.
+* 1a. User does not give a date or student.
+
+  * 1a1. TutorTrack shows all lessons.
+
+    Use case ends.
+
+* 1b. The date or index is invalid, both a date and a student are given, or an unknown parameter is given.
+
+  * 1b1. TutorTrack shows an error message and leaves the current lesson filter unchanged.
+
+    Use case resumes at step 1.
+
+* 2a. A lesson crosses midnight.
+
+  * 2a1. TutorTrack shows the lesson for both dates it overlaps.
+
+    Use case resumes at step 2.
+
+* 2b. No lesson matches.
+
+  * 2b1. TutorTrack shows a placeholder message in the lessons panel.
+
+    Use case ends.
+
+*Removing a lesson* uses the lesson's index in the displayed lesson list, and removes only that lesson, not the rest
+of its weekly series.
+
+**Use case: U8 - Follow up on unpaid fees**
+
+**MSS**
+
+1. User requests to filter students who have not paid for a given month.
+2. TutorTrack shows those students.
+3. After receiving a payment, user requests to mark the student at a given index as paid for that month.
+4. TutorTrack records the payment and shows it on the student's card, most recent month first.
+
+   Steps 3-4 are repeated for each payment received.
+
+   Use case ends.
+
+**Extensions**
+
+* 1a. The month is not in `YYYY-MM` format.
+
+  * 1a1. TutorTrack shows an error message describing the expected format.
+
+    Use case resumes at step 1.
+
+* 3a. The index is invalid, or the month is missing or invalid.
 
   * 3a1. TutorTrack shows an error message.
 
-    Use case ends.
+    Use case resumes at step 3.
 
-* 3b. The student and guardian are already linked.
+* 3b. The student is already marked as paid for that month.
 
-  * 3b1. TutorTrack informs the user that they are already linked.
+  * 3b1. TutorTrack informs the user, and leaves the student unchanged.
 
-    Use case ends.
+    Use case resumes at step 3.
 
-**Use case: U10 - Filter contacts**
+* 4a. The student has paid for more than 3 months.
 
-**MSS**
+  * 4a1. TutorTrack shows the 3 most recent months, with a button to show the rest.
 
-1. User requests to filter students by one or more criteria (academic level, subjects, a month paid for, a month not paid for).
-2. TutorTrack shows the students that match all the criteria.
+    Use case resumes at step 3.
 
-    Use case ends.
-
-**Extensions**
-
-* 1a. The command format or a criterion value is invalid.
-
-    * 1a1. TutorTrack shows an error message.
-
-      Use case resumes at step 1.
-
-* 2a. No contact matches the criteria.
-
-  Use case ends.
-
-**Use case: U11 - Find contacts**
+**Use case: U9 - Keep a note about a student**
 
 **MSS**
 
-1. User requests to find contacts by name keywords.
-2. TutorTrack shows the contacts whose names match any keyword.
-
-    Use case ends.
-
-**Extensions**
-
-* 1a. No keyword is given.
-
-    * 1a1. TutorTrack shows an error message.
-
-      Use case resumes at step 1.
-
-* 2a. No contact matches the keywords.
-
-  Use case ends.
-
-**Use case: U12 - Sort students**
-
-**MSS**
-
-1. User requests to sort the displayed students by name.
-2. TutorTrack sorts the displayed student list in ascending order by name.
-3. TutorTrack displays the sorted student list.
+1. User requests to set a remark for the student at a given index.
+2. TutorTrack saves the remark, replacing any previous remark, and shows it on the student's card.
+3. Later, user requests to clear the student's remark.
+4. TutorTrack clears the remark and hides it from the student's card.
 
    Use case ends.
 
 **Extensions**
 
-* 1a. User provides arguments with the sorting request.
+* 1a. The index is invalid, or the remark is blank or longer than 300 characters.
 
   * 1a1. TutorTrack shows an error message.
 
+    Use case resumes at step 1.
+
+* 3a. The student has no remark.
+
+  * 3a1. TutorTrack informs the user that there is no remark to clear.
+
     Use case ends.
 
-* 2a. The student list is empty.
-
-  * 2a1. TutorTrack displays the empty student list.
-
-    Use case ends.
-
-**Use case: U13 - Schedule a lesson**
-
-**Command:** `add-l INDEX d/YYYY-MM-DD t/HH:MM len/LENGTH(MINUTES) w/WEEKS`
-
-The lesson-length prefix `len/` may be shortened to `l/`.
+**Use case: U10 - Start using TutorTrack**
 
 **MSS**
 
-1. User <u>requests to list students (U3)</u>.
-2. User requests a weekly series of lessons for a specific student in the list, giving the first day, start time, duration and number of weeks.
-3. TutorTrack saves all lessons in the series and shows the updated lesson slots.
-
-    Use case ends.
-
-**Extensions**
-
-* 1a. The list is empty.
-
-  Use case ends.
-
-* 2a. The given index is invalid, or the person is not a student.
-
-    * 2a1. TutorTrack shows an error message.
-
-      Use case resumes at step 2.
-
-* 2b. The day, start time or duration is invalid.
-
-    * 2b1. TutorTrack shows an error message.
-
-      Use case resumes at step 2.
-
-* 2c. A lesson in the series overlaps an existing lesson or another lesson in the series.
-
-    * 2c1. TutorTrack shows a clash error message and adds none of the lessons in the series.
-
-      Use case resumes at step 2.
-
-* 2d. The number of weeks is not between 1 and 52.
-
-    * 2d1. TutorTrack shows an error message.
-
-      Use case resumes at step 2.
-
-**Use case: U14 - Remove a lesson**
-
-**Command:** `remove-l INDEX`
-
-**MSS**
-
-1. User views the currently displayed lesson list.
-2. User requests to remove a lesson by its displayed index.
-3. TutorTrack removes the selected lesson and displays the updated lesson list.
-
-    Use case ends.
-
-**Extensions**
-
-* 1a. The lesson list is empty.
-
-  Use case ends.
-
-* 2a. The given index is invalid or outside the displayed lesson list.
-
-    * 2a1. TutorTrack shows an error message and leaves the lesson list unchanged.
-
-      Use case resumes at step 2.
-
-**Use case: U15 - View lessons**
-
-**Command:** `view-l [d/YYYY-MM-DD | stu/INDEX]`
-
-The user may filter lessons by a calendar date or by a student in the currently displayed student list. A bare
-`view-l` clears the active lesson filter and displays all lessons.
-
-**MSS**
-
-1. User requests to view lessons, optionally supplying a date or displayed student index.
-2. TutorTrack filters the lesson list using the supplied criterion, or removes the filter if no criterion is given.
-3. TutorTrack displays the matching lessons sorted by date and start time.
-
-    Use case ends.
-
-**Extensions**
-
-* 1a. The command format is invalid, the date is not in `YYYY-MM-DD` format, or both filters are supplied.
-
-    * 1a1. TutorTrack shows an error message and leaves the current lesson filter unchanged.
-
-      Use case resumes at step 1.
-
-* 1b. The student index is invalid or outside the currently displayed student list.
-
-    * 1b1. TutorTrack shows an error message and leaves the current lesson filter unchanged.
-
-      Use case resumes at step 1.
-
-* 2a. A lesson overlaps the requested date, including a lesson that crosses midnight.
-
-    * 2a1. TutorTrack includes the lesson in the displayed results.
-
-      Use case resumes at step 3.
-
-* 3a. No lessons match the criterion.
-
-    * 3a1. TutorTrack displays an empty lesson list with an appropriate placeholder.
-
-      Use case ends.
-
-**Use case: U16 - Mark a student's payment as paid**
-
-**MSS**
-
-1. User <u>requests to list students (U3)</u>.
-2. User requests to mark a specific student in the list as paid for a given month of a year.
-3. TutorTrack records the payment and shows the student's updated paid months.
+1. User launches TutorTrack for the first time.
+2. TutorTrack shows sample students, guardians, links, payments, remarks, and lessons.
+3. User tries out commands on the sample data.
+4. User requests to clear all data.
+5. TutorTrack removes all students, guardians, lessons, and links.
+6. User <u>adds their own students (U1)</u> and guardians.
 
    Use case ends.
 
 **Extensions**
 
-* 1a. The list is empty.
+* 1a. A data file from a previous session exists.
 
-  Use case ends.
-
-* 2a. The given index is invalid.
-
-    * 2a1. TutorTrack shows an error message.
-
-      Use case resumes at step 2.
-
-* 2b. The month is missing or not in the format `YYYY-MM`.
-
-    * 2b1. TutorTrack shows an error message describing the expected format.
-
-      Use case resumes at step 2.
-
-* 2c. The student is already marked as paid for the given month.
-
-    * 2c1. TutorTrack shows an error message, and the student's record is unchanged.
-
-      Use case ends.
-
-**Use case: U17 - Set student remark**
-
-**MSS**
-
-1. User views the currently displayed student list.
-2. User requests to set a remark for a specific student in the list, providing the remark text.
-3. TutorTrack adds or updates the student's remark.
-
-   Use case ends.
-
-**Extensions**
-
-* 2a. The given index is invalid.
-
-  * 2a1. TutorTrack shows an error message.
+  * 1a1. TutorTrack loads it instead of the sample data.
 
     Use case ends.
 
-* 2b. The remark text is invalid or missing.
+* 1b. The data file exists but is invalid.
 
-  * 2b1. TutorTrack shows an error message.
+  * 1b1. TutorTrack deletes the invalid file and starts with no data.
 
-    Use case ends.
-
-**Use case: U18 - Clear student remark**
-
-**MSS**
-
-1. User views the currently displayed student list.
-2. User requests to clear the remark of a specific student in the list.
-3. TutorTrack clears the student's remark.
-
-   Use case ends.
-
-**Extensions**
-
-* 2a. The given index is invalid.
-
-  * 2a1. TutorTrack shows an error message.
-
-    Use case ends.
-
-* 2b. The student has no existing remark.
-
-  * 2b1. TutorTrack informs the user that there is no remark to clear.
-
-    Use case ends.
+    Use case resumes at step 6.
 
 ### Non-Functional Requirements
 
@@ -996,12 +986,24 @@ The user may filter lessons by a calendar date or by a student in the currently 
 
 ## **Appendix: Instructions for manual testing**
 
-Given below are instructions to test the app manually.
+Given below are instructions to test the app manually. They complement the [User Guide](UserGuide.md), which
+describes each command's format and constraints.
 
 <box type="info" seamless>
 
 **Note:** These instructions only provide a starting point for testers to work on;
 testers are expected to do more *exploratory* testing.
+</box>
+
+<box type="tip" seamless>
+
+**Tip:** Every section below starts from the sample data. To restore the sample data, close TutorTrack, delete
+`data/addressbook.json` from the folder containing the JAR file, and relaunch. The sample data contains:
+
+* Students: 1. Alice Tan, 2. Henry Tan, 3. Lucy Lim, 4. Sam Lee
+* Guardians: 1. Billie O'Connor, 2. John Tan, 3. Mary Jane
+* Payments: Alice has paid for Jul to Oct 2026, Lucy for Sep and Oct 2026, and Henry and Sam have not paid.
+* Lessons: seven lessons from 1 to 10 November 2026, including a lesson of Lucy's on 10 November from 23:30 to 01:30.
 </box>
 
 ### Launch and shutdown
@@ -1010,89 +1012,190 @@ testers are expected to do more *exploratory* testing.
 
    1. Download the JAR file and copy it into an empty folder.
 
-   1. Double-click the JAR file.<br>
-      Expected: The GUI opens with a set of sample contacts. The window size may not be optimal.
+   1. Run `java -jar addressbook.jar` from that folder.<br>
+      Expected: The GUI opens with the sample data. The lessons panel shows today's lessons. The window size may not
+      be optimal.
 
 1. Saving window preferences
 
    1. Resize the window to an optimal size. Move the window to a different location. Close the window.
 
-   1. Relaunch the app by double-clicking the JAR file.<br>
-       Expected: The most recent window size and location are retained.
+   1. Relaunch the app.<br>
+      Expected: The most recent window size and location are retained.
 
-1. _{ more test cases … }_
+1. Help and shutdown
 
-### Deleting a person
+   1. Test case: press `F1`, or enter `HELP`<br>
+      Expected: The help window opens with a link to the User Guide. Command words are case-insensitive.
 
-1. Deleting a person while all persons are being shown
+   1. Test case: `exit`<br>
+      Expected: The app closes.
 
-   1. Prerequisites: List all persons using the `list` command, with multiple persons in the list.
+### Adding and editing students and guardians
 
-   1. Test case: `delete 1`<br>
-      Expected: The first contact is deleted from the list. The status message shows the deleted contact's details.
+1. Adding records
 
-   1. Test case: `delete 0`<br>
-      Expected: No person is deleted. The status message shows error details.
+   1. Test case: `add-s n/Ben Lim p/90001111 e/ben@example.com a/1 Main Street l/Secondary 1 s/English`<br>
+      Expected: Ben Lim is added at the end of the student list, with `Paid: None`.
 
-   1. Other incorrect delete commands to try: `delete`, `delete x`, `...` (where x is larger than the list size)<br>
-      Expected: Similar to previous.
+   1. Test case: `add-s n/alice   TAN p/91234568 e/a@example.com a/1 Main Street l/Secondary 1 s/English`<br>
+      Expected: No student is added, because Alice Tan with the same phone number already exists.
 
-1. _{ more test cases … }_
+   1. Test case: `add-g n/Ben Tan p/92345678 e/ben.tan@gmail.com a/12 ABCD Ave 3`<br>
+      Expected: Ben Tan is added to the guardian list, and is not linked to any student.
 
-### Marking a student's payment
+1. Adding a student while a filter is active
 
-1. Marking a student as paid while all students are being shown
+   1. Test case: `filter l/JC 1`, then
+      `add-s n/Kim Ong p/90002222 e/kim@example.com a/2 Main Street l/Secondary 2 s/Science`<br>
+      Expected: Kim Ong is added, but only Sam Lee remains displayed, and the `Filtered:` label stays above the list.
+      `list-s` shows Kim Ong.
 
-   1. Prerequisites: At least two students in the student list, neither marked as paid for October 2026.
+1. Editing records
 
-   1. Test case: `mark-paid 1 m/2026-10`<br>
-      Expected: The first student's card shows `Oct 2026` in its `Paid:` line. The status message confirms that the student is marked as paid for Oct 2026.
+   1. Test case: `edit-s 1 s/Physics`<br>
+      Expected: Alice Tan's subjects become only `Physics`. Her guardians, remark, and paid months are unchanged.
 
-   1. Test case: `mark-paid 1 m/2026-10` (repeated)<br>
-      Expected: No change. The status message says the student is already marked as paid for Oct 2026.
+   1. Test case: `edit-g 1 n/Billie Tan`<br>
+      Expected: The guardian is renamed, and Alice Tan's card now lists `Billie Tan` as a guardian.
 
-   1. Test case: `mark-paid 1 m/2026-09`<br>
-      Expected: The first student's `Paid:` line shows `Oct 2026, Sep 2026`, with the most recent month first.
+   1. Test case: `edit-s 1`<br>
+      Expected: No change. The result display says at least one field to edit must be provided.
 
-   1. Test case: `mark-paid 0 m/2026-10`<br>
-      Expected: No student is updated. The status message shows an invalid command format error.
+### Removing students and guardians
 
-   1. Test case: `mark-paid 1 m/2026-13`, `mark-paid 1 m/10-2026`, `mark-paid 1`<br>
-      Expected: No student is updated. The status message shows an error describing the expected `YYYY-MM` format, or an invalid command format error.
+1. Test case: `remove-s 1`<br>
+   Expected: Alice Tan is removed. Her lessons disappear from the lessons panel, and her guardians remain.
 
-   1. Test case: `mark-paid x m/2026-10` (where x is larger than the list size)<br>
-      Expected: No student is updated. The status message says the student index is invalid.
+1. Test case: `remove-g 2`<br>
+   Expected: John Tan is removed, and is no longer listed on the cards of the students he was linked to.
 
-1. Payment history is kept after editing and restarting
+1. Test case: `find-s lucy`, then `remove-s 1`<br>
+   Expected: Lucy Lim is removed, because indexes refer to the displayed (searched) list.
 
-   1. Prerequisites: The first student is marked as paid for October 2026.
+1. Test case: `remove-s 0`, `remove-s 99`<br>
+   Expected: No student is removed. An invalid command format error, or an invalid student index error, is shown.
 
-   1. Test case: `edit-s 1 p/98765432`<br>
-      Expected: The phone number is updated, and `Oct 2026` remains in the `Paid:` line.
+### Linking and unlinking guardians
 
-   1. Close and relaunch the app.<br>
-      Expected: The student's paid months are unchanged.
+1. Test case: `link-g 2 g/1`<br>
+   Expected: Henry Tan is highlighted, and his card lists Billie O'Connor as a guardian.
 
-1. Filtering students by payment status
+1. Test case: `link-g 2 g/1` (repeated)<br>
+   Expected: No change. The result display says that Henry Tan is already linked to Billie O'Connor.
 
-   1. Prerequisites: The first student is marked as paid for October 2026, and the other students are not.
+1. Test case: `unlink-g 2 g/1`<br>
+   Expected: Billie O'Connor is removed from Henry Tan's `Guardians:` line. Both records remain.
 
-   1. Test case: `filter unpaid/2026-10`<br>
-      Expected: Every student except the one marked as paid is listed. The status message shows the number of students listed.
+1. Test case: `unlink-g 4 g/1`<br>
+   Expected: No change. The result display says that Sam Lee is not linked to Billie O'Connor.
 
-   1. Test case: `filter paid/2026-10`<br>
-      Expected: Only the student marked as paid is listed.
+### Finding, filtering, and sorting
 
-   1. Test case: `filter paid/2026-10 unpaid/2026-10`<br>
-      Expected: No students are listed. The status message says that no students match the filter.
+1. Test case: `find-s ali`<br>
+   Expected: Only Alice Tan is shown, with `Ali` highlighted and `Search: ali` shown above the list.
 
-   1. Test case: `filter unpaid/2026-13`, `filter paid/2026-10 paid/2026-11`<br>
-      Expected: The list is not changed. The status message shows the month format error, or a duplicate-field error.
+1. Test case: `sort-s` after the previous test<br>
+   Expected: The search label remains visible.
+
+1. Test case: `filter l/jc 1`<br>
+   Expected: Only Sam Lee is shown, and the label is replaced by the filter description.
+
+1. Test case: `filter n/Alice`<br>
+   Expected: The list is not changed. The result display says `Unknown parameter: n/`.
+
+1. Test case: `list-s`<br>
+   Expected: All students are shown, and the label is hidden.
+
+1. Test case: `find-g tan`<br>
+   Expected: Only John Tan is shown in the guardian list, with `Tan` highlighted and `Search: tan` shown above it.
+
+### Tracking payments
+
+1. Test case: `filter unpaid/2026-10`<br>
+   Expected: Henry Tan and Sam Lee are shown.
+
+1. Test case: `mark-paid 1 m/2026-10` while the previous filter is active<br>
+   Expected: Henry Tan is marked as paid for Oct 2026 and disappears from the filtered list, leaving Sam Lee.
+
+1. Test case: `list-s`, then `mark-paid 2 m/2026-10`<br>
+   Expected: No change. The result display says that Henry Tan is already marked as paid for Oct 2026.
+
+1. Test case: `mark-paid 1 m/2026-11`<br>
+   Expected: Alice Tan's card shows `Paid: Nov 2026, Oct 2026, Sep 2026` and a `+2 more` button. Clicking the button
+   shows all five months.
+
+1. Test case: `mark-paid 1 m/2026-13`, `mark-paid 1 m/10-2026`, `mark-paid 1 x/2026-10`<br>
+   Expected: No change. An error describing the `YYYY-MM` format, or an unknown parameter error, is shown.
+
+### Setting and clearing remarks
+
+1. Test case: `set-remark-s 2 Practise fractions before the next lesson`<br>
+   Expected: Henry Tan's card shows `Remark: Practise fractions before the next lesson`.
+
+1. Test case: `clear-remark-s 2`<br>
+   Expected: The remark line disappears from Henry Tan's card.
+
+1. Test case: `clear-remark-s 2` (repeated)<br>
+   Expected: The result display says that Henry Tan has no remark to clear.
+
+### Scheduling, viewing, and removing lessons
+
+1. Scheduling lessons
+
+   1. Test case: `view-l stu/4`, then `add-l 4 d/2026-11-14 t/18:00 len/120 w/3`<br>
+      Expected: `Added 3 lesson(s) for Sam Lee.` The lessons panel shows the three new lessons on 14, 21 and 28
+      November 2026, together with Sam's existing lesson.
+
+   1. Test case: `add-l 1 d/2026-11-01 t/14:30 len/60 w/1`<br>
+      Expected: No lesson is added. The error states that the lesson overlaps Alice Tan's lesson on 2026-11-01.
+
+   1. Test case: `add-l 1 d/2026-10-25 t/14:00 len/60 w/2`<br>
+      Expected: No lesson is added, because the second lesson (1 November) clashes with an existing lesson, even
+      though the first one does not.
+
+   1. Test case: `add-l 1 d/2026-12-01 t/09:00 len/300 w/1`<br>
+      Expected: The lesson is added, with a warning that the lesson exceeds 4 hours.
+
+1. Viewing lessons
+
+   1. Test case: `view-l d/2026-11-11`<br>
+      Expected: The title changes to `Lessons for 2026-11-11`, and Lucy Lim's lesson from the previous night is shown,
+      because it ends after midnight.
+
+   1. Test case: `view-l stu/3`, then `edit-s 3 p/98880000`<br>
+      Expected: The lessons panel still shows Lucy Lim's lessons after her details are edited.
+
+   1. Test case: `view-l d/2026-11-01 stu/1`<br>
+      Expected: The lesson filter is unchanged, and an invalid command format error is shown.
+
+1. Removing a lesson
+
+   1. Test case: `view-l stu/1`, then `remove-l 1`<br>
+      Expected: Alice Tan's lesson on 2026-11-01 is removed. Her lesson on 2026-11-08 remains.
+
+### Clearing all data
+
+1. Test case: `clear`<br>
+   Expected: All students, guardians, and lessons are removed. The result display says `TutorTrack has been cleared!`.
 
 ### Saving data
 
-1. Dealing with missing/corrupted data files
+1. Data is saved after every command
 
-   1. _{Explain how to simulate missing or corrupted data files and state the expected behavior.}_
+   1. Test case: `add-g n/Ben Tan p/92345678 e/ben.tan@gmail.com a/12 ABCD Ave 3`, then close and relaunch the app.<br>
+      Expected: Ben Tan is still in the guardian list.
 
-1. _{ more test cases … }_
+1. Dealing with a missing data file
+
+   1. Close the app, then delete `data/addressbook.json`.
+
+   1. Relaunch the app.<br>
+      Expected: The app starts with the sample data.
+
+1. Dealing with a corrupted data file
+
+   1. Close the app, then open `data/addressbook.json` in a text editor and change a student's `phone` to `abc`.
+
+   1. Relaunch the app.<br>
+      Expected: The app starts with no students, guardians, or lessons, and the invalid data file is deleted.

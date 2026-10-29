@@ -15,11 +15,6 @@ participant "m:Model" as Model MODEL_COLOR
 participant "p:LessonPredicate" as LessonPredicate MODEL_COLOR
 end box
 
-box UI UI_COLOR_T1
-participant ":MainWindow" as MainWindow UI_COLOR
-participant ":LessonListPanel" as LessonListPanel UI_COLOR
-end box
-
 [-> LogicManager : execute("view-l ...")
 activate LogicManager
 
@@ -87,15 +82,6 @@ deactivate CommandResult
 
 ViewLessonCommand --> LogicManager : r
 deactivate ViewLessonCommand
-
-LogicManager -> MainWindow : refresh lesson list
-activate MainWindow
-MainWindow -> LessonListPanel : refresh()
-activate LessonListPanel
-LessonListPanel --> MainWindow
-deactivate LessonListPanel
-MainWindow --> LogicManager
-deactivate MainWindow
 
 [<--LogicManager
 deactivate LogicManager
