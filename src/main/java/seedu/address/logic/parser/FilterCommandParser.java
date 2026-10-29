@@ -36,8 +36,11 @@ public class FilterCommandParser implements Parser<FilterCommand> {
         boolean hasSubjects = !argMultimap.getAllValues(PREFIX_SUBJECT).isEmpty();
         boolean hasPaid = argMultimap.getValue(PREFIX_PAID).isPresent();
         boolean hasUnpaid = argMultimap.getValue(PREFIX_UNPAID).isPresent();
-        if (!argMultimap.getPreamble().isEmpty() || !(hasLevel || hasSubjects || hasPaid || hasUnpaid)) {
+        if (!argMultimap.getPreamble().isEmpty()) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, FilterCommand.MESSAGE_USAGE));
+        }
+        if (!(hasLevel || hasSubjects || hasPaid || hasUnpaid)) {
+            throw new ParseException(FilterCommand.MESSAGE_NO_FILTER);
         }
 
         argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_LEVEL, PREFIX_PAID, PREFIX_UNPAID);
