@@ -230,6 +230,11 @@ for the schedule view, refreshes after commands execute, and shows a placeholder
 window connects date changes from the panel to the model's `LessonMatchesDatePredicate`, while `view-l stu/INDEX`
 changes the model filter through the normal command flow.
 
+The command flow is illustrated below. The three branches represent date
+filtering, student filtering, and clearing the filter with a bare `view-l`.
+
+<puml src="diagrams/ViewLessonSequenceDiagram.puml" alt="Interactions for the `view-l` command" />
+
 ### Student remarks feature
 
 #### Implementation
@@ -338,6 +343,19 @@ The sequence diagram below shows how `Model#addStudentGuardianLink(l)` stores th
 <puml src="diagrams/LinkGuardianSequenceDiagram-Model.puml" alt="Interactions Inside the Model Component for adding a StudentGuardianLink" />
 
 `ModelManager` passes the link to `AddressBook`, which checks again for a duplicate before adding it to its `studentGuardianLinks` list.
+
+#### Unlinking a guardian from a student
+
+The `unlink-g STUDENT_INDEX g/GUARDIAN_INDEX` command removes an existing
+`StudentGuardianLink`. It validates both displayed indexes, checks that the
+relationship exists, and removes the link through `Model` and `AddressBook`.
+If the relationship does not exist, the command reports an error and leaves
+the address book unchanged.
+
+The following diagram shows the parser, command, model, and address-book
+interactions for `unlink-g 1 g/2`.
+
+<puml src="diagrams/UnlinkGuardianSequenceDiagram.puml" alt="Interactions Inside the Logic Component for the `unlink-g 1 g/2` Command" />
 
 ### \[Proposed\] Undo/redo feature
 
