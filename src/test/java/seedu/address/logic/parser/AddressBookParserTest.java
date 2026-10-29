@@ -203,8 +203,8 @@ public class AddressBookParserTest {
 
     @Test
     public void parseCommand_removeLesson_invalidArguments() {
-        assertThrows(ParseException.class, seedu.address.logic.Messages.MESSAGE_INVALID_LESSON_DISPLAYED_INDEX, () ->
-                parser.parseCommand("remove-l 0"));
+        assertThrows(ParseException.class, "Invalid command format.\n"
+                + RemoveLessonCommand.MESSAGE_USAGE, () -> parser.parseCommand("remove-l 0"));
         assertThrows(ParseException.class, "Invalid command format.\n"
                 + RemoveLessonCommand.MESSAGE_USAGE, () -> parser.parseCommand("remove-l abc"));
     }
