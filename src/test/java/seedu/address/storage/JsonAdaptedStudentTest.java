@@ -37,6 +37,16 @@ public class JsonAdaptedStudentTest {
     }
 
     @Test
+    public void toModelType_expandedFormats_success() throws Exception {
+        Student result = adapted("Mrs. Lim", "+65 9123 4567", "lim@example.com", "12 Main Street",
+                "Secondary 3 (Express)", List.of("Math")).toModelType();
+        assertEquals("Mrs. Lim", result.getName().fullName);
+        assertEquals("+6591234567", result.getPhone().value);
+        assertEquals("Secondary 3 (Express)", result.getLevel().value);
+        assertEquals(result, new JsonAdaptedStudent(result).toModelType());
+    }
+
+    @Test
     public void constructorFromStudent_withPaidMonths_roundTrips() throws Exception {
         Student source = new Student(Name.fromStudentValue("Henry Tan"), Phone.fromStudentValue("91234567"),
                 Email.fromStudentValue("henry@example.com"), Address.fromStudentValue("12 ABCD Ave 3"),
@@ -102,7 +112,7 @@ public class JsonAdaptedStudentTest {
                 adapted("Henry&Tan", "91234567", "henry@example.com", "12 ABCD Ave 3", "JC 1",
                         List.of("Math")).toModelType());
         assertThrows(IllegalValueException.class, StudentFieldValidator.PHONE_MESSAGE, () ->
-                adapted("Henry Tan", "12 345", "henry@example.com", "12 ABCD Ave 3", "JC 1",
+                adapted("Henry Tan", "12-345", "henry@example.com", "12 ABCD Ave 3", "JC 1",
                         List.of("Math")).toModelType());
         assertThrows(IllegalValueException.class, StudentFieldValidator.EMAIL_MESSAGE, () ->
                 adapted("Henry Tan", "91234567", "henry@example", "12 ABCD Ave 3", "JC 1",

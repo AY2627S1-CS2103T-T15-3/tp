@@ -25,7 +25,7 @@ public class EditGuardianCommandParserTest {
         descriptor.setEmail(new Email("ben.lim@example.com"));
         descriptor.setAddress(new Address("25 Happy Road"));
 
-        assertParseSuccess(parser, "2 n/Ben Lim p/98765432 e/ben.lim@example.com a/25 Happy Road",
+        assertParseSuccess(parser, "2 n/Ben Lim p/9876 5432 e/ben.lim@example.com a/25 Happy Road",
                 new EditGuardianCommand(Index.fromOneBased(2), descriptor));
     }
 
