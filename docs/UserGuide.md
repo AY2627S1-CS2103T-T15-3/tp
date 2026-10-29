@@ -108,6 +108,7 @@ Format: `add-s n/NAME p/PHONE e/EMAIL a/ADDRESS l/LEVEL s/SUBJECT [s/SUBJECT]...
 * Additional `s/SUBJECT` parameters may be provided.
 * The parameters can be entered in any order.
 * A student with the same normalized name and phone number cannot be added again.
+* Adding a student preserves any active student filter. The new student is displayed only if it matches the filter.
 * Names may contain alphanumeric characters, spaces, hyphens, apostrophes, periods and slashes, such as `John s/o Raj`, and must contain at least one alphanumeric character.
 
 Examples:
@@ -124,6 +125,7 @@ Format: `add-g n/NAME p/PHONE e/EMAIL a/ADDRESS`
 * The parameters can be entered in any order.
 * Adding a guardian does not link them to a student; use `link-g` separately.
 * A guardian with the same normalized name and phone number cannot be added again.
+* Adding a guardian preserves any active guardian search. The new guardian is displayed only if it matches the search.
 * Names may contain alphanumeric characters, spaces, hyphens, apostrophes, periods and slashes, such as `John s/o Raj`, and must contain at least one alphanumeric character.
 
 Examples:

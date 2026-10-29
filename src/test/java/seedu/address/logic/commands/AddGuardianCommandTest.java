@@ -51,6 +51,20 @@ public class AddGuardianCommandTest {
     }
 
     @Test
+    public void execute_preservesActiveSearch() throws Exception {
+        Guardian other = guardian("Jane Lim", "91234567", "jane@example.com", "31 Clementi Avenue");
+        ModelManager model = new ModelManager();
+        model.addGuardian(BEN);
+        model.addGuardian(other);
+        model.updateFilteredGuardianList(guardian -> guardian.getName().fullName.equals("Ben Tan"));
+
+        Guardian unrelated = guardian("Alice Tan", "98765432", "alice@example.com", "25 Happy Road");
+        new AddGuardianCommand(unrelated).execute(model);
+
+        assertEquals(java.util.List.of(BEN), model.getFilteredGuardianList());
+    }
+
+    @Test
     public void equals_sameGuardian_returnsTrue() {
         AddGuardianCommand command = new AddGuardianCommand(BEN);
         assertTrue(command.equals(command));

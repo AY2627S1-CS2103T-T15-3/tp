@@ -103,7 +103,6 @@ public class ModelManager implements Model {
     public void addStudent(Student student) {
         requireNonNull(student);
         addressBook.addStudent(student);
-        updateFilteredStudentList(PREDICATE_SHOW_ALL_STUDENTS);
     }
 
     @Override
@@ -176,7 +175,6 @@ public class ModelManager implements Model {
     public void addGuardian(Guardian guardian) {
         requireNonNull(guardian);
         addressBook.addGuardian(guardian);
-        updateFilteredGuardianList(PREDICATE_SHOW_ALL_GUARDIANS);
     }
 
     @Override
