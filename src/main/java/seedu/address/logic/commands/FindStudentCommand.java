@@ -30,12 +30,15 @@ public class FindStudentCommand extends Command {
         model.updateFilteredStudentList(predicate);
 
         int resultCount = model.getFilteredStudentList().size();
+        String searchDescription = "Search: " + String.join(" ", predicate.getKeywords());
         if (resultCount > 0) {
-            return new CommandResult(
+            return CommandResult.withStudentFilterDescription(
                     String.format(Messages.MESSAGE_STUDENTS_LISTED_OVERVIEW, resultCount),
+                    searchDescription,
                     predicate.getKeywords(), HighlightTarget.STUDENTS);
         } else {
-            return new CommandResult(Messages.MESSAGE_NO_STUDENTS_MATCH_SEARCH,
+            return CommandResult.withStudentFilterDescription(Messages.MESSAGE_NO_STUDENTS_MATCH_SEARCH,
+                    searchDescription,
                     predicate.getKeywords(), HighlightTarget.STUDENTS);
         }
     }

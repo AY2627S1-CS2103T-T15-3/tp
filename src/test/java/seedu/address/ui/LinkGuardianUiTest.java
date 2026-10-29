@@ -1,6 +1,7 @@
 package seedu.address.ui;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -146,6 +147,70 @@ public class LinkGuardianUiTest {
 
             executeCommand.invoke(window, "view-l");
             assertEquals("Lessons", ((Label) window.getRoot().getScene().lookup("#lessonTitle")).getText());
+            window.getPrimaryStage().hide();
+            return null;
+        });
+    }
+
+    @Test
+    public void mainWindow_filterDescription_persistsUntilListCommand() throws Exception {
+        runOnFxThread(() -> {
+            MainWindow window = new MainWindow(new javafx.stage.Stage(),
+                    new StubLogic(student("Lucy Lim"), guardian("Ben Tan")), Path.of("data.json"));
+            window.fillInnerParts();
+            window.show();
+            Method executeCommand = MainWindow.class.getDeclaredMethod("executeCommand", String.class);
+            executeCommand.setAccessible(true);
+            Label filterLabel = (Label) window.getRoot().getScene().lookup("#filterLabel");
+
+            assertFalse(filterLabel.isVisible());
+            executeCommand.invoke(window, "filter");
+            assertEquals("Filtered: Secondary 3", filterLabel.getText());
+            assertTrue(filterLabel.isVisible());
+
+            executeCommand.invoke(window, "sort-s");
+            assertTrue(filterLabel.isVisible());
+
+            executeCommand.invoke(window, "find-g");
+            assertTrue(filterLabel.isVisible());
+
+            executeCommand.invoke(window, "list-g");
+            assertTrue(filterLabel.isVisible());
+
+            executeCommand.invoke(window, "list-s");
+            assertFalse(filterLabel.isVisible());
+            window.getPrimaryStage().hide();
+            return null;
+        });
+    }
+
+    @Test
+    public void mainWindow_guardianSearchDescription_persistsUntilListCommand() throws Exception {
+        runOnFxThread(() -> {
+            MainWindow window = new MainWindow(new javafx.stage.Stage(),
+                    new StubLogic(student("Lucy Lim"), guardian("Ben Tan")), Path.of("data.json"));
+            window.fillInnerParts();
+            window.show();
+            Method executeCommand = MainWindow.class.getDeclaredMethod("executeCommand", String.class);
+            executeCommand.setAccessible(true);
+            Label searchLabel = (Label) window.getRoot().getScene().lookup("#searchLabel");
+
+            assertFalse(searchLabel.isVisible());
+            executeCommand.invoke(window, "find-g");
+            assertEquals("Search: Ben", searchLabel.getText());
+            assertTrue(searchLabel.isVisible());
+
+            executeCommand.invoke(window, "sort-s");
+            assertTrue(searchLabel.isVisible());
+
+            executeCommand.invoke(window, "filter");
+            assertTrue(searchLabel.isVisible());
+
+            executeCommand.invoke(window, "list-s");
+            assertTrue(searchLabel.isVisible());
+
+            executeCommand.invoke(window, "list-g");
+            assertFalse(searchLabel.isVisible());
             window.getPrimaryStage().hide();
             return null;
         });
@@ -360,6 +425,19 @@ public class LinkGuardianUiTest {
             }
             if (commandText.equals("view-l")) {
                 return new CommandResult("Showing all lessons.");
+            }
+            if (commandText.equals("filter")) {
+                return CommandResult.withStudentFilterDescription("Filtered students.", "Filtered: Secondary 3");
+            }
+            if (commandText.equals("list-s")) {
+                return CommandResult.clearStudentFilterDescription("Showing all students.");
+            }
+            if (commandText.equals("find-g")) {
+                return CommandResult.withGuardianSearchDescription("Found guardians.", "Search: Ben",
+                        List.of("Ben"), CommandResult.HighlightTarget.GUARDIANS);
+            }
+            if (commandText.equals("list-g")) {
+                return CommandResult.clearGuardianSearchDescription("Showing all guardians.");
             }
             return commandText.equals("student")
                     ? new CommandResult("student", student) : new CommandResult("guardian", guardian);

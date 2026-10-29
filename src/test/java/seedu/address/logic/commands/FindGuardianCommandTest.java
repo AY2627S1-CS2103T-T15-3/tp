@@ -64,6 +64,8 @@ public class FindGuardianCommandTest {
         assertEquals(String.format(MESSAGE_GUARDIANS_LISTED_OVERVIEW, 2), result.getFeedbackToUser());
         assertEquals(keywords, result.getHighlightKeywords());
         assertEquals(CommandResult.HighlightTarget.GUARDIANS, result.getHighlightTarget());
+        assertEquals(CommandResult.GuardianSearchUpdate.SET, result.getGuardianSearchUpdate());
+        assertEquals("Search: tan ng", result.getGuardianSearchDescription());
         assertEquals(List.of(alice, carol), model.getFilteredGuardianList());
     }
 

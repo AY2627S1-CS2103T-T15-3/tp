@@ -34,6 +34,7 @@ public class ListStudentCommandTest {
 
         assertEquals(String.format(MESSAGE_STUDENTS_LISTED_OVERVIEW, model.getFilteredStudentList().size()),
                 result.getFeedbackToUser());
+        assertEquals(CommandResult.StudentFilterUpdate.CLEAR, result.getStudentFilterUpdate());
         assertEquals(List.of(alice, bob), model.getFilteredStudentList());
     }
 

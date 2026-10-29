@@ -30,6 +30,7 @@ public class ListGuardianCommandTest {
 
         assertEquals(String.format(MESSAGE_GUARDIANS_LISTED_OVERVIEW, model.getFilteredGuardianList().size()),
                 result.getFeedbackToUser());
+        assertEquals(CommandResult.GuardianSearchUpdate.CLEAR, result.getGuardianSearchUpdate());
         assertEquals(List.of(alice, bob), model.getFilteredGuardianList());
     }
 

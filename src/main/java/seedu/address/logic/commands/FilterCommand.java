@@ -43,10 +43,13 @@ public class FilterCommand extends Command {
         model.updateFilteredStudentList(predicate);
 
         int matchCount = model.getFilteredStudentList().size();
+        String filterDescription = "Filtered: " + predicate.getFilterDescription();
         if (matchCount == 0) {
-            return new CommandResult(Messages.MESSAGE_NO_STUDENTS_MATCH_FILTER);
+            return CommandResult.withStudentFilterDescription(Messages.MESSAGE_NO_STUDENTS_MATCH_FILTER,
+                    filterDescription);
         }
-        return new CommandResult(String.format(Messages.MESSAGE_STUDENTS_LISTED_OVERVIEW, matchCount));
+        return CommandResult.withStudentFilterDescription(
+                String.format(Messages.MESSAGE_STUDENTS_LISTED_OVERVIEW, matchCount), filterDescription);
     }
 
     @Override

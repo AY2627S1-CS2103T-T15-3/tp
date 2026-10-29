@@ -171,6 +171,16 @@ public class StudentMatchesFilterPredicateTest {
     }
 
     @Test
+    public void getFilterDescription_returnsReadableCriteria() {
+        StudentMatchesFilterPredicate predicate = new StudentMatchesFilterPredicate(Optional.of(new Level("JC 1")),
+                subjects("Physics", "Mathematics"), Optional.of(new PaymentMonth("2026-10")),
+                Optional.of(new PaymentMonth("2026-11")));
+
+        assertEquals("JC 1, Mathematics, Physics, Paid: Oct 2026, Unpaid: Nov 2026",
+                predicate.getFilterDescription());
+    }
+
+    @Test
     public void test_noCriteria_returnsTrue() {
         assertTrue(predicate(null).test(STUDENT));
     }

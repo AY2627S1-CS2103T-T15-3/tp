@@ -203,6 +203,15 @@ when their name contains any of the supplied keywords.
 The same process is followed for `find-g`, using the corresponding guardian command parser,
 command, predicate, and filtered guardian list.
 
+### Student and guardian list status indicators
+
+`FilterCommand` and `FindStudentCommand` include a user-facing description of the active student filter or search in
+their `CommandResult`. `MainWindow` applies this update to the `StudentListPanel`, which displays the description above
+the student cards. Commands that do not change the student predicate leave the description unchanged, so it remains
+visible after commands such as `sort-s`. `ListStudentCommand` explicitly clears the description. `FindGuardianCommand`
+and `ListGuardianCommand` provide the equivalent status updates for the guardian search displayed above the guardian
+cards.
+
 ### View lesson feature
 
 #### Implementation

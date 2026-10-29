@@ -5,6 +5,7 @@ import java.util.List;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.Region;
@@ -16,6 +17,9 @@ public class GuardianListPanel extends UiPart<Region> {
 
     @FXML
     private ListView<Guardian> guardianListView;
+
+    @FXML
+    private Label searchLabel;
     private List<String> highlightKeywords = List.of();
 
     /**
@@ -40,6 +44,20 @@ public class GuardianListPanel extends UiPart<Region> {
     public void setHighlightKeywords(List<String> keywords) {
         highlightKeywords = List.copyOf(keywords);
         guardianListView.refresh();
+    }
+
+    /** Displays the description of the active guardian search. */
+    public void setSearchDescription(String description) {
+        searchLabel.setText(description);
+        searchLabel.setVisible(true);
+        searchLabel.setManaged(true);
+    }
+
+    /** Hides the active guardian search description. */
+    public void clearSearchDescription() {
+        searchLabel.setText("");
+        searchLabel.setVisible(false);
+        searchLabel.setManaged(false);
     }
 
     /** Clears the current guardian selection. */

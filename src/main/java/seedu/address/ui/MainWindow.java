@@ -219,6 +219,9 @@ public class MainWindow extends UiPart<Stage> {
             logger.info("Result: " + commandResult.getFeedbackToUser());
             resultDisplay.setFeedbackToUser(commandResult.getFeedbackToUser());
 
+            updateStudentFilterDescription(commandResult);
+            updateGuardianSearchDescription(commandResult);
+
             if (commandText.trim().startsWith("view-l")) {
                 String lessonSearch = commandResult.getFeedbackToUser().equals("Showing all lessons.")
                         ? "all lessons"
@@ -273,5 +276,23 @@ public class MainWindow extends UiPart<Stage> {
                 ? keywords : List.of());
         guardianListPanel.setHighlightKeywords(target == HighlightTarget.GUARDIANS
                 ? keywords : List.of());
+    }
+
+    /** Updates the active student filter description based on the executed command. */
+    private void updateStudentFilterDescription(CommandResult commandResult) {
+        if (commandResult.getStudentFilterUpdate() == CommandResult.StudentFilterUpdate.SET) {
+            studentListPanel.setFilterDescription(commandResult.getStudentFilterDescription());
+        } else if (commandResult.getStudentFilterUpdate() == CommandResult.StudentFilterUpdate.CLEAR) {
+            studentListPanel.clearFilterDescription();
+        }
+    }
+
+    /** Updates the active guardian search description based on the executed command. */
+    private void updateGuardianSearchDescription(CommandResult commandResult) {
+        if (commandResult.getGuardianSearchUpdate() == CommandResult.GuardianSearchUpdate.SET) {
+            guardianListPanel.setSearchDescription(commandResult.getGuardianSearchDescription());
+        } else if (commandResult.getGuardianSearchUpdate() == CommandResult.GuardianSearchUpdate.CLEAR) {
+            guardianListPanel.clearSearchDescription();
+        }
     }
 }

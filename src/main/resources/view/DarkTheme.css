@@ -17,6 +17,36 @@
     -fx-opacity: 1;
 }
 
+.list-section-title {
+    -fx-font-size: 13pt;
+    -fx-font-family: "Segoe UI";
+    -fx-font-weight: bold;
+    -fx-text-fill: #f5f7fa;
+    -fx-alignment: center-left;
+    -fx-padding: 5 8 6 8;
+    -fx-min-height: 32px;
+    -fx-background-color: #3a3d40;
+    -fx-border-color: transparent transparent #3e7b91 transparent;
+    -fx-border-width: 0 0 2 0;
+    -fx-background-radius: 4 4 0 0;
+}
+
+.list-status-label {
+    -fx-font-size: 9pt;
+    -fx-font-family: "Segoe UI";
+    -fx-font-style: italic;
+    -fx-font-weight: bold;
+    -fx-text-fill: #e3f4f8;
+    -fx-padding: 5 9 5 9;
+    -fx-background-color: #2f4a54;
+    -fx-border-color: #5c9ead;
+    -fx-border-width: 1;
+    -fx-background-radius: 4;
+    -fx-border-radius: 4;
+    -fx-alignment: center-left;
+    -fx-wrap-text: true;
+}
+
 .label-header {
     -fx-font-size: 32pt;
     -fx-font-family: "Segoe UI Light";

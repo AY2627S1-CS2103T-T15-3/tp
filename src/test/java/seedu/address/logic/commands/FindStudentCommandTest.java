@@ -68,6 +68,8 @@ public class FindStudentCommandTest {
         assertEquals(String.format(MESSAGE_STUDENTS_LISTED_OVERVIEW, 2), result.getFeedbackToUser());
         assertEquals(List.of("tan", "ng"), result.getHighlightKeywords());
         assertEquals(CommandResult.HighlightTarget.STUDENTS, result.getHighlightTarget());
+        assertEquals(CommandResult.StudentFilterUpdate.SET, result.getStudentFilterUpdate());
+        assertEquals("Search: tan ng", result.getStudentFilterDescription());
         assertEquals(List.of(alice, carol), model.getFilteredStudentList());
     }
 

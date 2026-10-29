@@ -2,6 +2,8 @@ package seedu.address.model.student;
 
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -44,6 +46,16 @@ public class StudentMatchesFilterPredicate implements Predicate<Student> {
         boolean isPaidMatched = paidMonth.map(student::hasPaidFor).orElse(true);
         boolean isUnpaidMatched = unpaidMonth.map(month -> !student.hasPaidFor(month)).orElse(true);
         return isLevelMatched && student.getSubjects().containsAll(subjects) && isPaidMatched && isUnpaidMatched;
+    }
+
+    /** Returns a user-facing description of the active filter criteria. */
+    public String getFilterDescription() {
+        List<String> criteria = new ArrayList<>();
+        level.ifPresent(value -> criteria.add(value.toString()));
+        subjects.stream().map(Subject::toString).sorted().forEach(criteria::add);
+        paidMonth.ifPresent(month -> criteria.add("Paid: " + month.toDisplayString()));
+        unpaidMonth.ifPresent(month -> criteria.add("Unpaid: " + month.toDisplayString()));
+        return String.join(", ", criteria);
     }
 
     @Override
