@@ -1,6 +1,7 @@
 package seedu.address.ui;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Method;
@@ -100,6 +101,7 @@ public class LinkGuardianUiTest {
         runOnFxThread(() -> {
             MainWindow window = new MainWindow(new javafx.stage.Stage(), logic, Path.of("data.json"));
             window.fillInnerParts();
+            assertNotNull(window.getLessonListPanel());
             Method executeCommand = MainWindow.class.getDeclaredMethod("executeCommand", String.class);
             executeCommand.setAccessible(true);
             executeCommand.invoke(window, "student");

@@ -20,6 +20,9 @@ public interface Model {
     /** Predicate that always evaluates to true for guardians. */
     Predicate<Guardian> PREDICATE_SHOW_ALL_GUARDIANS = unused -> true;
 
+    /** Predicate that always evaluates to true for lessons. */
+    Predicate<Lesson> PREDICATE_SHOW_ALL_LESSONS = unused -> true;
+
     /**
      * Returns the user prefs.
      */
@@ -89,7 +92,10 @@ public interface Model {
     /** Returns the displayed lesson list, sorted by date and start time. */
     ObservableList<Lesson> getFilteredLessonList();
 
-    /** Updates the predicate used by the displayed lesson list. */
+    /**
+     * Updates the filter of the displayed lesson list to filter by the given predicate.
+     * @throws NullPointerException if {@code predicate} is null.
+     */
     void updateFilteredLessonList(Predicate<Lesson> predicate);
 
     /**

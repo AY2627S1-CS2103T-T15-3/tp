@@ -21,6 +21,7 @@ import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.CommandResult.HighlightTarget;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.lesson.LessonMatchesDatePredicate;
 
 /**
  * The Main Window. Provides the basic application layout containing
@@ -132,7 +133,7 @@ public class MainWindow extends UiPart<Stage> {
         studentListPanel = new StudentListPanel(logic.getFilteredStudentList(), logic::getGuardiansForStudent);
         guardianListPanel = new GuardianListPanel(logic.getFilteredGuardianList());
         lessonListPanel = new LessonListPanel(logic.getFilteredLessonList(),
-                date -> logic.updateFilteredLessonList(lesson -> lesson.getDate().equals(date)));
+                date -> logic.updateFilteredLessonList(new LessonMatchesDatePredicate(date)));
         lessonTitle.setText("Lessons for " + lessonListPanel.getDisplayedDate());
         personListPanelPlaceholder.getChildren().add(studentListPanel.getRoot());
         guardianListPanelPlaceholder.getChildren().add(guardianListPanel.getRoot());

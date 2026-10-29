@@ -14,6 +14,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.Region;
 import seedu.address.model.lesson.Lesson;
+import seedu.address.model.lesson.LessonMatchesDatePredicate;
 
 /** Panel containing the scheduled lessons. */
 public class LessonListPanel extends UiPart<Region> {
@@ -38,8 +39,7 @@ public class LessonListPanel extends UiPart<Region> {
         if (displayedDateUpdater != null) {
             displayedDateUpdater.accept(displayedDate);
         }
-        filteredLessons = new FilteredList<>(lessonList,
-                lesson -> lesson.getDate().equals(displayedDate));
+        filteredLessons = new FilteredList<>(lessonList, new LessonMatchesDatePredicate(displayedDate));
         SortedList<Lesson> sortedLessons = new SortedList<>(filteredLessons,
                 Comparator.comparing(Lesson::getDate).thenComparing(Lesson::getStartTime));
         lessonListView.setItems(sortedLessons);
@@ -66,7 +66,7 @@ public class LessonListPanel extends UiPart<Region> {
         if (displayedDateUpdater != null) {
             displayedDateUpdater.accept(date);
         }
-        filteredLessons.setPredicate(lesson -> lesson.getDate().equals(displayedDate));
+        filteredLessons.setPredicate(new LessonMatchesDatePredicate(displayedDate));
         updatePlaceholder();
     }
 
