@@ -94,11 +94,6 @@ The sequence diagram below illustrates the interactions within the `Logic` compo
 
 <puml src="diagrams/DeleteSequenceDiagram.puml" alt="Interactions Inside the Logic Component for the `remove-s 1` Command" />
 
-The following sequence diagram shows how `unlink-g` removes an existing student-guardian link.
-
-<puml src="diagrams/UnlinkGuardianSequenceDiagram.puml"
-      alt="Interactions for the unlink-g command"></puml>
-
 <box type="info" seamless>
 
 **Note:** The lifeline for `RemoveStudentCommandParser` should end at the destroy marker (X), but due to a limitation of PlantUML, the lifeline continues till the end of diagram.
@@ -133,11 +128,15 @@ The student and guardian MVP commands follow the same parser-command flow:
 * `ListGuardianCommandParser` parses `list-g` and creates a `ListGuardianCommand` that shows all guardians.
 * `FindStudentCommandParser` parses name keywords for `find-s` before creating a `FindStudentCommand`.
 * `FindGuardianCommandParser` parses name keywords for `find-g` before creating a `FindGuardianCommand`.
+* `ViewLessonCommandParser` parses an optional date or displayed student index for `view-l` before creating a
+  `ViewLessonCommand`. A bare `view-l` creates a command that clears the lesson filter.
 * The edit commands update only supplied fields and preserve the remaining values, including student remarks and payment history.
 * `LinkGuardianCommand` creates a `StudentGuardianLink` in the model and treats repeated pair as an existing link.
 * `UnlinkGuardianCommand` checks that the selected link exists before asking the model to remove it.
 * The list commands reset their respective filtered lists to show all students or guardians.
 * The find commands filter their respective lists by name, matching any full-word keyword case-insensitively.
+* Command words accept four documented capitalization variants: lower-case, first-letter capitalized, final-token
+  capitalized, and all-uppercase. Parameter prefixes remain case-sensitive.
 
 ### Model component
 **API** : [`Model.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/model/Model.java)
@@ -152,7 +151,9 @@ The `Model` component is the in-memory domain model for TutorTrack. The diagram 
 * `AddressBook` can remove an individual `StudentGuardianLink` without deleting either the student or the guardian.
 * `Student` contains shared contact details together with an academic level and one or more subjects. `Guardian` contains the shared contact details. These domain classes are composed from value objects such as `Name`, `Phone`, `Email`, and `Address`.
 * `StudentGuardianLink` represents a relationship between one student and one guardian. Duplicate links are rejected, and links are updated or removed when their linked student or guardian changes.
-* `ModelManager` maintains filtered student and guardian views for the UI. The displayed student view can also be sorted by name without changing the underlying storage order.
+* `ModelManager` maintains filtered student, guardian, and lesson views for the UI. Lessons are sorted by date and
+  start time, while the displayed student view can also be sorted by name without changing the underlying storage order.
+  Lesson filters can match either a date or a student.
 * `UserPrefs` stores user preferences, currently the GUI settings, and is exposed through `ReadOnlyUserPrefs`.
 * The Model component is independent of the UI, Logic, and Storage components; it represents domain data and exposes operations through its API.
 
@@ -199,6 +200,35 @@ when their name contains any of the supplied keywords.
 
 The same process is followed for `find-g`, using the corresponding guardian command parser,
 command, predicate, and filtered guardian list.
+
+### View lesson feature
+
+#### Implementation
+
+The `view-l` command supports three modes. `ViewLessonCommandParser` accepts no arguments, a date with the `d/`
+prefix, or a displayed student index with the `stu/` prefix. It rejects extra arguments, duplicate prefixes, invalid
+dates, and simultaneous date and student filters.
+
+`ViewLessonCommand` updates the model's filtered lesson list with one of the following predicates:
+
+* `Model.PREDICATE_SHOW_ALL_LESSONS` for a bare `view-l` command;
+* `LessonMatchesDatePredicate` for a date filter; or
+* `LessonMatchesStudentPredicate` for a student filter.
+
+`LessonMatchesDatePredicate` treats a lesson as occurring on a date when its time interval overlaps that calendar
+day. This includes lessons that begin on one date and end after midnight on the next date. The model exposes the
+complete lesson list separately from the filtered, date-and-time-sorted lesson list so commands can filter without
+altering stored data.
+
+The UI's `LessonListPanel` displays the filtered list using `LessonCard` components. It maintains the selected date
+for the schedule view, refreshes after commands execute, and shows a placeholder when no lessons match. The main
+window connects date changes from the panel to the model's `LessonMatchesDatePredicate`, while `view-l stu/INDEX`
+changes the model filter through the normal command flow.
+
+The command flow is illustrated below. The three branches represent date
+filtering, student filtering, and clearing the filter with a bare `view-l`.
+
+<puml src="diagrams/ViewLessonSequenceDiagram.puml" alt="Interactions for the `view-l` command" />
 
 ### Student remarks feature
 
@@ -308,6 +338,19 @@ The sequence diagram below shows how `Model#addStudentGuardianLink(l)` stores th
 <puml src="diagrams/LinkGuardianSequenceDiagram-Model.puml" alt="Interactions Inside the Model Component for adding a StudentGuardianLink" />
 
 `ModelManager` passes the link to `AddressBook`, which checks again for a duplicate before adding it to its `studentGuardianLinks` list.
+
+#### Unlinking a guardian from a student
+
+The `unlink-g STUDENT_INDEX g/GUARDIAN_INDEX` command removes an existing
+`StudentGuardianLink`. It validates both displayed indexes, checks that the
+relationship exists, and removes the link through `Model` and `AddressBook`.
+If the relationship does not exist, the command reports an error and leaves
+the address book unchanged.
+
+The following diagram shows the parser, command, model, and address-book
+interactions for `unlink-g 1 g/2`.
+
+<puml src="diagrams/UnlinkGuardianSequenceDiagram.puml" alt="Interactions Inside the Logic Component for the `unlink-g 1 g/2` Command" />
 
 ### \[Proposed\] Undo/redo feature
 
@@ -796,7 +839,48 @@ The lesson-length prefix `len/` may be shortened to `l/`.
 
       Use case resumes at step 2.
 
-**Use case: U15 - Mark a student's payment as paid**
+**Use case: U15 - View lessons**
+
+**Command:** `view-l [d/YYYY-MM-DD | stu/INDEX]`
+
+The user may filter lessons by a calendar date or by a student in the currently displayed student list. A bare
+`view-l` clears the active lesson filter and displays all lessons.
+
+**MSS**
+
+1. User requests to view lessons, optionally supplying a date or displayed student index.
+2. TutorTrack filters the lesson list using the supplied criterion, or removes the filter if no criterion is given.
+3. TutorTrack displays the matching lessons sorted by date and start time.
+
+    Use case ends.
+
+**Extensions**
+
+* 1a. The command format is invalid, the date is not in `YYYY-MM-DD` format, or both filters are supplied.
+
+    * 1a1. TutorTrack shows an error message and leaves the current lesson filter unchanged.
+
+      Use case resumes at step 1.
+
+* 1b. The student index is invalid or outside the currently displayed student list.
+
+    * 1b1. TutorTrack shows an error message and leaves the current lesson filter unchanged.
+
+      Use case resumes at step 1.
+
+* 2a. A lesson overlaps the requested date, including a lesson that crosses midnight.
+
+    * 2a1. TutorTrack includes the lesson in the displayed results.
+
+      Use case resumes at step 3.
+
+* 3a. No lessons match the criterion.
+
+    * 3a1. TutorTrack displays an empty lesson list with an appropriate placeholder.
+
+      Use case ends.
+
+**Use case: U16 - Mark a student's payment as paid**
 
 **MSS**
 
@@ -830,7 +914,7 @@ The lesson-length prefix `len/` may be shortened to `l/`.
 
       Use case ends.
 
-**Use case: U16 - Set student remark**
+**Use case: U17 - Set student remark**
 
 **MSS**
 
@@ -854,7 +938,7 @@ The lesson-length prefix `len/` may be shortened to `l/`.
 
     Use case ends.
 
-**Use case: U17 - Clear student remark**
+**Use case: U18 - Clear student remark**
 
 **MSS**
 

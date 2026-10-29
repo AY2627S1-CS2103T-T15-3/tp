@@ -36,6 +36,6 @@ ParserUtil .down.> Prefix
 ArgumentTokenizer .down.> Prefix
 XYZCommand -up-|> Command
 
-note right of XYZCommandParser: XYZCommandParser = AddStudentCommandParser, \nLinkGuardianCommandParser, etc
+note right of XYZCommandParser: XYZCommandParser = AddStudentCommandParser, \nLinkGuardianCommandParser, ViewLessonCommandParser, etc
 note bottom of ArgumentTokenizer: Used only by prefix-based parsers \nsuch as FilterCommandParser \nand MarkPaidCommandParser
 @enduml
