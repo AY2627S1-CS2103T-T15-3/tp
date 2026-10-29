@@ -11,7 +11,8 @@ public class Name {
 
     public static final String MESSAGE_CONSTRAINTS =
             "Student names must be 1-100 characters long and may contain only alphanumeric characters, "
-                    + "spaces, hyphens, apostrophes and slashes.";
+                    + "spaces, periods, hyphens, apostrophes and slashes, "
+                    + "with at least 1 alphanumeric character.";
 
     /*
      * The first character of the name must not be a whitespace,

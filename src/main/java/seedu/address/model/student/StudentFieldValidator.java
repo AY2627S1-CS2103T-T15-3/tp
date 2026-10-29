@@ -47,7 +47,7 @@ public final class StudentFieldValidator {
      * @return the normalized phone number
      */
     public static String normalizePhone(String value) {
-        return Phone.normalize(value);
+        return value.trim().replace(" ", "");
     }
 
     /**
@@ -57,7 +57,7 @@ public final class StudentFieldValidator {
      * @return true if the phone number is valid
      */
     public static boolean isValidPhone(String value) {
-        String normalized = normalizeName(value);
+        String normalized = normalizePhone(value);
         return Phone.isValidPhone(normalized);
     }
 
@@ -78,7 +78,7 @@ public final class StudentFieldValidator {
      * @return true if the email address is valid
      */
     public static boolean isValidEmail(String value) {
-        String normalized = normalizeName(value);
+        String normalized = normalizeEmail(value);
         return Email.isValidEmail(normalized);
     }
 
@@ -99,7 +99,7 @@ public final class StudentFieldValidator {
      * @return true if the address is valid
      */
     public static boolean isValidAddress(String value) {
-        String normalized = normalizeName(value);
+        String normalized = normalizeAddress(value);
         return Address.isValidAddress(normalized);
     }
 
