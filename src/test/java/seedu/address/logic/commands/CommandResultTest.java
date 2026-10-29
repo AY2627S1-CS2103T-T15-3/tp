@@ -47,6 +47,23 @@ public class CommandResultTest {
     }
 
     @Test
+    public void equals_statusDescriptionsAreCompared() {
+        CommandResult studentFilterResult = CommandResult.withStudentFilterDescription(
+                "feedback", "Filtered: Secondary 3");
+        assertTrue(studentFilterResult.equals(CommandResult.withStudentFilterDescription(
+                "feedback", "Filtered: Secondary 3")));
+        assertFalse(studentFilterResult.equals(CommandResult.withStudentFilterDescription(
+                "feedback", "Filtered: Secondary 4")));
+
+        CommandResult guardianSearchResult = CommandResult.withGuardianSearchDescription(
+                "feedback", "Search: Ben", List.of("Ben"), CommandResult.HighlightTarget.GUARDIANS);
+        assertTrue(guardianSearchResult.equals(CommandResult.withGuardianSearchDescription(
+                "feedback", "Search: Ben", List.of("Ben"), CommandResult.HighlightTarget.GUARDIANS)));
+        assertFalse(guardianSearchResult.equals(CommandResult.withGuardianSearchDescription(
+                "feedback", "Search: Alice", List.of("Alice"), CommandResult.HighlightTarget.GUARDIANS)));
+    }
+
+    @Test
     public void hashcode() {
         CommandResult commandResult = new CommandResult("feedback");
 
