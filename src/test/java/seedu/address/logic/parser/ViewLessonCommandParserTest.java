@@ -35,9 +35,15 @@ public class ViewLessonCommandParserTest {
         assertParseFailure(parser, " d/2026-02-30", DateTimeParser.MESSAGE_INVALID_DATE);
         assertParseFailure(parser, " stu/0", usage);
         assertParseFailure(parser, " d/2026-11-01 stu/1", usage);
-        assertParseFailure(parser, " s/1", usage);
         assertParseFailure(parser, "2026-11-01", usage);
-        assertParseFailure(parser, " x/anything", usage);
+    }
+
+    @Test
+    public void parse_unknownParameter_failure() {
+        assertParseFailure(parser, " d/2026-12-01 x/1", "Unknown parameter: x/");
+        assertParseFailure(parser, " stu/1 x/1", "Unknown parameter: x/");
+        assertParseFailure(parser, " s/1", "Unknown parameter: s/");
+        assertParseFailure(parser, " x/anything", "Unknown parameter: x/");
     }
 
     @Test

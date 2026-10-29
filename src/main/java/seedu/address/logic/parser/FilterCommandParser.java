@@ -9,6 +9,8 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_UNPAID;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import seedu.address.logic.commands.FilterCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
@@ -21,6 +23,9 @@ import seedu.address.model.student.Subject;
  * Parses input arguments and creates a new FilterCommand object
  */
 public class FilterCommandParser implements Parser<FilterCommand> {
+    private static final Pattern PREFIX_PATTERN = Pattern.compile("(?<!\\S)([A-Za-z][A-Za-z0-9-]*)/");
+    private static final Set<String> SUPPORTED_PREFIXES = Set.of(PREFIX_LEVEL.getPrefix(),
+            PREFIX_SUBJECT.getPrefix(), PREFIX_PAID.getPrefix(), PREFIX_UNPAID.getPrefix());
 
     /**
      * Parses the given {@code String} of arguments in the context of the FilterCommand
@@ -29,6 +34,7 @@ public class FilterCommandParser implements Parser<FilterCommand> {
      */
     public FilterCommand parse(String args) throws ParseException {
         requireNonNull(args);
+        rejectUnknownPrefixes(args);
         ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(args, PREFIX_LEVEL, PREFIX_SUBJECT,
                 PREFIX_PAID, PREFIX_UNPAID);
 
@@ -54,6 +60,16 @@ public class FilterCommandParser implements Parser<FilterCommand> {
         Optional<PaymentMonth> unpaidMonth = parseOptionalPaymentMonth(argMultimap, PREFIX_UNPAID);
 
         return new FilterCommand(new StudentMatchesFilterPredicate(level, subjects, paidMonth, unpaidMonth));
+    }
+
+    private static void rejectUnknownPrefixes(String args) throws ParseException {
+        Matcher matcher = PREFIX_PATTERN.matcher(args);
+        while (matcher.find()) {
+            String prefix = matcher.group(1) + "/";
+            if (!SUPPORTED_PREFIXES.contains(prefix)) {
+                throw new ParseException("Unknown parameter: " + prefix);
+            }
+        }
     }
 
     private static Optional<PaymentMonth> parseOptionalPaymentMonth(ArgumentMultimap argMultimap, Prefix prefix)
