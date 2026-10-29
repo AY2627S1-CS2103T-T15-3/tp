@@ -219,6 +219,17 @@ public class MainWindow extends UiPart<Stage> {
             logger.info("Result: " + commandResult.getFeedbackToUser());
             resultDisplay.setFeedbackToUser(commandResult.getFeedbackToUser());
 
+            if (commandText.trim().startsWith("view-l")) {
+                String lessonSearch = commandResult.getFeedbackToUser().equals("Showing all lessons.")
+                        ? "all lessons"
+                        : commandResult.getFeedbackToUser()
+                                .replaceFirst("^Showing lessons (?:on |for )?", "")
+                                .replaceFirst("\\.$", "");
+                lessonListPanel.setSearchDescription(lessonSearch);
+                lessonTitle.setText(lessonSearch.equals("all lessons")
+                        ? "Lessons" : "Lessons for " + lessonSearch);
+            }
+
             updateSearchHighlights(commandResult);
 
             if (commandResult.shouldRefreshStudentList()) {

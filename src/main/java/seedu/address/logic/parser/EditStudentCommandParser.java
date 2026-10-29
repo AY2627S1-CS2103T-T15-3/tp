@@ -1,5 +1,7 @@
 package seedu.address.logic.parser;
 
+import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -126,7 +128,8 @@ public class EditStudentCommandParser implements Parser<EditStudentCommand> {
     }
 
     private static ParseException invalidFormat() {
-        return new ParseException("Invalid command format.\n" + EditStudentCommand.MESSAGE_USAGE);
+        return new ParseException(
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditStudentCommand.MESSAGE_USAGE));
     }
 
     private record PrefixMatch(int start, int end, String prefix) {

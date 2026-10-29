@@ -13,7 +13,7 @@ public class Level {
 
     public static final String MESSAGE_CONSTRAINTS =
             "Academic level must be 1-50 characters long and may contain only alphanumeric characters and spaces.";
-    public static final String VALIDATION_REGEX = "[\\p{Alnum} ]+";
+    public static final String VALIDATION_REGEX = "[\\p{Alnum} ()]+";
     private static final int MAX_LENGTH = 50;
 
     public final String value;

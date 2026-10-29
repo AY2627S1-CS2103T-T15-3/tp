@@ -75,6 +75,12 @@ TutorTrack is a **desktop application for private tutors to manage students and 
   For example, `add-g n/NAME p/PHONE e/EMAIL a/ADDRESS` can be entered as
   `add-g p/PHONE n/NAME a/ADDRESS e/EMAIL`.
 
+* Command words accept four capitalization forms: the documented lower-case
+  form, the first-letter-capitalized form, the final command token capitalized
+  form, and the all-uppercase form. For example, `list-s`, `List-s`, `list-S`,
+  and `LIST-S` are equivalent. Parameter prefixes such as `n/` and `d/` remain
+  case-sensitive.
+
 * For `set-remark-s` and `clear-remark-s`, the index must come first. In `set-remark-s`, everything after the index is remark text; no prefix is needed.
 
 * Extraneous parameters for commands that take no parameters, such as `help`, `exit`, and `clear`, are ignored.<br>
@@ -102,7 +108,7 @@ Format: `add-s n/NAME p/PHONE e/EMAIL a/ADDRESS l/LEVEL s/SUBJECT [s/SUBJECT]...
 * Additional `s/SUBJECT` parameters may be provided.
 * The parameters can be entered in any order.
 * A student with the same normalized name and phone number cannot be added again.
-* Names may contain alphanumeric characters, spaces, hyphens, apostrophes and slashes, such as `John s/o Raj`.
+* Names may contain alphanumeric characters, spaces, hyphens, apostrophes, periods and slashes, such as `John s/o Raj`, and must contain at least one alphanumeric character.
 
 Examples:
 * `add-s n/Henry Tan p/91234567 e/henry@example.com a/12 ABCD Ave 3 l/Secondary 3 s/Mathematics s/Physics`
@@ -118,7 +124,7 @@ Format: `add-g n/NAME p/PHONE e/EMAIL a/ADDRESS`
 * The parameters can be entered in any order.
 * Adding a guardian does not link them to a student; use `link-g` separately.
 * A guardian with the same normalized name and phone number cannot be added again.
-* Names may contain alphanumeric characters, spaces, hyphens, apostrophes and slashes, such as `John s/o Raj`.
+* Names may contain alphanumeric characters, spaces, hyphens, apostrophes, periods and slashes, such as `John s/o Raj`, and must contain at least one alphanumeric character.
 
 Examples:
 * `add-g n/Ben Tan p/92345678 e/ben.tan@gmail.com a/12 ABCD Ave 3`
@@ -145,6 +151,33 @@ Example:
 This schedules four one-hour lessons for the first displayed student, starting
 at 2:00 PM on 1 November 2026. If a conflict is found, no lessons from the
 series are added and the conflicting lesson is shown in the error message.
+
+### Viewing lessons: `view-l`
+
+Shows lessons for a selected date or student. The lesson list is sorted by date
+and start time.
+
+Formats:
+
+* `view-l` — shows all lessons and clears the active lesson filter.
+* `view-l d/YYYY-MM-DD` — shows lessons that take place on the specified date.
+* `view-l stu/INDEX` — shows lessons for the student at the specified displayed
+  student index.
+
+The date must use the `YYYY-MM-DD` format. `d/` and `stu/` may not be used
+together, and each may be specified only once. `INDEX` must be a positive
+integer within the currently displayed student list. Extra arguments and
+invalid dates or indexes are rejected without changing the lesson filter.
+
+A lesson is shown for every date it overlaps. For example, a lesson beginning
+late on 1 November and ending after midnight on 2 November appears when either
+date is selected.
+
+Examples:
+
+* `view-l d/2026-11-01`
+* `view-l stu/1`
+* `view-l`
 
 ### Removing a lesson: `remove-l`
 
@@ -281,7 +314,8 @@ index number shown in the currently displayed student list.
 of students in the displayed list.
 * The month must be in the format `YYYY-MM`, with a two-digit month from `01` to `12`, e.g. `2026-10`.
 * A student who is already marked as paid for that month is left unchanged, and an error is shown.
-* Each student's card shows the months they have paid for, e.g. `Paid: Sep 2026, Oct 2026`.
+* Each student's card shows the months they have paid for at the bottom of the card, most recent first, e.g. `Paid: Oct 2026, Sep 2026`.
+* Only the 3 most recent months are shown. If there are more, click the `+N more` button beside them to show all months, and click `Show less` to hide the older months again.
 
 Examples:
 * `mark-paid 1 m/2026-10` marks the 1st student in the displayed student list as paid for October 2026.
@@ -324,6 +358,7 @@ Shows only the students who match all of the given criteria. The guardian list i
 Format: `filter [l/LEVEL] [s/SUBJECT]... [paid/YYYY-MM] [unpaid/YYYY-MM]`
 
 * At least one criterion must be provided.
+* Academic levels may contain alphanumeric characters, spaces and parentheses, e.g. `Secondary 3 (Express)`.
 * `l/LEVEL` shows students at that academic level. The match ignores case and extra spaces, e.g. `jc 1` matches `JC 1`.
 * `s/SUBJECT` shows students who take that subject. If several subjects are given, a student must take **all** of them.
 * `paid/YYYY-MM` shows students who have been marked as paid for that month using `mark-paid`.
@@ -428,6 +463,7 @@ Action     | Format, Examples
 **Add guardian** | `add-g n/NAME p/PHONE e/EMAIL a/ADDRESS` <br> e.g., `add-g n/Ben Tan p/92345678 e/ben.tan@gmail.com a/12 ABCD Ave 3`
 **Schedule lessons** | `add-l INDEX d/YYYY-MM-DD t/HH:MM len/LENGTH(MINUTES) w/WEEKS` <br> e.g., `add-l 1 d/2026-11-01 t/14:00 len/60 w/4`
 **Remove lesson** | `remove-l INDEX`<br> e.g., `remove-l 2`
+**View lessons** | `view-l [d/YYYY-MM-DD | stu/INDEX]`<br> e.g., `view-l d/2026-11-01`
 **Set student remark** | `set-remark-s INDEX REMARK`<br> e.g., `set-remark-s 1 Practise fractions before the next lesson`
 **Clear student remark** | `clear-remark-s INDEX`<br> e.g., `clear-remark-s 1`
 **Clear**  | `clear`

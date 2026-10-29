@@ -18,7 +18,7 @@ public class EditStudentCommandParserTest {
 
     @Test
     public void parse_allSupportedFields_success() throws Exception {
-        EditStudentCommand command = parser.parse("2 n/Ben Tan p/98765432 e/ben@example.com a/25 Happy Road "
+        EditStudentCommand command = parser.parse("2 n/Ben Tan p/9876 5432 e/ben@example.com a/25 Happy Road "
                 + "l/JC 2 s/Mathematics s/Physics");
 
         EditStudentDescriptor expected = new EditStudentDescriptor();

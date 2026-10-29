@@ -19,7 +19,7 @@ public class Name {
      *
      * Requires 1-100 characters, allowing alphanumeric characters, spaces, apostrophes, slashes and hyphens.
      */
-    public static final String VALIDATION_REGEX = "(?=.{1,100}\\z)[\\p{Alnum} '/-]+";
+    public static final String VALIDATION_REGEX = "(?=.{1,100}\\z)(?=.*[\\p{Alnum}])[\\p{Alnum} .'/-]+";
 
     public final String fullName;
 

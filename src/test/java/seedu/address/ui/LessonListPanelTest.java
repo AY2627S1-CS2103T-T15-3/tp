@@ -7,6 +7,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -40,7 +41,7 @@ public class LessonListPanelTest {
     }
 
     @Test
-    public void constructor_filtersToCurrentDateAndSortsByTime() {
+    public void constructor_displaysSuppliedFilteredLessonList() {
         LocalDate today = LocalDate.now();
         Lesson later = lesson(today, LocalTime.of(16, 0));
         Lesson earlier = lesson(today, LocalTime.of(10, 0));
@@ -50,11 +51,12 @@ public class LessonListPanelTest {
         LessonListPanel panel = new LessonListPanel(lessons);
         ListView<?> listView = (ListView<?>) panel.getRoot().lookup(".list-view");
 
-        assertEquals(java.util.List.of(earlier, later), listView.getItems());
+        assertEquals(java.util.List.of(later, lesson(today.plusDays(1), LocalTime.NOON), earlier),
+                listView.getItems());
     }
 
     @Test
-    public void setDisplayedDate_filtersAndUpdatesPlaceholder() {
+    public void setDisplayedDate_updatesPlaceholderWithoutApplyingUiFilter() {
         LocalDate tomorrow = LocalDate.now().plusDays(1);
         ObservableList<Lesson> lessons = FXCollections.observableArrayList(
                 lesson(tomorrow, LocalTime.NOON));
@@ -66,8 +68,7 @@ public class LessonListPanelTest {
         assertEquals(1, listView.getItems().size());
         assertEquals(tomorrow, panel.getDisplayedDate());
         assertTrue(listView.getPlaceholder() instanceof Label);
-        assertEquals("No lessons scheduled for "
-                + tomorrow + ".", ((Label) listView.getPlaceholder()).getText());
+        assertEquals("No lessons for " + tomorrow + ".", ((Label) listView.getPlaceholder()).getText());
     }
 
     @Test
@@ -75,8 +76,29 @@ public class LessonListPanelTest {
         LessonListPanel panel = new LessonListPanel(FXCollections.observableArrayList());
         ListView<?> listView = (ListView<?>) panel.getRoot().lookup(".list-view");
 
-        assertEquals("No lessons scheduled for "
-                + LocalDate.now() + ".", ((Label) listView.getPlaceholder()).getText());
+        assertEquals("No lessons for " + LocalDate.now() + ".", ((Label) listView.getPlaceholder()).getText());
+    }
+
+    @Test
+    public void setSearchDescription_updatesPlaceholder() {
+        LessonListPanel panel = new LessonListPanel(FXCollections.observableArrayList());
+        ListView<?> listView = (ListView<?>) panel.getRoot().lookup(".list-view");
+
+        panel.setSearchDescription("Henry Tan");
+
+        assertEquals("No lessons for Henry Tan.", ((Label) listView.getPlaceholder()).getText());
+    }
+
+    @Test
+    public void constructorAndSetDisplayedDate_updateModelPredicate() {
+        AtomicReference<LocalDate> updatedDate = new AtomicReference<>();
+        LessonListPanel panel = new LessonListPanel(
+                FXCollections.observableArrayList(), updatedDate::set);
+
+        assertEquals(LocalDate.now(), updatedDate.get());
+        LocalDate date = LocalDate.of(2026, 11, 1);
+        panel.setDisplayedDate(date);
+        assertEquals(date, updatedDate.get());
     }
 
     @Test

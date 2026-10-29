@@ -12,7 +12,6 @@ end box
 
 box Model MODEL_COLOR_T1
 participant "m:Model" as Model MODEL_COLOR
-participant "a:AddressBook" as AddressBook MODEL_COLOR
 end box
 
 [-> LogicManager : execute("unlink-g 1 g/2")
@@ -48,16 +47,12 @@ UnlinkGuardianCommand -> Model : getFilteredGuardianList()
 Model --> UnlinkGuardianCommand
 UnlinkGuardianCommand -> Model : hasStudentGuardianLink(link)
 activate Model
-Model -> AddressBook : hasStudentGuardianLink(link)
-AddressBook --> Model
 Model --> UnlinkGuardianCommand
 deactivate Model
 
 alt link exists
     UnlinkGuardianCommand -> Model : removeStudentGuardianLink(link)
     activate Model
-    Model -> AddressBook : removeStudentGuardianLink(link)
-    AddressBook --> Model
     Model --> UnlinkGuardianCommand
     deactivate Model
     create CommandResult

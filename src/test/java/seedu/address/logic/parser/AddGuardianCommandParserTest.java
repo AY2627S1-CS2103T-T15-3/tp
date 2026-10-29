@@ -29,7 +29,7 @@ public class AddGuardianCommandParserTest {
     public void parse_specialCharacters_success() {
         Guardian expected = guardian("Billie O'Connor", "+6598765432", "billie@example.com", "25 Happy Road");
         assertParseSuccess(parser,
-                "n/ Billie O'Connor p/+6598765432 e/billie@example.com a/25 Happy Road",
+                "n/ Billie O'Connor p/+65 9876 5432 e/billie@example.com a/25 Happy Road",
                 new AddGuardianCommand(expected));
     }
 
@@ -82,7 +82,7 @@ public class AddGuardianCommandParserTest {
                 "n/Ben&Tan p/92345678 e/ben@example.com a/12 ABCD Ave 3",
                 GuardianFieldValidator.NAME_MESSAGE);
         assertParseFailure(parser,
-                "n/Ben Tan p/12 345 e/ben@example.com a/12 ABCD Ave 3",
+                "n/Ben Tan p/12-345 e/ben@example.com a/12 ABCD Ave 3",
                 GuardianFieldValidator.PHONE_MESSAGE);
         assertParseFailure(parser,
                 "n/Ben Tan p/92345678 e/ben@example a/12 ABCD Ave 3",
