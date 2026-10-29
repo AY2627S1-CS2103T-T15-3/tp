@@ -18,10 +18,7 @@ public class RemoveGuardianCommand extends Command {
 
     public static final String COMMAND_WORD = "remove-g";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Removes the guardian identified by the index number used in the displayed guardian list.\n"
-            + "Parameters: INDEX (must be a positive integer)\n"
-            + "Example: " + COMMAND_WORD + " 1";
+    public static final String MESSAGE_USAGE = "Usage: " + COMMAND_WORD + " INDEX";
 
     public static final String MESSAGE_REMOVE_GUARDIAN_SUCCESS = "Removed guardian: %1$s";
 

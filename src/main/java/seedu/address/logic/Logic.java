@@ -30,8 +30,14 @@ public interface Logic {
     /** Returns an unmodifiable view of the filtered list of guardians. */
     ObservableList<Guardian> getFilteredGuardianList();
 
-    /** Returns an unmodifiable view of the filtered list of lessons. */
+    /** Returns the scheduled lessons. */
+    ObservableList<Lesson> getLessonList();
+
+    /** Returns the displayed, sorted lesson list. */
     ObservableList<Lesson> getFilteredLessonList();
+
+    /** Updates the predicate used by the displayed lesson list. */
+    void updateFilteredLessonList(java.util.function.Predicate<Lesson> predicate);
 
     /** Returns the guardians linked to the given student. */
     List<Guardian> getGuardiansForStudent(Student student);

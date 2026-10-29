@@ -18,10 +18,7 @@ public class RemoveStudentCommand extends Command {
 
     public static final String COMMAND_WORD = "remove-s";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Removes the student identified by the index number used in the displayed student list.\n"
-            + "Parameters: INDEX (must be a positive integer)\n"
-            + "Example: " + COMMAND_WORD + " 1";
+    public static final String MESSAGE_USAGE = "Usage: " + COMMAND_WORD + " INDEX";
 
     public static final String MESSAGE_REMOVE_STUDENT_SUCCESS = "Removed student: %1$s";
 

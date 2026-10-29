@@ -7,9 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.Duration;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.FutureTask;
@@ -38,7 +36,6 @@ import seedu.address.model.AddressBook;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.guardian.Guardian;
-import seedu.address.model.lesson.Lesson;
 import seedu.address.model.link.StudentGuardianLink;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
@@ -115,18 +112,19 @@ public class LinkGuardianUiTest {
     }
 
     @Test
-    public void lessonListPanel_displaysLessonTextAndStyle() {
-        Lesson lesson = new Lesson(student("Lucy Lim"), LocalDate.of(2026, 11, 1), LocalTime.of(14, 0),
-                Duration.ofMinutes(60));
-        LessonListPanel panel = new LessonListPanel(FXCollections.observableArrayList(lesson));
-        LessonListPanel.LessonListViewCell cell = panel.new LessonListViewCell();
+    public void mainWindow_setLessonListDate_updatesLessonPanel() throws Exception {
+        runOnFxThread(() -> {
+            MainWindow window = new MainWindow(new javafx.stage.Stage(),
+                    new StubLogic(student("Lucy Lim"), guardian("Ben Tan")), Path.of("data.json"));
+            window.fillInnerParts();
+            LocalDate date = LocalDate.of(2026, 11, 1);
 
-        cell.updateItem(lesson, false);
-        assertEquals("Lucy Lim | 2026-11-01 | 14:00-15:00", cell.getText());
-        assertTrue(cell.getStyleClass().contains("lesson-list-cell"));
+            window.setLessonListDate(date);
 
-        cell.updateItem(null, true);
-        assertEquals(null, cell.getText());
+            assertEquals(date, window.getLessonListPanel().getDisplayedDate());
+            window.getPrimaryStage().hide();
+            return null;
+        });
     }
 
     @Test
@@ -348,9 +346,18 @@ public class LinkGuardianUiTest {
         }
 
         @Override
+        public javafx.collections.ObservableList<seedu.address.model.lesson.Lesson> getLessonList() {
+            return FXCollections.observableArrayList();
+        }
+
+        @Override
         public javafx.collections.ObservableList<seedu.address.model.lesson.Lesson> getFilteredLessonList() {
             return FXCollections.observableArrayList();
         }
+
+        @Override
+        public void updateFilteredLessonList(
+                java.util.function.Predicate<seedu.address.model.lesson.Lesson> predicate) { }
 
         @Override
         public List<Guardian> getGuardiansForStudent(Student ignored) {

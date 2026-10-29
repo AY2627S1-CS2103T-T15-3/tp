@@ -150,6 +150,11 @@ public class LogicManagerTest {
     }
 
     @Test
+    public void getLessonList_returnsModelLessonList() {
+        assertEquals(model.getLessonList(), logic.getLessonList());
+    }
+
+    @Test
     public void getGuardiansForStudent_returnsModelLinkedGuardians() {
         Student student = new Student(new Name("Henry Tan"), new Phone("91234567"),
                 new Email("henry@example.com"), new Address("12 Main Street"), new Level("JC 1"),
