@@ -142,7 +142,7 @@ public class LogicManagerTest {
         logic.execute("view-l d/2026-11-01");
         assertEquals(java.util.List.of(henryLesson), logic.getFilteredLessonList());
 
-        logic.execute("view-l s/2");
+        logic.execute("view-l stu/2");
         assertEquals(java.util.List.of(ivyLesson), logic.getFilteredLessonList());
 
         logic.execute("view-l");

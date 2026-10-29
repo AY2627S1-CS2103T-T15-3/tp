@@ -17,7 +17,7 @@ import seedu.address.model.student.Student;
 public class ViewLessonCommand extends Command {
     public static final String COMMAND_WORD = "view-l";
     public static final String MESSAGE_USAGE = "Usage: " + COMMAND_WORD
-            + " [d/DATE(YYYY-MM-DD) | s/INDEX]";
+            + " [d/DATE(YYYY-MM-DD) | stu/INDEX]";
     public static final String MESSAGE_SHOW_ALL = "Showing all lessons.";
     public static final String MESSAGE_SHOW_DATE = "Showing lessons on %1$s.";
     public static final String MESSAGE_SHOW_STUDENT = "Showing lessons for %1$s.";

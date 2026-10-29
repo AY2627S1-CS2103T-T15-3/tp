@@ -110,7 +110,7 @@ public class AddressBookParserTest {
     @Test
     public void parseCommand_viewLesson() throws Exception {
         assertTrue(parser.parseCommand("view-l d/2026-11-01") instanceof ViewLessonCommand);
-        assertTrue(parser.parseCommand("view-l s/1") instanceof ViewLessonCommand);
+        assertTrue(parser.parseCommand("view-l stu/1") instanceof ViewLessonCommand);
         assertTrue(parser.parseCommand("view-l") instanceof ViewLessonCommand);
     }
 

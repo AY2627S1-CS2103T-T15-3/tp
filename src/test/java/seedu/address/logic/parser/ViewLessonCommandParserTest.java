@@ -25,7 +25,7 @@ public class ViewLessonCommandParserTest {
 
     @Test
     public void parse_studentIndex_success() {
-        assertParseSuccess(parser, " s/2", new ViewLessonCommand(Index.fromOneBased(2)));
+        assertParseSuccess(parser, " stu/2", new ViewLessonCommand(Index.fromOneBased(2)));
     }
 
     @Test
@@ -33,8 +33,9 @@ public class ViewLessonCommandParserTest {
         String usage = String.format(seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT,
                 ViewLessonCommand.MESSAGE_USAGE);
         assertParseFailure(parser, " d/2026-02-30", DateTimeParser.MESSAGE_INVALID_DATE);
-        assertParseFailure(parser, " s/0", usage);
-        assertParseFailure(parser, " d/2026-11-01 s/1", usage);
+        assertParseFailure(parser, " stu/0", usage);
+        assertParseFailure(parser, " d/2026-11-01 stu/1", usage);
+        assertParseFailure(parser, " s/1", usage);
         assertParseFailure(parser, "2026-11-01", usage);
         assertParseFailure(parser, " x/anything", usage);
     }
