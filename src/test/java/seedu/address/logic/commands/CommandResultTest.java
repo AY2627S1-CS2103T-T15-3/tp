@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
@@ -14,8 +15,14 @@ import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Phone;
+import seedu.address.model.student.Level;
+import seedu.address.model.student.Student;
+import seedu.address.model.student.Subject;
 
 public class CommandResultTest {
+    private static final Student STUDENT = new Student(new Name("Lucy Lim"), new Phone("91234567"),
+            new Email("lucy@example.com"), new Address("21 Happy Road"), new Level("Secondary 3"),
+            Set.of(new Subject("Mathematics")));
     private static final Guardian GUARDIAN = new Guardian(new Name("Ben Tan"), new Phone("92345678"),
             new Email("ben@example.com"), new Address("25 Happy Road"));
 
@@ -63,6 +70,23 @@ public class CommandResultTest {
         assertFalse(guardianSearchResult.equals(CommandResult.withGuardianSearchDescription(
                 "feedback", "Search: Alice", List.of("Alice"), CommandResult.HighlightTarget.GUARDIANS)));
         assertFalse(new CommandResult("feedback").equals(guardianSearchResult));
+    }
+
+    @Test
+    public void equals_includesHighlightingState() {
+        assertFalse(new CommandResult("feedback").equals(new CommandResult("feedback", STUDENT)));
+        assertFalse(new CommandResult("feedback").equals(new CommandResult("feedback", GUARDIAN)));
+
+        CommandResult highlighted = new CommandResult("feedback", List.of("Ben"),
+                CommandResult.HighlightTarget.GUARDIANS);
+        assertTrue(highlighted.equals(new CommandResult("feedback", List.of("Ben"),
+                CommandResult.HighlightTarget.GUARDIANS)));
+        assertFalse(highlighted.equals(new CommandResult("feedback", List.of("Alice"),
+                CommandResult.HighlightTarget.GUARDIANS)));
+        assertFalse(highlighted.equals(new CommandResult("feedback", List.of("Ben"),
+                CommandResult.HighlightTarget.STUDENTS)));
+        assertEquals(highlighted.hashCode(), new CommandResult("feedback", List.of("Ben"),
+                CommandResult.HighlightTarget.GUARDIANS).hashCode());
     }
 
     @Test

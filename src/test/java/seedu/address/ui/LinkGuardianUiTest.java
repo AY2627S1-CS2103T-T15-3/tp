@@ -171,6 +171,12 @@ public class LinkGuardianUiTest {
             executeCommand.invoke(window, "sort-s");
             assertTrue(filterLabel.isVisible());
 
+            executeCommand.invoke(window, "find-g");
+            assertTrue(filterLabel.isVisible());
+
+            executeCommand.invoke(window, "list-g");
+            assertTrue(filterLabel.isVisible());
+
             executeCommand.invoke(window, "list-s");
             assertFalse(filterLabel.isVisible());
             window.getPrimaryStage().hide();
@@ -195,6 +201,12 @@ public class LinkGuardianUiTest {
             assertTrue(searchLabel.isVisible());
 
             executeCommand.invoke(window, "sort-s");
+            assertTrue(searchLabel.isVisible());
+
+            executeCommand.invoke(window, "filter");
+            assertTrue(searchLabel.isVisible());
+
+            executeCommand.invoke(window, "list-s");
             assertTrue(searchLabel.isVisible());
 
             executeCommand.invoke(window, "list-g");

@@ -210,6 +210,10 @@ public class CommandResult {
                 && showHelp == otherCommandResult.showHelp
                 && exit == otherCommandResult.exit
                 && refreshStudentList == otherCommandResult.refreshStudentList
+                && Objects.equals(studentToHighlight, otherCommandResult.studentToHighlight)
+                && Objects.equals(guardianToHighlight, otherCommandResult.guardianToHighlight)
+                && highlightKeywords.equals(otherCommandResult.highlightKeywords)
+                && highlightTarget == otherCommandResult.highlightTarget
                 && studentFilterUpdate == otherCommandResult.studentFilterUpdate
                 && studentFilterDescription.equals(otherCommandResult.studentFilterDescription)
                 && guardianSearchUpdate == otherCommandResult.guardianSearchUpdate
@@ -219,6 +223,7 @@ public class CommandResult {
     @Override
     public int hashCode() {
         return Objects.hash(feedbackToUser, showHelp, exit, refreshStudentList,
+                studentToHighlight, guardianToHighlight, highlightKeywords, highlightTarget,
                 studentFilterUpdate, studentFilterDescription, guardianSearchUpdate, guardianSearchDescription);
     }
 
