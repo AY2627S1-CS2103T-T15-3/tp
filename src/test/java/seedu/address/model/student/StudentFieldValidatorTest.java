@@ -22,7 +22,7 @@ public class StudentFieldValidatorTest {
         assertTrue(StudentFieldValidator.isValidName("-A."));
         assertTrue(StudentFieldValidator.isValidName("1"));
         for (String name : new String[] {"...", "---", "'", "/", " . - / ' "}) {
-            assertTrue(StudentFieldValidator.isValidName(name));
+            assertFalse(StudentFieldValidator.isValidName(name));
         }
         assertFalse(StudentFieldValidator.isValidName("Henry&Tan"));
         assertFalse(StudentFieldValidator.isValidName(""));
@@ -49,6 +49,7 @@ public class StudentFieldValidatorTest {
         assertTrue(StudentFieldValidator.isValidAddress("12 ABCD Ave 3, #04-15"));
         assertFalse(StudentFieldValidator.isValidAddress("12 ABCD Ave @"));
         assertTrue(StudentFieldValidator.isValidLevel("JC 1"));
+        assertTrue(StudentFieldValidator.isValidLevel("Secondary 3 (Express)"));
         assertTrue(StudentFieldValidator.isValidSubject("A-Level (H2)"));
         assertEquals("+6591234567", StudentFieldValidator.normalizePhone(" +6591234567 "));
         assertEquals("mary@example.com", StudentFieldValidator.normalizeEmail(" mary@example.com "));

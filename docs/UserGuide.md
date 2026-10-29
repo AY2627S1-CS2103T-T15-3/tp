@@ -108,7 +108,7 @@ Format: `add-s n/NAME p/PHONE e/EMAIL a/ADDRESS l/LEVEL s/SUBJECT [s/SUBJECT]...
 * Additional `s/SUBJECT` parameters may be provided.
 * The parameters can be entered in any order.
 * A student with the same normalized name and phone number cannot be added again.
-* Names may contain alphanumeric characters, spaces, hyphens, apostrophes, periods and slashes, such as `John s/o Raj`.
+* Names may contain alphanumeric characters, spaces, hyphens, apostrophes, periods and slashes, such as `John s/o Raj`, and must contain at least one alphanumeric character.
 
 Examples:
 * `add-s n/Henry Tan p/91234567 e/henry@example.com a/12 ABCD Ave 3 l/Secondary 3 s/Mathematics s/Physics`
@@ -124,7 +124,7 @@ Format: `add-g n/NAME p/PHONE e/EMAIL a/ADDRESS`
 * The parameters can be entered in any order.
 * Adding a guardian does not link them to a student; use `link-g` separately.
 * A guardian with the same normalized name and phone number cannot be added again.
-* Names may contain alphanumeric characters, spaces, hyphens, apostrophes, periods and slashes, such as `John s/o Raj`.
+* Names may contain alphanumeric characters, spaces, hyphens, apostrophes, periods and slashes, such as `John s/o Raj`, and must contain at least one alphanumeric character.
 
 Examples:
 * `add-g n/Ben Tan p/92345678 e/ben.tan@gmail.com a/12 ABCD Ave 3`
@@ -358,6 +358,7 @@ Shows only the students who match all of the given criteria. The guardian list i
 Format: `filter [l/LEVEL] [s/SUBJECT]... [paid/YYYY-MM] [unpaid/YYYY-MM]`
 
 * At least one criterion must be provided.
+* Academic levels may contain alphanumeric characters, spaces and parentheses, e.g. `Secondary 3 (Express)`.
 * `l/LEVEL` shows students at that academic level. The match ignores case and extra spaces, e.g. `jc 1` matches `JC 1`.
 * `s/SUBJECT` shows students who take that subject. If several subjects are given, a student must take **all** of them.
 * `paid/YYYY-MM` shows students who have been marked as paid for that month using `mark-paid`.

@@ -25,6 +25,15 @@ public class JsonAdaptedGuardianTest {
     }
 
     @Test
+    public void toModelType_expandedFormats_success() throws Exception {
+        Guardian result = adapted("Mrs. Lim", "+65 9123 4567", "lim@example.com", "12 Main Street")
+                .toModelType();
+        assertEquals("Mrs. Lim", result.getName().fullName);
+        assertEquals("+6591234567", result.getPhone().value);
+        assertEquals(result, new JsonAdaptedGuardian(result).toModelType());
+    }
+
+    @Test
     public void toModelType_missingFields_throwsIllegalValueException() {
         assertThrows(IllegalValueException.class, "Guardian's Name field is missing!", () ->
                 adapted(null, "92345678", "ben@example.com", "12 ABCD Ave 3").toModelType());

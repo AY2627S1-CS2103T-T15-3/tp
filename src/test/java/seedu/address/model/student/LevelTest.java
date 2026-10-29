@@ -25,12 +25,16 @@ public class LevelTest {
     @Test
     public void constructor_normalizesWhitespace() {
         assertEquals("Secondary 3", new Level("  Secondary   3 ").value);
+        assertEquals("Secondary 3 (Express)", new Level("  Secondary 3   (Express) ").value);
     }
 
     @Test
     public void isValidLevel() {
         assertThrows(NullPointerException.class, () -> Level.isValidLevel(null));
         assertTrue(Level.isValidLevel("Secondary 3"));
+        assertTrue(Level.isValidLevel("Secondary 3 (Express)"));
+        assertTrue(Level.isValidLevel("JC 1 (H2)"));
+        assertFalse(Level.isValidLevel("a".repeat(48) + "(1)"));
         assertTrue(Level.isValidLevel("  JC   1 "));
         assertFalse(Level.isValidLevel(""));
         assertFalse(Level.isValidLevel("Secondary-3"));

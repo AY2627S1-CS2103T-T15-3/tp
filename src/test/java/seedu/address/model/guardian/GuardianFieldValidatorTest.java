@@ -14,8 +14,11 @@ public class GuardianFieldValidatorTest {
         assertTrue(GuardianFieldValidator.isValidName("Billie O'Connor"));
         assertTrue(GuardianFieldValidator.isValidName("John s/o Raj"));
         assertFalse(GuardianFieldValidator.isValidName("Ben&Tan"));
-        assertTrue(GuardianFieldValidator.isValidName("..."));
-        assertTrue(GuardianFieldValidator.isValidName("- . / '"));
+        for (String name : new String[] {"...", "---", "'", "/", " . - / ' "}) {
+            assertFalse(GuardianFieldValidator.isValidName(name));
+        }
+        assertTrue(GuardianFieldValidator.isValidName("-A."));
+        assertTrue(GuardianFieldValidator.isValidName("1"));
         assertTrue(GuardianFieldValidator.isValidName("Mrs. Lim"));
     }
 
