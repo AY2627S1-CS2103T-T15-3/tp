@@ -15,6 +15,7 @@ import seedu.address.logic.parser.AddressBookParser;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.Model;
 import seedu.address.model.guardian.Guardian;
+import seedu.address.model.lesson.Lesson;
 import seedu.address.model.student.Student;
 import seedu.address.storage.Storage;
 
@@ -69,6 +70,22 @@ public class LogicManager implements Logic {
     @Override
     public ObservableList<Guardian> getFilteredGuardianList() {
         return model.getFilteredGuardianList();
+    }
+
+    /** Returns the scheduled lessons. */
+    @Override
+    public ObservableList<Lesson> getLessonList() {
+        return model.getLessonList();
+    }
+
+    @Override
+    public ObservableList<Lesson> getFilteredLessonList() {
+        return model.getFilteredLessonList();
+    }
+
+    @Override
+    public void updateFilteredLessonList(java.util.function.Predicate<Lesson> predicate) {
+        model.updateFilteredLessonList(predicate);
     }
 
     @Override

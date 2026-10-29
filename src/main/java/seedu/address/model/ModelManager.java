@@ -152,6 +152,12 @@ public class ModelManager implements Model {
         return sortedLessons;
     }
 
+    @Override
+    public void updateFilteredLessonList(Predicate<Lesson> predicate) {
+        requireNonNull(predicate);
+        filteredLessons.setPredicate(predicate);
+    }
+
     //=========== Guardian Operations ========================================================================
 
     @Override
