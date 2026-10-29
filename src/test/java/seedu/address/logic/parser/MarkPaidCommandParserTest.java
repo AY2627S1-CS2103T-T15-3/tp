@@ -51,6 +51,13 @@ public class MarkPaidCommandParserTest {
     }
 
     @Test
+    public void parse_unknownParameter_failure() {
+        assertParseFailure(parser, " 1 m/2026-10 x/value", "Unknown parameter: x/");
+        assertParseFailure(parser, " 1 x/value m/2026-10", "Unknown parameter: x/");
+        assertParseFailure(parser, " 1 x/value", "Unknown parameter: x/");
+    }
+
+    @Test
     public void parse_duplicateMonth_failure() {
         assertParseFailure(parser, " 1 m/2026-10 m/2026-11",
                 Messages.getErrorMessageForDuplicatePrefixes(PREFIX_MONTH));
