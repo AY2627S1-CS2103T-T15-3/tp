@@ -15,6 +15,11 @@ public class LessonMatchesStudentPredicate implements Predicate<Lesson> {
         this.student = requireNonNull(student);
     }
 
+    /** Returns whether this predicate targets the given student. */
+    public boolean matchesStudent(Student studentToCheck) {
+        return student.equals(studentToCheck);
+    }
+
     @Override
     public boolean test(Lesson lesson) {
         return lesson.getStudent().equals(student);
