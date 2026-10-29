@@ -133,6 +133,8 @@ The student and guardian MVP commands follow the same parser-command flow:
 * The edit commands update only supplied fields and preserve the remaining values, including student remarks and payment history.
 * `LinkGuardianCommand` creates a `StudentGuardianLink` in the model and treats repeated pair as an existing link.
 * `UnlinkGuardianCommand` checks that the selected link exists before asking the model to remove it.
+* The add and edit commands preserve the active predicate for their respective student or guardian lists.
+  Newly added or edited records are displayed only when they match that predicate.
 * The list commands reset their respective filtered lists to show all students or guardians.
 * The find commands filter their respective lists by name, matching any full-word keyword case-insensitively.
 * Command words accept four documented capitalization variants: lower-case, first-letter capitalized, final-token

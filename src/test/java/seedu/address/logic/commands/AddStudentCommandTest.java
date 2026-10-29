@@ -57,6 +57,19 @@ public class AddStudentCommandTest {
     }
 
     @Test
+    public void execute_preservesActiveFilter() throws Exception {
+        Student existing = student("Alice Tan", "98765432", "alice@example.com", "25 Happy Road", "JC 1",
+                "Physics");
+        ModelManager model = new ModelManager();
+        model.addStudent(existing);
+        model.updateFilteredStudentList(student -> student.getLevel().equals(new Level("JC 1")));
+
+        new AddStudentCommand(HENRY).execute(model);
+
+        assertEquals(java.util.List.of(existing), model.getFilteredStudentList());
+    }
+
+    @Test
     public void equals_sameStudent_returnsTrue() {
         AddStudentCommand command = new AddStudentCommand(HENRY);
         assertEquals(command, command);
