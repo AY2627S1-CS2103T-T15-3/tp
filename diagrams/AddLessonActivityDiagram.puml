@@ -1,0 +1,37 @@
+@startuml
+skin rose
+skinparam ActivityFontSize 15
+skinparam ArrowFontSize 12
+start
+:User executes add-l command;
+
+if () then ([student index is invalid])
+    :Show invalid index error;
+    stop
+else ([else])
+endif
+
+:Create one lesson per week;
+
+repeat
+    :Take the next new lesson;
+    if () then ([overlaps an existing lesson
+or another lesson in the series])
+        :Show the clashing lesson;
+        note right: No lesson in the\nseries is added.
+        stop
+    else ([else])
+    endif
+repeat while () is ([more new lessons])
+->[all lessons checked];
+
+:Add all lessons to the model;
+
+if () then ([lesson length > 4 hours])
+    :Show success message
+    with a warning;
+else ([else])
+    :Show success message;
+endif
+stop
+@enduml

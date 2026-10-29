@@ -24,7 +24,12 @@ create UnlinkGuardianCommandParser
 AddressBookParser -> UnlinkGuardianCommandParser
 activate UnlinkGuardianCommandParser
 
-UnlinkGuardianCommandParser -> UnlinkGuardianCommandParser : parse("1 g/2")
+UnlinkGuardianCommandParser --> AddressBookParser
+deactivate UnlinkGuardianCommandParser
+
+AddressBookParser -> UnlinkGuardianCommandParser : parse("1 g/2")
+activate UnlinkGuardianCommandParser
+
 create UnlinkGuardianCommand
 UnlinkGuardianCommandParser -> UnlinkGuardianCommand
 activate UnlinkGuardianCommand
@@ -33,6 +38,7 @@ deactivate UnlinkGuardianCommand
 
 UnlinkGuardianCommandParser --> AddressBookParser : u
 deactivate UnlinkGuardianCommandParser
+UnlinkGuardianCommandParser -[hidden]-> AddressBookParser
 destroy UnlinkGuardianCommandParser
 
 AddressBookParser --> LogicManager : u
@@ -42,9 +48,13 @@ LogicManager -> UnlinkGuardianCommand : execute(m)
 activate UnlinkGuardianCommand
 
 UnlinkGuardianCommand -> Model : getFilteredStudentList()
-Model --> UnlinkGuardianCommand
+activate Model
+Model --> UnlinkGuardianCommand : students
+deactivate Model
 UnlinkGuardianCommand -> Model : getFilteredGuardianList()
-Model --> UnlinkGuardianCommand
+activate Model
+Model --> UnlinkGuardianCommand : guardians
+deactivate Model
 UnlinkGuardianCommand -> Model : hasStudentGuardianLink(link)
 activate Model
 Model --> UnlinkGuardianCommand
@@ -60,11 +70,10 @@ alt link exists
     activate CommandResult
     CommandResult --> UnlinkGuardianCommand
     deactivate CommandResult
+    UnlinkGuardianCommand --> LogicManager : r
 else link does not exist
     UnlinkGuardianCommand --> LogicManager : CommandException
 end
-
-UnlinkGuardianCommand --> LogicManager : r
 deactivate UnlinkGuardianCommand
 
 [<--LogicManager
