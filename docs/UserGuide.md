@@ -26,6 +26,10 @@ TutorTrack is a **desktop application for private tutors to manage students and 
    TutorTrack's graphical interface should appear in a few seconds.<br>
    ![Ui](images/Ui.png)
 
+   On the first launch, TutorTrack displays representative sample students, guardians,
+   links, payments, remarks, and lessons. Run `clear` if you want to start with an
+   empty address book before entering your own data.
+
 1. Type a command in the command box and press Enter to execute it. For example, type **`help`** and press Enter to open the help window.<br>
    Some example commands you can try:
 
