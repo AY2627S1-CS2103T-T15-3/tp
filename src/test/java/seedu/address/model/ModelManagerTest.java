@@ -203,6 +203,23 @@ public class ModelManagerTest {
     }
 
     @Test
+    public void setStudent_preservesStudentLessonFilter() {
+        Student original = student("Henry Tan", "91234567", "henry@example.com");
+        Student edited = student("Henry Tan", "91234567", "updated@example.com");
+        Lesson lesson = new Lesson(original, LocalDate.of(2026, 10, 25), LocalTime.of(14, 0),
+                Duration.ofMinutes(60));
+
+        modelManager.addStudent(original);
+        modelManager.addLesson(lesson);
+        modelManager.updateFilteredLessonList(new LessonMatchesStudentPredicate(original));
+
+        modelManager.setStudent(original, edited);
+
+        assertEquals(1, modelManager.getFilteredLessonList().size());
+        assertEquals(edited, modelManager.getFilteredLessonList().get(0).getStudent());
+    }
+
+    @Test
     public void lessonOperations_nullInputs_throwNullPointerException() {
         assertThrows(NullPointerException.class, () ->
                 modelManager.addLesson(null));
