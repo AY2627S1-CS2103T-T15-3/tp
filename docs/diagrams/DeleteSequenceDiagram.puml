@@ -6,7 +6,7 @@ box Logic LOGIC_COLOR_T1
 participant ":LogicManager" as LogicManager LOGIC_COLOR
 participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
 participant ":RemoveStudentCommandParser" as RemoveStudentCommandParser LOGIC_COLOR
-participant "r:RemoveStudentCommand" as RemoveStudentCommand LOGIC_COLOR
+participant "c:RemoveStudentCommand" as RemoveStudentCommand LOGIC_COLOR
 participant "r:CommandResult" as CommandResult LOGIC_COLOR
 end box
 
@@ -37,19 +37,24 @@ activate RemoveStudentCommand
 RemoveStudentCommand --> RemoveStudentCommandParser :
 deactivate RemoveStudentCommand
 
-RemoveStudentCommandParser --> AddressBookParser : r
+RemoveStudentCommandParser --> AddressBookParser : c
 deactivate RemoveStudentCommandParser
 'Hidden arrow to position the destroy marker below the end of the activation bar.
 RemoveStudentCommandParser -[hidden]-> AddressBookParser
 destroy RemoveStudentCommandParser
 
-AddressBookParser --> LogicManager : d
+AddressBookParser --> LogicManager : c
 deactivate AddressBookParser
 
 LogicManager -> RemoveStudentCommand : execute(m)
 activate RemoveStudentCommand
 
-RemoveStudentCommand -> Model : deleteStudent(1)
+RemoveStudentCommand -> Model : getFilteredStudentList()
+activate Model
+Model --> RemoveStudentCommand : students
+deactivate Model
+
+RemoveStudentCommand -> Model : deleteStudent(s)
 activate Model
 
 Model --> RemoveStudentCommand
