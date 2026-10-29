@@ -15,6 +15,7 @@ import seedu.address.commons.core.GuiSettings;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.model.guardian.Guardian;
 import seedu.address.model.lesson.Lesson;
+import seedu.address.model.lesson.LessonMatchesStudentPredicate;
 import seedu.address.model.link.StudentGuardianLink;
 import seedu.address.model.student.Student;
 import seedu.address.model.student.StudentNameComparator;
@@ -32,6 +33,7 @@ public class ModelManager implements Model {
     private final FilteredList<Guardian> filteredGuardians;
     private final FilteredList<Lesson> filteredLessons;
     private final SortedList<Lesson> sortedLessons;
+    private Predicate<Lesson> lessonPredicate = Model.PREDICATE_SHOW_ALL_LESSONS;
 
     /**
      * Initializes a ModelManager with the given addressBook and userPrefs.
@@ -109,6 +111,10 @@ public class ModelManager implements Model {
     public void setStudent(Student target, Student editedStudent) {
         requireAllNonNull(target, editedStudent);
         addressBook.setStudent(target, editedStudent);
+        if (lessonPredicate instanceof LessonMatchesStudentPredicate studentPredicate
+                && studentPredicate.matchesStudent(target)) {
+            updateFilteredLessonList(new LessonMatchesStudentPredicate(editedStudent));
+        }
     }
 
     @Override
@@ -154,6 +160,7 @@ public class ModelManager implements Model {
     @Override
     public void updateFilteredLessonList(Predicate<Lesson> predicate) {
         requireNonNull(predicate);
+        lessonPredicate = predicate;
         filteredLessons.setPredicate(predicate);
     }
 

@@ -13,6 +13,7 @@ import seedu.address.model.AddressBook;
 import seedu.address.model.ReadOnlyAddressBook;
 import seedu.address.model.guardian.Guardian;
 import seedu.address.model.lesson.Lesson;
+import seedu.address.model.lesson.exceptions.DuplicateLessonException;
 import seedu.address.model.student.Student;
 
 /**
@@ -25,6 +26,7 @@ class JsonSerializableAddressBook {
     public static final String MESSAGE_DUPLICATE_GUARDIAN = "Guardians list contains duplicate guardian(s).";
     public static final String MESSAGE_INVALID_LINK = "Student-guardian link references a missing contact.";
     public static final String MESSAGE_INVALID_LESSON = "Lesson references a missing student.";
+    public static final String MESSAGE_OVERLAPPING_LESSON = "Lessons list contains overlapping lesson(s).";
 
     private final List<JsonAdaptedStudent> students = new ArrayList<>();
     private final List<JsonAdaptedGuardian> guardians = new ArrayList<>();
@@ -126,7 +128,11 @@ class JsonSerializableAddressBook {
             if (addressBook.getLessonList().contains(lesson)) {
                 throw new IllegalValueException(MESSAGE_DUPLICATE_LESSON);
             }
-            addressBook.addLesson(lesson);
+            try {
+                addressBook.addLesson(lesson);
+            } catch (DuplicateLessonException exception) {
+                throw new IllegalValueException(MESSAGE_OVERLAPPING_LESSON, exception);
+            }
         }
         return addressBook;
     }

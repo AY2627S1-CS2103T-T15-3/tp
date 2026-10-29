@@ -132,6 +132,21 @@ public class JsonSerializableAddressBookTest {
                 data::toModelType);
     }
 
+    @Test
+    public void toModelType_overlappingLessons_throwsIllegalValueException() {
+        JsonAdaptedStudent student = new JsonAdaptedStudent("Lucy Lim", "91234567", "lucy@example.com",
+                "21 Happy Road", "JC 1", List.of("Mathematics"));
+        JsonAdaptedLesson first = new JsonAdaptedLesson(
+                "Lucy Lim", "91234567", "2026-10-25", "14:00", 60);
+        JsonAdaptedLesson overlapping = new JsonAdaptedLesson(
+                "Lucy Lim", "91234567", "2026-10-25", "14:30", 60);
+        JsonSerializableAddressBook data = new JsonSerializableAddressBook(
+                List.of(student), List.of(), List.of(), List.of(first, overlapping));
+
+        assertThrows(IllegalValueException.class, JsonSerializableAddressBook.MESSAGE_OVERLAPPING_LESSON,
+                data::toModelType);
+    }
+
     private static Student student(String name, String phone) {
         return new Student(new Name(name), new Phone(phone), new Email("lucy@example.com"),
                 new Address("21 Happy Road"), new Level("JC 1"), Set.of(new Subject("Mathematics")));
