@@ -38,4 +38,15 @@ public class FindGuardianCommandParserTest {
     public void parse_invalidName_throwsParseException() {
         assertParseFailure(parser, "!@aa", Name.MESSAGE_CONSTRAINTS);
     }
+
+    @Test
+    public void parse_keywordsValidatedIndividually() {
+        String firstKeyword = "a".repeat(100);
+        String secondKeyword = "b".repeat(100);
+        FindGuardianCommand expected = new FindGuardianCommand(
+                new GuardianNameContainsKeywordsPredicate(List.of(firstKeyword, secondKeyword)));
+
+        assertParseSuccess(parser, firstKeyword + " " + secondKeyword, expected);
+        assertParseFailure(parser, "a".repeat(101), Name.MESSAGE_CONSTRAINTS);
+    }
 }

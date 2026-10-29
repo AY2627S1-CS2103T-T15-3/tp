@@ -4,9 +4,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.lang.reflect.Constructor;
+
 import org.junit.jupiter.api.Test;
 
 public class StudentFieldValidatorTest {
+
+    @Test
+    public void privateConstructor_canBeInvokedReflectively() throws Exception {
+        Constructor<StudentFieldValidator> constructor = StudentFieldValidator.class.getDeclaredConstructor();
+        constructor.setAccessible(true);
+
+        assertTrue(constructor.newInstance() instanceof StudentFieldValidator);
+    }
 
     @Test
     public void normalizeName_collapsesWhitespace() {

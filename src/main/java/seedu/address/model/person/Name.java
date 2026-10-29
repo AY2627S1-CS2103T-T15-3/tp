@@ -10,13 +10,17 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
 public class Name {
 
     public static final String MESSAGE_CONSTRAINTS =
-            "Names should only contain alphanumeric characters, spaces and slashes, and should not be blank";
+            "Student names must be 1-100 characters long and may contain only alphanumeric characters, "
+                    + "spaces, periods, hyphens, apostrophes and slashes, "
+                    + "with at least 1 alphanumeric character.";
 
     /*
      * The first character of the name must not be a whitespace,
      * otherwise " " (a blank string) becomes a valid input.
+     *
+     * Requires 1-100 characters, allowing alphanumeric characters, spaces, apostrophes, slashes and hyphens.
      */
-    public static final String VALIDATION_REGEX = "[\\p{Alnum}][\\p{Alnum} /]*";
+    public static final String VALIDATION_REGEX = "(?=.{1,100}\\z)(?=.*[\\p{Alnum}])[\\p{Alnum} .'/-]+";
 
     public final String fullName;
 
@@ -45,10 +49,20 @@ public class Name {
     }
 
     /**
+     * Normalizes whitespace in a student name.
+     *
+     * @param value the name to normalize
+     * @return the normalized name
+     */
+    public static String normalize(String value) {
+        return value.trim().replaceAll("\\s+", " ");
+    }
+
+    /**
      * Returns true if a given string is a valid name.
      */
     public static boolean isValidName(String test) {
-        return test.matches(VALIDATION_REGEX);
+        return normalize(test).matches(VALIDATION_REGEX);
     }
 
 

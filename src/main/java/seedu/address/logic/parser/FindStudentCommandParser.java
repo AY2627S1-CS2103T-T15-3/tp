@@ -27,11 +27,14 @@ public class FindStudentCommandParser implements Parser<FindStudentCommand> {
         }
 
         String normalizedArgs = trimmedArgs.replaceAll("\\s+", " ");
-        if (!Name.isValidName(normalizedArgs)) {
-            throw new ParseException(Name.MESSAGE_CONSTRAINTS);
+        String[] keywords = normalizedArgs.split(" ");
+        for (String keyword : keywords) {
+            if (!Name.isValidName(keyword)) {
+                throw new ParseException(Name.MESSAGE_CONSTRAINTS);
+            }
         }
 
         return new FindStudentCommand(
-                new StudentNameContainsKeywordsPredicate(List.of(normalizedArgs.split(" "))));
+                new StudentNameContainsKeywordsPredicate(List.of(keywords)));
     }
 }
