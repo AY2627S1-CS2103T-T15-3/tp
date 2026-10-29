@@ -1,11 +1,13 @@
 package seedu.address.ui;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.FutureTask;
@@ -99,12 +101,53 @@ public class LinkGuardianUiTest {
         runOnFxThread(() -> {
             MainWindow window = new MainWindow(new javafx.stage.Stage(), logic, Path.of("data.json"));
             window.fillInnerParts();
+            assertNotNull(window.getLessonListPanel());
             Method executeCommand = MainWindow.class.getDeclaredMethod("executeCommand", String.class);
             executeCommand.setAccessible(true);
             executeCommand.invoke(window, "student");
             executeCommand.invoke(window, "guardian");
             window.show();
             return window;
+        });
+    }
+
+    @Test
+    public void mainWindow_setLessonListDate_updatesLessonPanel() throws Exception {
+        runOnFxThread(() -> {
+            MainWindow window = new MainWindow(new javafx.stage.Stage(),
+                    new StubLogic(student("Lucy Lim"), guardian("Ben Tan")), Path.of("data.json"));
+            window.fillInnerParts();
+            LocalDate date = LocalDate.of(2026, 11, 1);
+
+            window.setLessonListDate(date);
+
+            assertEquals(date, window.getLessonListPanel().getDisplayedDate());
+            window.getPrimaryStage().hide();
+            return null;
+        });
+    }
+
+    @Test
+    public void mainWindow_viewLesson_updatesLessonHeading() throws Exception {
+        runOnFxThread(() -> {
+            MainWindow window = new MainWindow(new javafx.stage.Stage(),
+                    new StubLogic(student("Lucy Lim"), guardian("Ben Tan")), Path.of("data.json"));
+            window.fillInnerParts();
+            window.show();
+            Method executeCommand = MainWindow.class.getDeclaredMethod("executeCommand", String.class);
+            executeCommand.setAccessible(true);
+
+            assertEquals("Lessons for " + LocalDate.now(), ((Label)
+                    window.getRoot().getScene().lookup("#lessonTitle")).getText());
+
+            executeCommand.invoke(window, "view-l d/2026-11-01");
+            assertEquals("Lessons for 2026-11-01", ((Label)
+                    window.getRoot().getScene().lookup("#lessonTitle")).getText());
+
+            executeCommand.invoke(window, "view-l");
+            assertEquals("Lessons", ((Label) window.getRoot().getScene().lookup("#lessonTitle")).getText());
+            window.getPrimaryStage().hide();
+            return null;
         });
     }
 
@@ -312,6 +355,12 @@ public class LinkGuardianUiTest {
 
         @Override
         public CommandResult execute(String commandText) throws CommandException, ParseException {
+            if (commandText.equals("view-l d/2026-11-01")) {
+                return new CommandResult("Showing lessons on 2026-11-01.");
+            }
+            if (commandText.equals("view-l")) {
+                return new CommandResult("Showing all lessons.");
+            }
             return commandText.equals("student")
                     ? new CommandResult("student", student) : new CommandResult("guardian", guardian);
         }
@@ -325,6 +374,20 @@ public class LinkGuardianUiTest {
         public javafx.collections.ObservableList<Guardian> getFilteredGuardianList() {
             return FXCollections.observableArrayList(guardian);
         }
+
+        @Override
+        public javafx.collections.ObservableList<seedu.address.model.lesson.Lesson> getLessonList() {
+            return FXCollections.observableArrayList();
+        }
+
+        @Override
+        public javafx.collections.ObservableList<seedu.address.model.lesson.Lesson> getFilteredLessonList() {
+            return FXCollections.observableArrayList();
+        }
+
+        @Override
+        public void updateFilteredLessonList(
+                java.util.function.Predicate<seedu.address.model.lesson.Lesson> predicate) { }
 
         @Override
         public List<Guardian> getGuardiansForStudent(Student ignored) {

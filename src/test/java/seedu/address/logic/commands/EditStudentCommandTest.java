@@ -100,6 +100,19 @@ public class EditStudentCommandTest {
     }
 
     @Test
+    public void execute_editPreservesActiveFilter() throws Exception {
+        Student other = student("Ben Tan", "98765432", "ben@example.com", "25 Happy Road", "JC 1", "Physics");
+        ModelManager model = modelWith(ORIGINAL, other);
+        model.updateFilteredStudentList(student -> student.getName().fullName.equals("Lucy Lim"));
+        EditStudentDescriptor descriptor = new EditStudentDescriptor();
+        descriptor.setName(new Name("Alicia Lim"));
+
+        new EditStudentCommand(Index.fromOneBased(1), descriptor).execute(model);
+
+        assertTrue(model.getFilteredStudentList().isEmpty());
+    }
+
+    @Test
     public void equals() {
         EditStudentDescriptor descriptor = new EditStudentDescriptor();
         descriptor.setPhone(new Phone("98765432"));

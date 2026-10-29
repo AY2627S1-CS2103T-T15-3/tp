@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javafx.application.Platform;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
 import seedu.address.model.person.Address;
@@ -43,14 +44,42 @@ public class StudentCardTest {
     }
 
     @Test
-    public void constructor_withPayments_displaysMonthsChronologically() {
+    public void constructor_withPayments_displaysMostRecentMonthsFirst() {
         Student student = student()
-                .withPaymentFor(new PaymentMonth("2026-10"))
-                .withPaymentFor(new PaymentMonth("2026-09"));
+                .withPaymentFor(new PaymentMonth("2026-09"))
+                .withPaymentFor(new PaymentMonth("2025-12"))
+                .withPaymentFor(new PaymentMonth("2026-10"));
 
         StudentCard card = new StudentCard(student, 1, ignored -> List.of());
 
-        assertEquals("Paid: Sep 2026, Oct 2026", paymentsText(card));
+        assertEquals("Paid: Oct 2026, Sep 2026, Dec 2025", paymentsText(card));
+        assertFalse(paymentsToggle(card).isVisible());
+        assertFalse(paymentsToggle(card).isManaged());
+    }
+
+    @Test
+    public void paymentsToggle_manyPayments_showsAndHidesOlderMonths() {
+        Student student = student()
+                .withPaymentFor(new PaymentMonth("2026-06"))
+                .withPaymentFor(new PaymentMonth("2026-07"))
+                .withPaymentFor(new PaymentMonth("2026-08"))
+                .withPaymentFor(new PaymentMonth("2026-09"))
+                .withPaymentFor(new PaymentMonth("2026-10"));
+
+        StudentCard card = new StudentCard(student, 1, ignored -> List.of());
+        Button toggle = paymentsToggle(card);
+
+        assertEquals("Paid: Oct 2026, Sep 2026, Aug 2026", paymentsText(card));
+        assertTrue(toggle.isVisible());
+        assertEquals("+2 more", toggle.getText());
+
+        toggle.fire();
+        assertEquals("Paid: Oct 2026, Sep 2026, Aug 2026, Jul 2026, Jun 2026", paymentsText(card));
+        assertEquals("Show less", toggle.getText());
+
+        toggle.fire();
+        assertEquals("Paid: Oct 2026, Sep 2026, Aug 2026", paymentsText(card));
+        assertEquals("+2 more", toggle.getText());
     }
 
     @Test
@@ -83,6 +112,10 @@ public class StudentCardTest {
 
     private static String paymentsText(StudentCard card) {
         return ((Label) card.getRoot().lookup("#payments")).getText();
+    }
+
+    private static Button paymentsToggle(StudentCard card) {
+        return (Button) card.getRoot().lookup("#paymentsToggle");
     }
 
     private static Student student() {

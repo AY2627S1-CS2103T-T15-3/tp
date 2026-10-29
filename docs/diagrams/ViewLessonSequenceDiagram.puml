@@ -1,0 +1,102 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":ViewLessonCommandParser" as ViewLessonCommandParser LOGIC_COLOR
+participant "v:ViewLessonCommand" as ViewLessonCommand LOGIC_COLOR
+participant "r:CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant "m:Model" as Model MODEL_COLOR
+participant "p:LessonPredicate" as LessonPredicate MODEL_COLOR
+end box
+
+box UI UI_COLOR_T1
+participant ":MainWindow" as MainWindow UI_COLOR
+participant ":LessonListPanel" as LessonListPanel UI_COLOR
+end box
+
+[-> LogicManager : execute("view-l ...")
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand("view-l ...")
+activate AddressBookParser
+
+create ViewLessonCommandParser
+AddressBookParser -> ViewLessonCommandParser
+activate ViewLessonCommandParser
+ViewLessonCommandParser --> AddressBookParser
+deactivate ViewLessonCommandParser
+
+AddressBookParser -> ViewLessonCommandParser : parse(arguments)
+activate ViewLessonCommandParser
+
+create ViewLessonCommand
+alt date filter: d/YYYY-MM-DD
+    ViewLessonCommandParser -> ViewLessonCommand : ViewLessonCommand(date)
+else student filter: stu/INDEX
+    ViewLessonCommandParser -> ViewLessonCommand : ViewLessonCommand(studentIndex)
+else no arguments
+    ViewLessonCommandParser -> ViewLessonCommand : ViewLessonCommand()
+end
+ViewLessonCommandParser --> AddressBookParser : v
+deactivate ViewLessonCommandParser
+ViewLessonCommandParser -[hidden]-> AddressBookParser
+destroy ViewLessonCommandParser
+
+AddressBookParser --> LogicManager : v
+deactivate AddressBookParser
+
+LogicManager -> ViewLessonCommand : execute(m)
+activate ViewLessonCommand
+
+alt date filter
+    create LessonPredicate
+    ViewLessonCommand -> LessonPredicate : LessonMatchesDatePredicate(date)
+    activate LessonPredicate
+    LessonPredicate --> ViewLessonCommand
+    deactivate LessonPredicate
+    ViewLessonCommand -> Model : updateFilteredLessonList(p)
+else student filter
+    ViewLessonCommand -> Model : getFilteredStudentList()
+    activate Model
+    Model --> ViewLessonCommand : students
+    deactivate Model
+    create LessonPredicate
+    ViewLessonCommand -> LessonPredicate : LessonMatchesStudentPredicate(student)
+    activate LessonPredicate
+    LessonPredicate --> ViewLessonCommand
+    deactivate LessonPredicate
+    ViewLessonCommand -> Model : updateFilteredLessonList(p)
+else no arguments
+    ViewLessonCommand -> Model : updateFilteredLessonList(PREDICATE_SHOW_ALL_LESSONS)
+end
+activate Model
+Model --> ViewLessonCommand
+deactivate Model
+
+create CommandResult
+ViewLessonCommand -> CommandResult
+activate CommandResult
+CommandResult --> ViewLessonCommand
+deactivate CommandResult
+
+ViewLessonCommand --> LogicManager : r
+deactivate ViewLessonCommand
+
+LogicManager -> MainWindow : refresh lesson list
+activate MainWindow
+MainWindow -> LessonListPanel : refresh()
+activate LessonListPanel
+LessonListPanel --> MainWindow
+deactivate LessonListPanel
+MainWindow --> LogicManager
+deactivate MainWindow
+
+[<--LogicManager
+deactivate LogicManager
+@enduml

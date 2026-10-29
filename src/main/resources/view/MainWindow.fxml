@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 
 <fx:root type="javafx.stage.Stage" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-         title="Address App" minWidth="450" minHeight="600" onCloseRequest="#handleExit">
+         title="TutorTrack" minWidth="450" minHeight="600" onCloseRequest="#handleExit">
   <icons>
     <Image url="@/images/address_book_32.png" />
   </icons>
@@ -51,7 +51,7 @@
           <padding>
             <Insets top="10" right="10" bottom="10" left="10" />
           </padding>
-          <SplitPane dividerPositions="0.5" VBox.vgrow="ALWAYS">
+          <SplitPane dividerPositions="0.5,0.75" VBox.vgrow="ALWAYS">
             <VBox minWidth="0">
               <Label text="Students" styleClass="label-bright" />
               <StackPane fx:id="personListPanelPlaceholder" VBox.vgrow="ALWAYS" />
@@ -59,6 +59,10 @@
             <VBox minWidth="0">
               <Label text="Guardians" styleClass="label-bright" />
               <StackPane fx:id="guardianListPanelPlaceholder" VBox.vgrow="ALWAYS" />
+            </VBox>
+            <VBox minWidth="0">
+              <Label fx:id="lessonTitle" text="Lessons" styleClass="label-bright" />
+              <StackPane fx:id="lessonListPanelPlaceholder" VBox.vgrow="ALWAYS" />
             </VBox>
           </SplitPane>
         </VBox>

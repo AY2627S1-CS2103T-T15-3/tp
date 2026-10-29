@@ -12,6 +12,7 @@ import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.model.AddressBook;
 import seedu.address.model.ReadOnlyAddressBook;
 import seedu.address.model.guardian.Guardian;
+import seedu.address.model.lesson.Lesson;
 import seedu.address.model.student.Student;
 
 /**
@@ -20,6 +21,7 @@ import seedu.address.model.student.Student;
 @JsonRootName(value = "addressbook")
 class JsonSerializableAddressBook {
 
+    public static final String MESSAGE_DUPLICATE_LESSON = "Lessons list contains duplicate lesson(s).";
     public static final String MESSAGE_DUPLICATE_GUARDIAN = "Guardians list contains duplicate guardian(s).";
     public static final String MESSAGE_INVALID_LINK = "Student-guardian link references a missing contact.";
     public static final String MESSAGE_INVALID_LESSON = "Lesson references a missing student.";
@@ -120,7 +122,11 @@ class JsonSerializableAddressBook {
             if (matchingStudent == null) {
                 throw new IllegalValueException(MESSAGE_INVALID_LESSON);
             }
-            addressBook.addLesson(jsonLesson.toModelType(matchingStudent));
+            Lesson lesson = jsonLesson.toModelType(matchingStudent);
+            if (addressBook.getLessonList().contains(lesson)) {
+                throw new IllegalValueException(MESSAGE_DUPLICATE_LESSON);
+            }
+            addressBook.addLesson(lesson);
         }
         return addressBook;
     }

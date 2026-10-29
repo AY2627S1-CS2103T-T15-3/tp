@@ -3,9 +3,9 @@ package seedu.address.ui;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Region;
@@ -17,8 +17,13 @@ import seedu.address.model.student.Student;
 /** UI component that displays a student. */
 public class StudentCard extends UiPart<Region> {
     private static final String FXML = "StudentListCard.fxml";
+    /** Number of most recent paid months shown before the rest are hidden behind the toggle button. */
+    private static final int PAID_MONTHS_SHOWN = 3;
 
     public final Student student;
+
+    private final List<String> paidMonths;
+    private boolean isShowingAllPaidMonths;
 
     @FXML
     private TextFlow name;
@@ -34,6 +39,8 @@ public class StudentCard extends UiPart<Region> {
     private Label level;
     @FXML
     private Label payments;
+    @FXML
+    private Button paymentsToggle;
     @FXML
     private FlowPane subjects;
     @FXML
@@ -71,14 +78,30 @@ public class StudentCard extends UiPart<Region> {
         remark.setText("Remark: " + student.getRemark().value);
         remark.setVisible(!student.getRemark().isEmpty());
         remark.setManaged(remark.isVisible());
-        payments.setText("Paid: " + (student.getPaidMonths().isEmpty() ? "None"
-                : student.getPaidMonths().stream()
-                        .map(PaymentMonth::toDisplayString)
-                        .collect(Collectors.joining(", "))));
+        paidMonths = student.getPaidMonths().reversed().stream()
+                .map(PaymentMonth::toDisplayString)
+                .toList();
+        showPaidMonths(false);
+        paymentsToggle.setOnAction(event -> showPaidMonths(!isShowingAllPaidMonths));
+        paymentsToggle.setVisible(paidMonths.size() > PAID_MONTHS_SHOWN);
+        paymentsToggle.setManaged(paymentsToggle.isVisible());
         student.getSubjects().stream()
                 .sorted(Comparator.comparing(subject -> subject.value))
                 .forEach(subject -> subjects.getChildren().add(new Label(subject.value)));
         guardianProvider.apply(student).forEach(guardian -> guardians.getChildren().add(
                 new Label(guardian.getName().fullName + " (" + guardian.getPhone().value + ")")));
+    }
+
+    /**
+     * Shows either all paid months or only the most recent few, and updates the toggle button to match.
+     *
+     * @param showAll whether all paid months should be shown
+     */
+    private void showPaidMonths(boolean showAll) {
+        isShowingAllPaidMonths = showAll;
+        int shownCount = showAll ? paidMonths.size() : Math.min(paidMonths.size(), PAID_MONTHS_SHOWN);
+        payments.setText("Paid: " + (paidMonths.isEmpty() ? "None"
+                : String.join(", ", paidMonths.subList(0, shownCount))));
+        paymentsToggle.setText(showAll ? "Show less" : "+" + (paidMonths.size() - shownCount) + " more");
     }
 }

@@ -112,8 +112,8 @@ public class FilterCommandParserTest {
 
     @Test
     public void parse_noCriteria_failure() {
-        assertParseFailure(parser, "", MESSAGE_INVALID_FORMAT);
-        assertParseFailure(parser, "     ", MESSAGE_INVALID_FORMAT);
+        assertParseFailure(parser, "", FilterCommand.MESSAGE_NO_FILTER);
+        assertParseFailure(parser, "     ", FilterCommand.MESSAGE_NO_FILTER);
     }
 
     @Test

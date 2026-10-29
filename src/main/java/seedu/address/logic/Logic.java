@@ -8,6 +8,7 @@ import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.guardian.Guardian;
+import seedu.address.model.lesson.Lesson;
 import seedu.address.model.student.Student;
 
 /**
@@ -28,6 +29,15 @@ public interface Logic {
 
     /** Returns an unmodifiable view of the filtered list of guardians. */
     ObservableList<Guardian> getFilteredGuardianList();
+
+    /** Returns the scheduled lessons. */
+    ObservableList<Lesson> getLessonList();
+
+    /** Returns the displayed, sorted lesson list. */
+    ObservableList<Lesson> getFilteredLessonList();
+
+    /** Updates the predicate used by the displayed lesson list. */
+    void updateFilteredLessonList(java.util.function.Predicate<Lesson> predicate);
 
     /** Returns the guardians linked to the given student. */
     List<Guardian> getGuardiansForStudent(Student student);

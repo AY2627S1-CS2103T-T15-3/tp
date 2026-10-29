@@ -35,8 +35,9 @@ public class UniqueLessonList implements Iterable<Lesson> {
         if (contains(toAdd)) {
             throw new DuplicateLessonException();
         }
-        assert internalList.stream().noneMatch(existingLesson -> existingLesson.overlaps(toAdd))
-                : "Lesson overlaps an existing lesson";
+        if (internalList.stream().anyMatch(existingLesson -> existingLesson.overlaps(toAdd))) {
+            throw new DuplicateLessonException("Lesson overlaps an existing lesson");
+        }
         internalList.add(toAdd);
         logger.info("Added lesson: " + toAdd);
     }
@@ -60,10 +61,11 @@ public class UniqueLessonList implements Iterable<Lesson> {
         if (!target.equals(editedLesson) && contains(editedLesson)) {
             throw new DuplicateLessonException();
         }
-        assert internalList.stream()
+        if (internalList.stream()
                 .filter(existingLesson -> !existingLesson.equals(target))
-                .noneMatch(existingLesson -> existingLesson.overlaps(editedLesson))
-                : "Lesson overlaps an existing lesson";
+                .anyMatch(existingLesson -> existingLesson.overlaps(editedLesson))) {
+            throw new DuplicateLessonException("Lesson overlaps an existing lesson");
+        }
         internalList.set(index, editedLesson);
         logger.info("Replaced lesson: " + target + " with " + editedLesson);
     }
@@ -78,6 +80,9 @@ public class UniqueLessonList implements Iterable<Lesson> {
         requireAllNonNull(lessons);
         if (!lessonsAreUnique(lessons)) {
             throw new DuplicateLessonException();
+        }
+        if (lessonsHaveOverlaps(lessons)) {
+            throw new DuplicateLessonException("Lesson overlaps an existing lesson");
         }
         internalList.setAll(lessons);
     }
@@ -122,5 +127,16 @@ public class UniqueLessonList implements Iterable<Lesson> {
             }
         }
         return true;
+    }
+
+    private boolean lessonsHaveOverlaps(List<Lesson> lessons) {
+        for (int i = 0; i < lessons.size() - 1; i++) {
+            for (int j = i + 1; j < lessons.size(); j++) {
+                if (lessons.get(i).overlaps(lessons.get(j))) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

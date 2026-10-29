@@ -48,6 +48,15 @@ public class EditGuardianCommandParserTest {
     }
 
     @Test
+    public void parse_addressContainingSlash_success() {
+        EditGuardianDescriptor descriptor = new EditGuardianDescriptor();
+        descriptor.setAddress(new Address("Block A/B"));
+
+        assertParseSuccess(parser, "1 a/Block A/B",
+                new EditGuardianCommand(Index.fromOneBased(1), descriptor));
+    }
+
+    @Test
     public void parse_missingField_failure() {
         assertParseFailure(parser, "2", EditGuardianCommand.MESSAGE_NOT_EDITED);
         assertParseFailure(parser, "", "Invalid command format.\n" + EditGuardianCommand.MESSAGE_USAGE);
