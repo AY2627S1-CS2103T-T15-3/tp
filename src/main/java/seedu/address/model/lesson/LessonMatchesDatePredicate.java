@@ -3,11 +3,12 @@ package seedu.address.model.lesson;
 import static java.util.Objects.requireNonNull;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.function.Predicate;
 
 import seedu.address.commons.util.ToStringBuilder;
 
-/** Tests that a {@code Lesson} takes place on the given date. */
+/** Tests that a {@code Lesson} takes place during any part of the given date. */
 public class LessonMatchesDatePredicate implements Predicate<Lesson> {
     private final LocalDate date;
 
@@ -17,7 +18,10 @@ public class LessonMatchesDatePredicate implements Predicate<Lesson> {
 
     @Override
     public boolean test(Lesson lesson) {
-        return lesson.getDate().equals(date);
+        LocalDateTime dayStart = date.atStartOfDay();
+        LocalDateTime nextDayStart = date.plusDays(1).atStartOfDay();
+        return lesson.getStartDateTime().isBefore(nextDayStart)
+                && lesson.getEndDateTime().isAfter(dayStart);
     }
 
     @Override
