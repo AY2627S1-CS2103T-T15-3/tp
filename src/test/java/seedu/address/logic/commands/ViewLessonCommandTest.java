@@ -63,6 +63,21 @@ public class ViewLessonCommandTest {
     }
 
     @Test
+    public void execute_filterByDate_includesOvernightLessonOnBothDates() throws Exception {
+        ModelManager model = new ModelManager();
+        model.addStudent(HENRY);
+        Lesson overnightLesson = new Lesson(HENRY, LocalDate.of(2026, 11, 1), LocalTime.of(23, 0),
+                Duration.ofHours(2));
+        model.addLesson(overnightLesson);
+
+        new ViewLessonCommand(LocalDate.of(2026, 11, 1)).execute(model);
+        assertEquals(java.util.List.of(overnightLesson), model.getFilteredLessonList());
+
+        new ViewLessonCommand(LocalDate.of(2026, 11, 2)).execute(model);
+        assertEquals(java.util.List.of(overnightLesson), model.getFilteredLessonList());
+    }
+
+    @Test
     public void execute_invalidStudentIndex_throwsCommandException() {
         ModelManager model = populatedModel();
 

@@ -36,6 +36,23 @@ public class LessonPredicateTest {
     }
 
     @Test
+    public void datePredicate_overnightLesson_matchesBothOccupiedDates() {
+        Lesson overnightLesson = new Lesson(STUDENT, DATE, LocalTime.of(23, 0), Duration.ofHours(2));
+
+        assertTrue(new LessonMatchesDatePredicate(DATE).test(overnightLesson));
+        assertTrue(new LessonMatchesDatePredicate(DATE.plusDays(1)).test(overnightLesson));
+        assertFalse(new LessonMatchesDatePredicate(DATE.plusDays(2)).test(overnightLesson));
+    }
+
+    @Test
+    public void datePredicate_lessonEndingAtMidnight_doesNotMatchNextDate() {
+        Lesson lessonEndingAtMidnight = new Lesson(STUDENT, DATE, LocalTime.of(23, 0), Duration.ofHours(1));
+
+        assertTrue(new LessonMatchesDatePredicate(DATE).test(lessonEndingAtMidnight));
+        assertFalse(new LessonMatchesDatePredicate(DATE.plusDays(1)).test(lessonEndingAtMidnight));
+    }
+
+    @Test
     public void studentPredicate_matchingStudent_returnsTrue() {
         assertTrue(new LessonMatchesStudentPredicate(STUDENT).test(LESSON));
         assertFalse(new LessonMatchesStudentPredicate(OTHER_STUDENT).test(LESSON));
