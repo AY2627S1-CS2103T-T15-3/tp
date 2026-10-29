@@ -77,9 +77,9 @@ public class ContactFormattingIntegrationTest {
     @Test
     public void load_existingCompactPhones_preservesExactValues() throws Exception {
         for (String phone : List.of("00123456", "91234567", "+6591234567")) {
-            var student = new JsonAdaptedStudent("---", phone, "henry@example.com", "12 Road",
+            var student = new JsonAdaptedStudent("Henry", phone, "henry@example.com", "12 Road",
                     "JC 1", List.of("Math")).toModelType();
-            var guardian = new JsonAdaptedGuardian("...", phone, "ben@example.com", "12 Road")
+            var guardian = new JsonAdaptedGuardian("Ben", phone, "ben@example.com", "12 Road")
                     .toModelType();
             assertEquals(phone, student.getPhone().value);
             assertEquals(phone, guardian.getPhone().value);
