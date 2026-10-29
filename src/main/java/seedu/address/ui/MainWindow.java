@@ -219,6 +219,9 @@ public class MainWindow extends UiPart<Stage> {
             logger.info("Result: " + commandResult.getFeedbackToUser());
             resultDisplay.setFeedbackToUser(commandResult.getFeedbackToUser());
 
+            updateStudentFilterDescription(commandResult);
+            updateGuardianSearchDescription(commandResult);
+
             if (commandText.trim().startsWith("view-l")) {
                 String lessonSearch = commandResult.getFeedbackToUser().equals("Showing all lessons.")
                         ? "all lessons"
@@ -273,5 +276,27 @@ public class MainWindow extends UiPart<Stage> {
                 ? keywords : List.of());
         guardianListPanel.setHighlightKeywords(target == HighlightTarget.GUARDIANS
                 ? keywords : List.of());
+    }
+
+    /** Updates the active student filter description based on the executed command. */
+    private void updateStudentFilterDescription(CommandResult commandResult) {
+        switch (commandResult.getStudentFilterUpdate()) {
+            case SET -> studentListPanel.setFilterDescription(commandResult.getStudentFilterDescription());
+            case CLEAR -> studentListPanel.clearFilterDescription();
+            case UNCHANGED -> { }
+            default -> throw new IllegalStateException("Unexpected student filter update: "
+                    + commandResult.getStudentFilterUpdate());
+        }
+    }
+
+    /** Updates the active guardian search description based on the executed command. */
+    private void updateGuardianSearchDescription(CommandResult commandResult) {
+        switch (commandResult.getGuardianSearchUpdate()) {
+            case SET -> guardianListPanel.setSearchDescription(commandResult.getGuardianSearchDescription());
+            case CLEAR -> guardianListPanel.clearSearchDescription();
+            case UNCHANGED -> { }
+            default -> throw new IllegalStateException("Unexpected guardian search update: "
+                    + commandResult.getGuardianSearchUpdate());
+        }
     }
 }

@@ -69,7 +69,11 @@ public class CommandResultTest {
         String expected = CommandResult.class.getCanonicalName() + "{feedbackToUser="
                 + commandResult.getFeedbackToUser() + ", showHelp=" + commandResult.isShowHelp()
                 + ", exit=" + commandResult.isExit()
-                + ", refreshStudentList=" + commandResult.shouldRefreshStudentList() + "}";
+                + ", refreshStudentList=" + commandResult.shouldRefreshStudentList()
+                + ", studentFilterUpdate=" + commandResult.getStudentFilterUpdate()
+                + ", studentFilterDescription=" + commandResult.getStudentFilterDescription()
+                + ", guardianSearchUpdate=" + commandResult.getGuardianSearchUpdate()
+                + ", guardianSearchDescription=" + commandResult.getGuardianSearchDescription() + "}";
         assertEquals(expected, commandResult.toString());
     }
 
@@ -107,5 +111,32 @@ public class CommandResultTest {
 
         assertEquals(List.of(), result.getHighlightKeywords());
         assertEquals(CommandResult.HighlightTarget.NONE, result.getHighlightTarget());
+    }
+
+    @Test
+    public void studentFilterDescription_updateIsStored() {
+        CommandResult setResult = CommandResult.withStudentFilterDescription(
+                "feedback", "Filtered: Secondary 3");
+        assertEquals(CommandResult.StudentFilterUpdate.SET, setResult.getStudentFilterUpdate());
+        assertEquals("Filtered: Secondary 3", setResult.getStudentFilterDescription());
+
+        CommandResult clearResult = CommandResult.clearStudentFilterDescription("feedback");
+        assertEquals(CommandResult.StudentFilterUpdate.CLEAR, clearResult.getStudentFilterUpdate());
+        assertEquals("", clearResult.getStudentFilterDescription());
+
+        CommandResult unchangedResult = new CommandResult("feedback");
+        assertEquals(CommandResult.StudentFilterUpdate.UNCHANGED, unchangedResult.getStudentFilterUpdate());
+    }
+
+    @Test
+    public void guardianSearchDescription_updateIsStored() {
+        CommandResult setResult = CommandResult.withGuardianSearchDescription(
+                "feedback", "Search: Alice", List.of("Alice"), CommandResult.HighlightTarget.GUARDIANS);
+        assertEquals(CommandResult.GuardianSearchUpdate.SET, setResult.getGuardianSearchUpdate());
+        assertEquals("Search: Alice", setResult.getGuardianSearchDescription());
+
+        CommandResult clearResult = CommandResult.clearGuardianSearchDescription("feedback");
+        assertEquals(CommandResult.GuardianSearchUpdate.CLEAR, clearResult.getGuardianSearchUpdate());
+        assertEquals("", clearResult.getGuardianSearchDescription());
     }
 }

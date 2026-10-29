@@ -17,7 +17,7 @@ public class ListGuardianCommand extends Command {
     public CommandResult execute(Model model) {
         requireNonNull(model);
         model.updateFilteredGuardianList(PREDICATE_SHOW_ALL_GUARDIANS);
-        return new CommandResult(
+        return CommandResult.clearGuardianSearchDescription(
                 String.format(MESSAGE_GUARDIANS_LISTED_OVERVIEW, model.getFilteredGuardianList().size()));
     }
 

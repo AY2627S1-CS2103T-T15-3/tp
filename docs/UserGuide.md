@@ -349,6 +349,8 @@ Format: `find-g KEYWORD [MORE_KEYWORDS]`
 * The search considers only guardian names.
 * Matches by prefix of each part of the name.
 * Guardians matching at least one keyword are returned (an `OR` search).
+* The active search is shown above the guardian list and remains visible while other commands are executed. It is
+  cleared by `list-g` or replaced by a new `find-g` command.
 
 Example:
 * `find-g alex david` returns matching guardians named Alex or David.
@@ -367,6 +369,8 @@ Format: `filter [l/LEVEL] [s/SUBJECT]... [paid/YYYY-MM] [unpaid/YYYY-MM]`
 * `unpaid/YYYY-MM` shows students who have **not** been marked as paid for that month.
 * `l/`, `paid/` and `unpaid/` can each be given at most once.
 * Student indexes in later commands, such as `mark-paid` or `edit-s`, refer to the filtered list.
+* The active filter is shown above the student list and remains visible while other commands, such as `sort-s`,
+  are executed. It is cleared by `list-s` or replaced by a new `filter` or `find-s` command.
 
 Examples:
 * `filter l/JC 1 s/Mathematics` shows JC 1 students who take Mathematics.

@@ -29,12 +29,15 @@ public class FindGuardianCommand extends Command {
         model.updateFilteredGuardianList(predicate);
 
         int resultCount = model.getFilteredGuardianList().size();
+        String searchDescription = "Search: " + String.join(" ", predicate.getKeywords());
         if (resultCount > 0) {
-            return new CommandResult(
+            return CommandResult.withGuardianSearchDescription(
                     String.format(Messages.MESSAGE_GUARDIANS_LISTED_OVERVIEW, resultCount),
+                    searchDescription,
                     predicate.getKeywords(), HighlightTarget.GUARDIANS);
         } else {
-            return new CommandResult(Messages.MESSAGE_NO_GUARDIANS_MATCH_SEARCH,
+            return CommandResult.withGuardianSearchDescription(Messages.MESSAGE_NO_GUARDIANS_MATCH_SEARCH,
+                    searchDescription,
                     predicate.getKeywords(), HighlightTarget.GUARDIANS);
         }
     }

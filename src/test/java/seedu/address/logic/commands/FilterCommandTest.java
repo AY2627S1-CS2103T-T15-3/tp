@@ -55,6 +55,8 @@ public class FilterCommandTest {
         CommandResult result = new FilterCommand(predicate("JC 1")).execute(model);
 
         assertEquals(String.format(MESSAGE_STUDENTS_LISTED_OVERVIEW, 2), result.getFeedbackToUser());
+        assertEquals(CommandResult.StudentFilterUpdate.SET, result.getStudentFilterUpdate());
+        assertEquals("Filtered: JC 1", result.getStudentFilterDescription());
         assertEquals(List.of(HENRY, IVY), model.getFilteredStudentList());
     }
 

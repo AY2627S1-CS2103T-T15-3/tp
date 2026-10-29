@@ -6,6 +6,7 @@ import java.util.function.Function;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.Region;
@@ -18,6 +19,9 @@ public class StudentListPanel extends UiPart<Region> {
 
     @FXML
     private ListView<Student> studentListView;
+
+    @FXML
+    private Label filterLabel;
 
     private final Function<Student, List<Guardian>> guardianProvider;
     private List<String> highlightKeywords = List.of();
@@ -47,6 +51,20 @@ public class StudentListPanel extends UiPart<Region> {
     public void setHighlightKeywords(List<String> keywords) {
         highlightKeywords = List.copyOf(keywords);
         studentListView.refresh();
+    }
+
+    /** Displays the description of the active student filter or search. */
+    public void setFilterDescription(String description) {
+        filterLabel.setText(description);
+        filterLabel.setVisible(true);
+        filterLabel.setManaged(true);
+    }
+
+    /** Hides the active student filter or search description. */
+    public void clearFilterDescription() {
+        filterLabel.setText("");
+        filterLabel.setVisible(false);
+        filterLabel.setManaged(false);
     }
 
     /** Refreshes cards after a relationship changes. */
