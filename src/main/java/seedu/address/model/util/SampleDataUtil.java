@@ -30,7 +30,7 @@ public class SampleDataUtil {
 
         Student alice = createStudent("Alice Tan", "91234568", "alice@example.com", "20 Hill Road",
                 "Secondary 3", Set.of("Mathematics", "Physics"),
-                "Bring the worksheet next lesson", Set.of("2026-10"));
+                "Bring the worksheet next lesson", Set.of("2026-07", "2026-08", "2026-09", "2026-10"));
         Student henry = createStudent("Henry Tan", "98765432", "henry@example.com", "12 ABCD Ave 3",
                 "Secondary 3", Set.of("Mathematics"), "", Set.of());
         Student lucy = createStudent("Lucy Lim", "98889999", "lucy@example.com", "21 Happy Road",
@@ -46,7 +46,7 @@ public class SampleDataUtil {
         Guardian billie = createGuardian("Billie O'Connor", "6598765432", "billie@example.com",
                 "30 River Valley Road");
         Guardian john = createGuardian("John Tan", "91234567", "john@example.com", "10 Main Street");
-        Guardian mary = createGuardian("Mary Jane", "6598765432", "mary@example.com", "25 Happy Road");
+        Guardian mary = createGuardian("Mary Jane", "91234999", "mary@example.com", "25 Happy Road");
         addressBook.addGuardian(billie);
         addressBook.addGuardian(john);
         addressBook.addGuardian(mary);
@@ -62,7 +62,7 @@ public class SampleDataUtil {
                 Duration.ofMinutes(90)));
         addressBook.addLesson(new Lesson(lucy, LocalDate.of(2026, 11, 3), LocalTime.of(10, 0),
                 Duration.ofMinutes(60)));
-        addressBook.addLesson(new Lesson(sam, LocalDate.of(2026, 11, 4), LocalTime.of(18, 0),
+        addressBook.addLesson(new Lesson(sam, LocalDate.of(2026, 11, 7), LocalTime.of(18, 0),
                 Duration.ofMinutes(120)));
         addressBook.addLesson(new Lesson(alice, LocalDate.of(2026, 11, 8), LocalTime.of(14, 0),
                 Duration.ofMinutes(60)));
