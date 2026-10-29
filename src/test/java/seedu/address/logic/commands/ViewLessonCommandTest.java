@@ -1,6 +1,7 @@
 package seedu.address.logic.commands;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.Duration;
@@ -96,6 +97,25 @@ public class ViewLessonCommandTest {
 
         assertEquals(java.util.List.of(ALICE_LESSON, HENRY_OTHER_LESSON), model.getLessonList());
         assertEquals(java.util.List.of(HENRY_OTHER_LESSON), model.getFilteredLessonList());
+    }
+
+    @Test
+    public void execute_nullModel_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> new ViewLessonCommand().execute(null));
+    }
+
+    @Test
+    public void equalsAndHashCode_sameValues_equal() {
+        ViewLessonCommand first = new ViewLessonCommand(LocalDate.of(2026, 11, 1));
+        ViewLessonCommand same = new ViewLessonCommand(LocalDate.of(2026, 11, 1));
+        ViewLessonCommand different = new ViewLessonCommand(LocalDate.of(2026, 11, 2));
+
+        assertEquals(first, first);
+        assertEquals(first, same);
+        assertEquals(first.hashCode(), same.hashCode());
+        assertNotEquals(first, different);
+        assertNotEquals(first, null);
+        assertNotEquals(first, "command");
     }
 
     private static ModelManager populatedModel() {

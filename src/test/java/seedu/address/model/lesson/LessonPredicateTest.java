@@ -1,6 +1,8 @@
 package seedu.address.model.lesson;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.testutil.Assert.assertThrows;
 
@@ -56,6 +58,30 @@ public class LessonPredicateTest {
     public void studentPredicate_matchingStudent_returnsTrue() {
         assertTrue(new LessonMatchesStudentPredicate(STUDENT).test(LESSON));
         assertFalse(new LessonMatchesStudentPredicate(OTHER_STUDENT).test(LESSON));
+    }
+
+    @Test
+    public void datePredicate_equalsAndToString_behavesAsExpected() {
+        LessonMatchesDatePredicate predicate = new LessonMatchesDatePredicate(DATE);
+
+        assertEquals(predicate, predicate);
+        assertEquals(predicate, new LessonMatchesDatePredicate(DATE));
+        assertNotEquals(predicate, new LessonMatchesDatePredicate(DATE.plusDays(1)));
+        assertNotEquals(predicate, null);
+        assertNotEquals(predicate, "predicate");
+        assertTrue(predicate.toString().contains("date=" + DATE));
+    }
+
+    @Test
+    public void studentPredicate_equalsAndToString_behavesAsExpected() {
+        LessonMatchesStudentPredicate predicate = new LessonMatchesStudentPredicate(STUDENT);
+
+        assertEquals(predicate, predicate);
+        assertEquals(predicate, new LessonMatchesStudentPredicate(STUDENT));
+        assertNotEquals(predicate, new LessonMatchesStudentPredicate(OTHER_STUDENT));
+        assertNotEquals(predicate, null);
+        assertNotEquals(predicate, "predicate");
+        assertTrue(predicate.toString().contains("student="));
     }
 
     @Test

@@ -1,11 +1,15 @@
 package seedu.address.ui;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.FutureTask;
@@ -34,6 +38,7 @@ import seedu.address.model.AddressBook;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.guardian.Guardian;
+import seedu.address.model.lesson.Lesson;
 import seedu.address.model.link.StudentGuardianLink;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
@@ -99,6 +104,7 @@ public class LinkGuardianUiTest {
         runOnFxThread(() -> {
             MainWindow window = new MainWindow(new javafx.stage.Stage(), logic, Path.of("data.json"));
             window.fillInnerParts();
+            assertNotNull(window.getLessonListPanel());
             Method executeCommand = MainWindow.class.getDeclaredMethod("executeCommand", String.class);
             executeCommand.setAccessible(true);
             executeCommand.invoke(window, "student");
@@ -106,6 +112,21 @@ public class LinkGuardianUiTest {
             window.show();
             return window;
         });
+    }
+
+    @Test
+    public void lessonListPanel_displaysLessonTextAndStyle() {
+        Lesson lesson = new Lesson(student("Lucy Lim"), LocalDate.of(2026, 11, 1), LocalTime.of(14, 0),
+                Duration.ofMinutes(60));
+        LessonListPanel panel = new LessonListPanel(FXCollections.observableArrayList(lesson));
+        LessonListPanel.LessonListViewCell cell = panel.new LessonListViewCell();
+
+        cell.updateItem(lesson, false);
+        assertEquals("Lucy Lim | 2026-11-01 | 14:00-15:00", cell.getText());
+        assertTrue(cell.getStyleClass().contains("lesson-list-cell"));
+
+        cell.updateItem(null, true);
+        assertEquals(null, cell.getText());
     }
 
     @Test
