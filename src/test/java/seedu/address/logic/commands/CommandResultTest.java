@@ -54,6 +54,7 @@ public class CommandResultTest {
                 "feedback", "Filtered: Secondary 3")));
         assertFalse(studentFilterResult.equals(CommandResult.withStudentFilterDescription(
                 "feedback", "Filtered: Secondary 4")));
+        assertFalse(new CommandResult("feedback").equals(studentFilterResult));
 
         CommandResult guardianSearchResult = CommandResult.withGuardianSearchDescription(
                 "feedback", "Search: Ben", List.of("Ben"), CommandResult.HighlightTarget.GUARDIANS);
@@ -61,6 +62,7 @@ public class CommandResultTest {
                 "feedback", "Search: Ben", List.of("Ben"), CommandResult.HighlightTarget.GUARDIANS)));
         assertFalse(guardianSearchResult.equals(CommandResult.withGuardianSearchDescription(
                 "feedback", "Search: Alice", List.of("Alice"), CommandResult.HighlightTarget.GUARDIANS)));
+        assertFalse(new CommandResult("feedback").equals(guardianSearchResult));
     }
 
     @Test

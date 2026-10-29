@@ -280,23 +280,19 @@ public class MainWindow extends UiPart<Stage> {
 
     /** Updates the active student filter description based on the executed command. */
     private void updateStudentFilterDescription(CommandResult commandResult) {
-        switch (commandResult.getStudentFilterUpdate()) {
-            case SET -> studentListPanel.setFilterDescription(commandResult.getStudentFilterDescription());
-            case CLEAR -> studentListPanel.clearFilterDescription();
-            case UNCHANGED -> { }
-            default -> throw new IllegalStateException("Unexpected student filter update: "
-                    + commandResult.getStudentFilterUpdate());
+        if (commandResult.getStudentFilterUpdate() == CommandResult.StudentFilterUpdate.SET) {
+            studentListPanel.setFilterDescription(commandResult.getStudentFilterDescription());
+        } else if (commandResult.getStudentFilterUpdate() == CommandResult.StudentFilterUpdate.CLEAR) {
+            studentListPanel.clearFilterDescription();
         }
     }
 
     /** Updates the active guardian search description based on the executed command. */
     private void updateGuardianSearchDescription(CommandResult commandResult) {
-        switch (commandResult.getGuardianSearchUpdate()) {
-            case SET -> guardianListPanel.setSearchDescription(commandResult.getGuardianSearchDescription());
-            case CLEAR -> guardianListPanel.clearSearchDescription();
-            case UNCHANGED -> { }
-            default -> throw new IllegalStateException("Unexpected guardian search update: "
-                    + commandResult.getGuardianSearchUpdate());
+        if (commandResult.getGuardianSearchUpdate() == CommandResult.GuardianSearchUpdate.SET) {
+            guardianListPanel.setSearchDescription(commandResult.getGuardianSearchDescription());
+        } else if (commandResult.getGuardianSearchUpdate() == CommandResult.GuardianSearchUpdate.CLEAR) {
+            guardianListPanel.clearSearchDescription();
         }
     }
 }
