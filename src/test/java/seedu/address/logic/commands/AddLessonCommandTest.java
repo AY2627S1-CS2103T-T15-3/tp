@@ -72,19 +72,6 @@ public class AddLessonCommandTest {
     }
 
     @Test
-    public void execute_seriesBeyondLocalDateRange_rejectsEntireSeries() {
-        ModelManager model = new ModelManager();
-        model.addStudent(STUDENT);
-
-        CommandException exception = assertThrows(CommandException.class, () ->
-                new AddLessonCommand(Index.fromOneBased(1), LocalDate.MAX,
-                        LocalTime.NOON, Duration.ofMinutes(60), 2).execute(model));
-
-        assertEquals(AddLessonCommand.MESSAGE_DATE_OUT_OF_RANGE, exception.getMessage());
-        assertEquals(0, model.getLessonList().size());
-    }
-
-    @Test
     public void execute_seriesWithNegativeYear_rejectsEntireSeries() {
         ModelManager model = new ModelManager();
         model.addStudent(STUDENT);

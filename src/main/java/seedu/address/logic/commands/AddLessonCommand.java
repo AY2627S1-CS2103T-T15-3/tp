@@ -2,7 +2,6 @@ package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
 
-import java.time.DateTimeException;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -87,12 +86,7 @@ public class AddLessonCommand extends Command {
     private List<Lesson> createLessons(Student student) throws CommandException {
         List<Lesson> lessonsToAdd = new ArrayList<>();
         for (int week = 0; week < numberOfWeeks; week++) {
-            LocalDate lessonDate;
-            try {
-                lessonDate = startDate.plusWeeks(week);
-            } catch (DateTimeException exception) {
-                throw new CommandException(MESSAGE_DATE_OUT_OF_RANGE, exception);
-            }
+            LocalDate lessonDate = startDate.plusWeeks(week);
             if (lessonDate.getYear() < 0 || lessonDate.getYear() > 9999) {
                 throw new CommandException(MESSAGE_DATE_OUT_OF_RANGE);
             }
