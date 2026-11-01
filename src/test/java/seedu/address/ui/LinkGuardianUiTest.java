@@ -190,7 +190,13 @@ public class LinkGuardianUiTest {
 
             executeCommand.invoke(window, "edit-s bad n/Mary Lim");
             executeCommand.invoke(window, "edit-s 2 n/Mary Lim");
+            executeCommand.invoke(window, "edit-s 0 n/Mary Lim");
             executeCommand.invoke(window, "view-l stu/2");
+            executeCommand.invoke(window, "view-l stu/0");
+
+            executeCommand.invoke(window, "view-l stu/1");
+            executeCommand.invoke(window, "edit-s 2 n/Other Lim");
+            executeCommand.invoke(window, "edit-s 1 n/no-highlight");
             window.getPrimaryStage().hide();
             return null;
         });
@@ -476,6 +482,12 @@ public class LinkGuardianUiTest {
             if (commandText.equals("edit-s 1 n/Mary Lim")) {
                 return new CommandResult("Edited student: Mary Lim", student("Mary Lim"));
             }
+            if (commandText.equals("edit-s 2 n/Other Lim")) {
+                return new CommandResult("Edited student: Other Lim", student("Other Lim"));
+            }
+            if (commandText.equals("edit-s 1 n/no-highlight")) {
+                return new CommandResult("Edited student without highlight.");
+            }
             if (commandText.equals("filter")) {
                 return CommandResult.withStudentFilterDescription("Filtered students.", "Filtered: Secondary 3");
             }
@@ -495,7 +507,7 @@ public class LinkGuardianUiTest {
 
         @Override
         public javafx.collections.ObservableList<Student> getFilteredStudentList() {
-            return FXCollections.observableArrayList(student);
+            return FXCollections.observableArrayList(student, student("Other"));
         }
 
         @Override
