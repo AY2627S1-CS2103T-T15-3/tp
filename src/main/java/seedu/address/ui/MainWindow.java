@@ -22,6 +22,7 @@ import seedu.address.logic.commands.CommandResult.HighlightTarget;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.lesson.LessonMatchesDatePredicate;
+import seedu.address.model.student.Student;
 
 /**
  * The Main Window. Provides the basic application layout containing
@@ -43,6 +44,7 @@ public class MainWindow extends UiPart<Stage> {
     private LessonListPanel lessonListPanel;
     private ResultDisplay resultDisplay;
     private HelpWindow helpWindow;
+    private Student displayedLessonStudent;
 
     @FXML
     private StackPane commandBoxPlaceholder;
@@ -215,6 +217,8 @@ public class MainWindow extends UiPart<Stage> {
      */
     private CommandResult executeCommand(String commandText) throws CommandException, ParseException {
         try {
+            Student studentBeforeEdit = getStudentBeingEdited(commandText);
+            updateDisplayedLessonStudentForView(commandText);
             CommandResult commandResult = logic.execute(commandText);
             logger.info("Result: " + commandResult.getFeedbackToUser());
             resultDisplay.setFeedbackToUser(commandResult.getFeedbackToUser());
@@ -231,6 +235,15 @@ public class MainWindow extends UiPart<Stage> {
                 lessonListPanel.setSearchDescription(lessonSearch);
                 lessonTitle.setText(lessonSearch.equals("all lessons")
                         ? "Lessons" : "Lessons for " + lessonSearch);
+            }
+
+            if (studentBeforeEdit != null && displayedLessonStudent != null
+                    && displayedLessonStudent.equals(studentBeforeEdit)
+                    && commandResult.getStudentToHighlight() != null) {
+                displayedLessonStudent = commandResult.getStudentToHighlight();
+                String studentName = displayedLessonStudent.getName().fullName;
+                lessonListPanel.setSearchDescription(studentName);
+                lessonTitle.setText("Lessons for " + studentName);
             }
 
             updateSearchHighlights(commandResult);
@@ -265,6 +278,34 @@ public class MainWindow extends UiPart<Stage> {
             logger.info("An error occurred while executing command: " + commandText);
             resultDisplay.setFeedbackToUser(e.getMessage());
             throw e;
+        }
+    }
+
+    private Student getStudentBeingEdited(String commandText) {
+        String trimmedCommand = commandText.trim();
+        if (!trimmedCommand.startsWith("edit-s ")) {
+            return null;
+        }
+        try {
+            int index = Integer.parseInt(trimmedCommand.substring(7).split("\\s+")[0]) - 1;
+            List<Student> students = logic.getFilteredStudentList();
+            return index >= 0 && index < students.size() ? students.get(index) : null;
+        } catch (NumberFormatException exception) {
+            return null;
+        }
+    }
+
+    private void updateDisplayedLessonStudentForView(String commandText) {
+        String trimmedCommand = commandText.trim();
+        if (!trimmedCommand.startsWith("view-l")) {
+            return;
+        }
+        if (trimmedCommand.matches("view-l\\s+stu/\\d+")) {
+            int index = Integer.parseInt(trimmedCommand.replaceFirst("view-l\\s+stu/", "")) - 1;
+            List<Student> students = logic.getFilteredStudentList();
+            displayedLessonStudent = index >= 0 && index < students.size() ? students.get(index) : null;
+        } else {
+            displayedLessonStudent = null;
         }
     }
 
