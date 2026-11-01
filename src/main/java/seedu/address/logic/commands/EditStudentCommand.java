@@ -17,7 +17,8 @@ public class EditStudentCommand extends Command {
     public static final String MESSAGE_USAGE = "Usage: edit-s INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] "
             + "[l/LEVEL] [s/SUBJECT]...";
     public static final String MESSAGE_SUCCESS = "Edited student: %1$s";
-    public static final String MESSAGE_NOT_EDITED = "At least one field to edit must be provided.";
+    public static final String MESSAGE_NOT_EDITED = "At least one field to edit must be provided.\n"
+            + MESSAGE_USAGE;
     public static final String MESSAGE_INVALID_INDEX = "The student index provided is invalid.";
     public static final String MESSAGE_DUPLICATE_STUDENT = "This student already exists in TutorTrack.";
 
