@@ -147,6 +147,10 @@ public class LinkGuardianUiTest {
 
             executeCommand.invoke(window, "view-l");
             assertEquals("Lessons", ((Label) window.getRoot().getScene().lookup("#lessonTitle")).getText());
+
+            executeCommand.invoke(window, "VIEW-L d/2026-11-01");
+            assertEquals("Lessons for 2026-11-01", ((Label)
+                    window.getRoot().getScene().lookup("#lessonTitle")).getText());
             window.getPrimaryStage().hide();
             return null;
         });
@@ -420,7 +424,7 @@ public class LinkGuardianUiTest {
 
         @Override
         public CommandResult execute(String commandText) throws CommandException, ParseException {
-            if (commandText.equals("view-l d/2026-11-01")) {
+            if (commandText.equalsIgnoreCase("view-l d/2026-11-01")) {
                 return new CommandResult("Showing lessons on 2026-11-01.");
             }
             if (commandText.equals("view-l")) {

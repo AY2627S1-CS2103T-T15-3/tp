@@ -3,6 +3,7 @@ package seedu.address.ui;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Logger;
 
 import javafx.event.ActionEvent;
@@ -222,7 +223,7 @@ public class MainWindow extends UiPart<Stage> {
             updateStudentFilterDescription(commandResult);
             updateGuardianSearchDescription(commandResult);
 
-            if (commandText.trim().startsWith("view-l")) {
+            if (commandText.trim().toLowerCase(Locale.ROOT).startsWith("view-l")) {
                 String lessonSearch = commandResult.getFeedbackToUser().equals("Showing all lessons.")
                         ? "all lessons"
                         : commandResult.getFeedbackToUser()
