@@ -3,6 +3,7 @@ package seedu.address.ui;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Method;
@@ -197,6 +198,32 @@ public class LinkGuardianUiTest {
             executeCommand.invoke(window, "view-l stu/1");
             executeCommand.invoke(window, "edit-s 2 n/Other Lim");
             executeCommand.invoke(window, "edit-s 1 n/no-highlight");
+            window.getPrimaryStage().hide();
+            return null;
+        });
+    }
+
+    @Test
+    public void mainWindow_studentFilterIndexValidation_coversAllBranches() throws Exception {
+        runOnFxThread(() -> {
+            MainWindow window = new MainWindow(new javafx.stage.Stage(),
+                    new StubLogic(student("mary"), guardian("Ben Tan")), Path.of("data.json"));
+            window.fillInnerParts();
+
+            Method getStudentBeingEdited = MainWindow.class
+                    .getDeclaredMethod("getStudentBeingEdited", String.class);
+            getStudentBeingEdited.setAccessible(true);
+            Method updateDisplayedLessonStudent = MainWindow.class
+                    .getDeclaredMethod("updateDisplayedLessonStudentForView", String.class);
+            updateDisplayedLessonStudent.setAccessible(true);
+
+            assertNotNull(getStudentBeingEdited.invoke(window, "edit-s 1 n/Mary Lim"));
+            assertNull(getStudentBeingEdited.invoke(window, "edit-s 0 n/Mary Lim"));
+            assertNull(getStudentBeingEdited.invoke(window, "edit-s 3 n/Mary Lim"));
+
+            updateDisplayedLessonStudent.invoke(window, "view-l stu/1");
+            updateDisplayedLessonStudent.invoke(window, "view-l stu/0");
+            updateDisplayedLessonStudent.invoke(window, "view-l stu/3");
             window.getPrimaryStage().hide();
             return null;
         });
