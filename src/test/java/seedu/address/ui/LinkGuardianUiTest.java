@@ -175,6 +175,28 @@ public class LinkGuardianUiTest {
     }
 
     @Test
+    public void mainWindow_editWithoutStudentLessonFilter_doesNotChangeLessonHeading() throws Exception {
+        runOnFxThread(() -> {
+            MainWindow window = new MainWindow(new javafx.stage.Stage(),
+                    new StubLogic(student("mary"), guardian("Ben Tan")), Path.of("data.json"));
+            window.fillInnerParts();
+            window.show();
+            Method executeCommand = MainWindow.class.getDeclaredMethod("executeCommand", String.class);
+            executeCommand.setAccessible(true);
+
+            executeCommand.invoke(window, "edit-s 1 n/Mary Lim");
+            assertEquals("Lessons for " + LocalDate.now(), ((Label) window.getRoot().getScene()
+                    .lookup("#lessonTitle")).getText());
+
+            executeCommand.invoke(window, "edit-s bad n/Mary Lim");
+            executeCommand.invoke(window, "edit-s 2 n/Mary Lim");
+            executeCommand.invoke(window, "view-l stu/2");
+            window.getPrimaryStage().hide();
+            return null;
+        });
+    }
+
+    @Test
     public void mainWindow_filterDescription_persistsUntilListCommand() throws Exception {
         runOnFxThread(() -> {
             MainWindow window = new MainWindow(new javafx.stage.Stage(),
