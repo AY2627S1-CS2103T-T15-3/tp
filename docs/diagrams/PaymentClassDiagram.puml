@@ -8,15 +8,15 @@ skinparam classBackgroundColor MODEL_COLOR
 
 Package Model as ModelPackage <<Rectangle>>{
 Class Student {
-  +getPaidMonths() : SortedSet<PaymentMonth>
-  +hasPaidFor(PaymentMonth) : boolean
-  +withPaymentFor(PaymentMonth) : Student
+  +getPaidMonths(): SortedSet<PaymentMonth>
+  +hasPaidFor(paymentMonth: PaymentMonth): boolean
+  +withPaymentFor(paymentMonth: PaymentMonth): Student
 }
 
 Class PaymentMonth {
-  +value : YearMonth
-  +isValidPaymentMonth(String) : boolean
-  +toDisplayString() : String
+  +value: YearMonth
+  {static} +isValidPaymentMonth(test: String): boolean
+  +toDisplayString(): String
 }
 }
 
