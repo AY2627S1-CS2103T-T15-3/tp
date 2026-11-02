@@ -171,7 +171,7 @@ public class LinkGuardianUiTest {
             assertEquals("Lessons for mary", ((Label) window.getRoot().getScene()
                     .lookup("#lessonTitle")).getText());
 
-            executeCommand.invoke(window, "edit-s 1 n/Mary Lim");
+            executeCommand.invoke(window, "Edit-s 1 n/Mary Lim");
             assertEquals("Lessons for Mary Lim", ((Label) window.getRoot().getScene()
                     .lookup("#lessonTitle")).getText());
             window.getPrimaryStage().hide();
@@ -222,6 +222,7 @@ public class LinkGuardianUiTest {
             updateDisplayedLessonStudent.setAccessible(true);
 
             assertNotNull(getStudentBeingEdited.invoke(window, "edit-s 1 n/Mary Lim"));
+            assertNotNull(getStudentBeingEdited.invoke(window, "Edit-s 1 n/Mary Lim"));
             assertNull(getStudentBeingEdited.invoke(window, "edit-s 0 n/Mary Lim"));
             assertNull(getStudentBeingEdited.invoke(window, "edit-s 3 n/Mary Lim"));
 
@@ -510,7 +511,7 @@ public class LinkGuardianUiTest {
             if (commandText.equals("view-l stu/1")) {
                 return new CommandResult("Showing lessons for " + student.getName() + ".");
             }
-            if (commandText.equals("edit-s 1 n/Mary Lim")) {
+            if (commandText.equalsIgnoreCase("edit-s 1 n/Mary Lim")) {
                 return new CommandResult("Edited student: Mary Lim", student("Mary Lim"));
             }
             if (commandText.equals("edit-s 2 n/Other Lim")) {
