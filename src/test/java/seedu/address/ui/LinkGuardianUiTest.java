@@ -3,6 +3,7 @@ package seedu.address.ui;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Method;
@@ -151,6 +152,82 @@ public class LinkGuardianUiTest {
             executeCommand.invoke(window, "VIEW-L d/2026-11-01");
             assertEquals("Lessons for 2026-11-01", ((Label)
                     window.getRoot().getScene().lookup("#lessonTitle")).getText());
+            window.getPrimaryStage().hide();
+            return null;
+        });
+    }
+
+    @Test
+    public void mainWindow_editFilteredStudent_updatesLessonHeading() throws Exception {
+        runOnFxThread(() -> {
+            MainWindow window = new MainWindow(new javafx.stage.Stage(),
+                    new StubLogic(student("mary"), guardian("Ben Tan")), Path.of("data.json"));
+            window.fillInnerParts();
+            window.show();
+            Method executeCommand = MainWindow.class.getDeclaredMethod("executeCommand", String.class);
+            executeCommand.setAccessible(true);
+
+            executeCommand.invoke(window, "view-l stu/1");
+            assertEquals("Lessons for mary", ((Label) window.getRoot().getScene()
+                    .lookup("#lessonTitle")).getText());
+
+            executeCommand.invoke(window, "edit-s 1 n/Mary Lim");
+            assertEquals("Lessons for Mary Lim", ((Label) window.getRoot().getScene()
+                    .lookup("#lessonTitle")).getText());
+            window.getPrimaryStage().hide();
+            return null;
+        });
+    }
+
+    @Test
+    public void mainWindow_editWithoutStudentLessonFilter_doesNotChangeLessonHeading() throws Exception {
+        runOnFxThread(() -> {
+            MainWindow window = new MainWindow(new javafx.stage.Stage(),
+                    new StubLogic(student("mary"), guardian("Ben Tan")), Path.of("data.json"));
+            window.fillInnerParts();
+            window.show();
+            Method executeCommand = MainWindow.class.getDeclaredMethod("executeCommand", String.class);
+            executeCommand.setAccessible(true);
+
+            executeCommand.invoke(window, "edit-s 1 n/Mary Lim");
+            assertEquals("Lessons for " + LocalDate.now(), ((Label) window.getRoot().getScene()
+                    .lookup("#lessonTitle")).getText());
+
+            executeCommand.invoke(window, "edit-s bad n/Mary Lim");
+            executeCommand.invoke(window, "edit-s 2 n/Mary Lim");
+            executeCommand.invoke(window, "edit-s 0 n/Mary Lim");
+            executeCommand.invoke(window, "view-l stu/2");
+            executeCommand.invoke(window, "view-l stu/0");
+
+            executeCommand.invoke(window, "view-l stu/1");
+            executeCommand.invoke(window, "edit-s 2 n/Other Lim");
+            executeCommand.invoke(window, "edit-s 1 n/no-highlight");
+            window.getPrimaryStage().hide();
+            return null;
+        });
+    }
+
+    @Test
+    public void mainWindow_studentFilterIndexValidation_coversAllBranches() throws Exception {
+        runOnFxThread(() -> {
+            MainWindow window = new MainWindow(new javafx.stage.Stage(),
+                    new StubLogic(student("mary"), guardian("Ben Tan")), Path.of("data.json"));
+            window.fillInnerParts();
+
+            Method getStudentBeingEdited = MainWindow.class
+                    .getDeclaredMethod("getStudentBeingEdited", String.class);
+            getStudentBeingEdited.setAccessible(true);
+            Method updateDisplayedLessonStudent = MainWindow.class
+                    .getDeclaredMethod("updateDisplayedLessonStudentForView", String.class);
+            updateDisplayedLessonStudent.setAccessible(true);
+
+            assertNotNull(getStudentBeingEdited.invoke(window, "edit-s 1 n/Mary Lim"));
+            assertNull(getStudentBeingEdited.invoke(window, "edit-s 0 n/Mary Lim"));
+            assertNull(getStudentBeingEdited.invoke(window, "edit-s 3 n/Mary Lim"));
+
+            updateDisplayedLessonStudent.invoke(window, "view-l stu/1");
+            updateDisplayedLessonStudent.invoke(window, "view-l stu/0");
+            updateDisplayedLessonStudent.invoke(window, "view-l stu/3");
             window.getPrimaryStage().hide();
             return null;
         });
@@ -430,6 +507,18 @@ public class LinkGuardianUiTest {
             if (commandText.equals("view-l")) {
                 return new CommandResult("Showing all lessons.");
             }
+            if (commandText.equals("view-l stu/1")) {
+                return new CommandResult("Showing lessons for " + student.getName() + ".");
+            }
+            if (commandText.equals("edit-s 1 n/Mary Lim")) {
+                return new CommandResult("Edited student: Mary Lim", student("Mary Lim"));
+            }
+            if (commandText.equals("edit-s 2 n/Other Lim")) {
+                return new CommandResult("Edited student: Other Lim", student("Other Lim"));
+            }
+            if (commandText.equals("edit-s 1 n/no-highlight")) {
+                return new CommandResult("Edited student without highlight.");
+            }
             if (commandText.equals("filter")) {
                 return CommandResult.withStudentFilterDescription("Filtered students.", "Filtered: Secondary 3");
             }
@@ -449,7 +538,7 @@ public class LinkGuardianUiTest {
 
         @Override
         public javafx.collections.ObservableList<Student> getFilteredStudentList() {
-            return FXCollections.observableArrayList(student);
+            return FXCollections.observableArrayList(student, student("Other"));
         }
 
         @Override
