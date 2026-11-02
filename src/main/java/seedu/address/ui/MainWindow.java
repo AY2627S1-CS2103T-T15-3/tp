@@ -284,7 +284,7 @@ public class MainWindow extends UiPart<Stage> {
 
     private Student getStudentBeingEdited(String commandText) {
         String trimmedCommand = commandText.trim();
-        if (!trimmedCommand.startsWith("edit-s ")) {
+        if (!trimmedCommand.regionMatches(true, 0, "edit-s ", 0, "edit-s ".length())) {
             return null;
         }
         try {
