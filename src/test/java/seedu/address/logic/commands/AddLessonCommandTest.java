@@ -59,6 +59,32 @@ public class AddLessonCommandTest {
     }
 
     @Test
+    public void execute_seriesCrossingFiveDigitYear_rejectsEntireSeries() {
+        ModelManager model = new ModelManager();
+        model.addStudent(STUDENT);
+
+        CommandException exception = assertThrows(CommandException.class, () ->
+                new AddLessonCommand(Index.fromOneBased(1), LocalDate.of(9999, 12, 31),
+                        LocalTime.of(14, 0), Duration.ofMinutes(60), 2).execute(model));
+
+        assertEquals(AddLessonCommand.MESSAGE_DATE_OUT_OF_RANGE, exception.getMessage());
+        assertEquals(0, model.getLessonList().size());
+    }
+
+    @Test
+    public void execute_seriesWithNegativeYear_rejectsEntireSeries() {
+        ModelManager model = new ModelManager();
+        model.addStudent(STUDENT);
+
+        CommandException exception = assertThrows(CommandException.class, () ->
+                new AddLessonCommand(Index.fromOneBased(1), LocalDate.of(-1, 1, 1),
+                        LocalTime.NOON, Duration.ofMinutes(60), 1).execute(model));
+
+        assertEquals(AddLessonCommand.MESSAGE_DATE_OUT_OF_RANGE, exception.getMessage());
+        assertEquals(0, model.getLessonList().size());
+    }
+
+    @Test
     public void execute_longLesson_includesWarning() throws Exception {
         ModelManager model = new ModelManager();
         model.addStudent(STUDENT);

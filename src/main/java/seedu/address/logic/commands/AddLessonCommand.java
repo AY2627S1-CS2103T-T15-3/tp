@@ -28,6 +28,8 @@ public class AddLessonCommand extends Command {
             + " INDEX d/DATE(YYYY-MM-DD) t/TIME(HH:MM) len/LENGTH(MINUTES) w/WEEKS";
     public static final String MESSAGE_INVALID_WEEKS =
             "Number of weeks must be between 1 and " + MAX_WEEKS + ".";
+    public static final String MESSAGE_DATE_OUT_OF_RANGE =
+            "All lesson dates in the series must have a four-digit year.";
     public static final String MESSAGE_SUCCESS = "Added %1$d lesson(s) for %2$s.";
 
     private final Index targetIndex;
@@ -81,10 +83,14 @@ public class AddLessonCommand extends Command {
         return students.get(targetIndex.getZeroBased());
     }
 
-    private List<Lesson> createLessons(Student student) {
+    private List<Lesson> createLessons(Student student) throws CommandException {
         List<Lesson> lessonsToAdd = new ArrayList<>();
         for (int week = 0; week < numberOfWeeks; week++) {
-            lessonsToAdd.add(new Lesson(student, startDate.plusWeeks(week), startTime, duration));
+            LocalDate lessonDate = startDate.plusWeeks(week);
+            if (lessonDate.getYear() < 0 || lessonDate.getYear() > 9999) {
+                throw new CommandException(MESSAGE_DATE_OUT_OF_RANGE);
+            }
+            lessonsToAdd.add(new Lesson(student, lessonDate, startTime, duration));
         }
         return lessonsToAdd;
     }
