@@ -569,7 +569,7 @@ Action     | Format, Examples
 **Clear student remark** | `clear-remark-s INDEX`<br> e.g., `clear-remark-s 1`
 **Mark paid** | `mark-paid INDEX m/YYYY-MM`<br> e.g., `mark-paid 1 m/2026-10`
 **Schedule lessons** | `add-l INDEX d/YYYY-MM-DD t/HH:MM len/LENGTH(MINUTES) w/WEEKS` <br> e.g., `add-l 1 d/2026-11-01 t/14:00 len/60 w/4`
-**View lessons** | `view-l [d/YYYY-MM-DD | stu/INDEX]`<br> e.g., `view-l d/2026-11-01`
+**View lessons** | `view-l [d/YYYY-MM-DD \| stu/INDEX]`<br> e.g., `view-l d/2026-11-01`
 **Remove lesson** | `remove-l INDEX`<br> e.g., `remove-l 2`
 **Clear**  | `clear`
 **Exit** | `exit`
