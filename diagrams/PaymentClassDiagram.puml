@@ -1,25 +1,24 @@
 @startuml
 !include style.puml
+show Student members
+show PaymentMonth members
 skinparam arrowThickness 1.1
 skinparam arrowColor MODEL_COLOR
 skinparam classBackgroundColor MODEL_COLOR
 
-package Model as ModelPackage <<Rectangle>> {
+Package Model as ModelPackage <<Rectangle>>{
 Class Student {
-  +getPaidMonths(): SortedSet<PaymentMonth>
-  +hasPaidFor(paymentMonth: PaymentMonth): boolean
-  +withPaymentFor(paymentMonth: PaymentMonth): Student
+  +getPaidMonths() : SortedSet<PaymentMonth>
+  +hasPaidFor(PaymentMonth) : boolean
+  +withPaymentFor(PaymentMonth) : Student
 }
 
 Class PaymentMonth {
-  +value: YearMonth
-  {static} +isValidPaymentMonth(test: String): boolean
-  +toDisplayString(): String
+  +value : YearMonth
+  +isValidPaymentMonth(String) : boolean
+  +toDisplayString() : String
 }
 }
-
-show Student members
-show PaymentMonth members
 
 Class "<<interface>>\nComparable<PaymentMonth>" as Comparable #FFFFFF
 
