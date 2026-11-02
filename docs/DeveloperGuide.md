@@ -119,7 +119,7 @@ How the `Logic` component works:
 
 Here are the other classes in `Logic` (omitted from the class diagram above) that are used for parsing a user command:
 
-<puml src="diagrams/ParserClasses.puml" width="600"></puml>
+<puml src="diagrams/ParserClasses.puml" width="800"></puml>
 
 How the parsing works:
 * When called upon to parse a user command, the `AddressBookParser` class creates an `XYZCommandParser` (`XYZ` is a placeholder for the specific command name, e.g., `AddStudentCommandParser`). The parser uses the other classes shown above to parse the user command and create an `XYZCommand` object (e.g., `AddStudentCommand`). The `AddressBookParser` returns that object as a `Command` object.
@@ -162,7 +162,7 @@ The student and guardian MVP commands follow the same parser-command flow:
 ### Model component
 **API** : [`Model.java`](https://github.com/AY2627S1-CS2103T-T15-3/tp/tree/master/src/main/java/seedu/address/model/Model.java)
 
-<puml src="diagrams/ModelClassDiagram.puml" width="450" />
+<puml src="diagrams/ModelClassDiagram.puml" width="800" />
 
 
 The `Model` component is the in-memory domain model for TutorTrack. The diagram focuses on the classes needed to manage students, guardians, lessons, and their relationships; utility classes and predicates other than the lesson predicates are omitted for readability.
@@ -186,7 +186,7 @@ The `Model` component is the in-memory domain model for TutorTrack. The diagram 
 
 **API** : [`Storage.java`](https://github.com/AY2627S1-CS2103T-T15-3/tp/tree/master/src/main/java/seedu/address/storage/Storage.java)
 
-<puml src="diagrams/StorageClassDiagram.puml" width="550" />
+<puml src="diagrams/StorageClassDiagram.puml" width="800" />
 
 The `Storage` component,
 
@@ -644,8 +644,8 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 (For all use cases below, the **System** is `TutorTrack` and the **Actor** is the `user`, unless specified otherwise.)
 
-Simple interactions that consist of a single request and response, such as listing students or guardians, sorting
-students, opening help and exiting, are not documented as use cases.
+Simple interactions that consist of a single request and response, such as listing students or guardians, opening help
+and exiting, are not documented as use cases.
 
 **Use case: U1 - Add a student**
 
@@ -796,7 +796,31 @@ not linked to the guardian, and on success, both records are kept.
 *Finding guardians* is similar, but guardians can only be found by name, and the search is shown above the guardian
 list.
 
-**Use case: U6 - Schedule weekly lessons**
+**Use case: U6 - Sort students**
+
+**MSS**
+
+1. User requests to sort the displayed students by name.
+2. TutorTrack sorts the displayed student list in ascending order by name, preserving any active search or filter.
+3. TutorTrack displays the sorted student list.
+
+   Use case ends.
+
+**Extensions**
+
+* 1a. User provides arguments with the sorting request.
+
+  * 1a1. TutorTrack shows an error message.
+
+    Use case ends.
+
+* 2a. The student list is empty.
+
+  * 2a1. TutorTrack displays the empty student list.
+
+    Use case ends.
+
+**Use case: U7 - Schedule weekly lessons**
 
 **MSS**
 
@@ -833,7 +857,7 @@ list.
 
     Use case ends.
 
-**Use case: U7 - View lessons**
+**Use case: U8 - View lessons**
 
 **MSS**
 
@@ -872,7 +896,7 @@ list.
 *Removing a lesson* uses the lesson's index in the displayed lesson list, and removes only that lesson, not the rest
 of its weekly series.
 
-**Use case: U8 - Follow up on unpaid fees**
+**Use case: U9 - Follow up on unpaid fees**
 
 **MSS**
 
@@ -911,7 +935,7 @@ of its weekly series.
 
     Use case resumes at step 3.
 
-**Use case: U9 - Keep a note about a student**
+**Use case: U10 - Keep a note about a student**
 
 **MSS**
 
@@ -936,7 +960,7 @@ of its weekly series.
 
     Use case ends.
 
-**Use case: U10 - Start using TutorTrack**
+**Use case: U11 - Start using TutorTrack**
 
 **MSS**
 
