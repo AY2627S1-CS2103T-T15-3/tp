@@ -16,6 +16,9 @@
 * TutorTrack is adapted from [AddressBook-Level3](https://se-education.org/addressbook-level3/) (AB3) by the
   [SE-EDU initiative](https://se-education.org). Its overall architecture, much of its code, and parts of this guide
   are reused from AB3.
+
+* OpenAI Codex was used to assist with code generation and refinement across the project; all AI-assisted output was
+  reviewed and adapted by the team.
 * Libraries used: [JavaFX](https://openjfx.io/), [Jackson](https://github.com/FasterXML/jackson),
   [JUnit5](https://github.com/junit-team/junit5).
 
